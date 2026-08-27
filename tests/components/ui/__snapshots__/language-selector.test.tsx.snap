@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LanguageSelector Component renders EN-US correctly 1`] = `null`;
+
+exports[`LanguageSelector Component renders PT-BR correctly 1`] = `null`;
