@@ -24,7 +24,7 @@ Instead of manually crafting an HTML/CSS portfolio, struggling with a generic te
 3. **Resume (CV) Generator**: Export your technical profile directly to a clean, ATS-friendly PDF.
 
 ### Motivation
-The main motivation behind Portfolio Builder is simple: **Developers should spend their time coding, not designing their own portfolios from scratch every year.** We wanted to create an out-of-the-box, premium-looking experience that highlights what really matters: your code and your projects.
+The main motivation behind Portfolio Builder is simple: **Developers should spend their time coding, not designing their own portfolios from scratch every year.** We wanted to create an out-of-the-box, premium-looking experience that highlights what really matters: your code and your projects. Far from subscriptions or intrusive ads. Even better: with built-in integrations for the tools you use daily.
 
 ## Methodology & Structure
 
@@ -62,6 +62,15 @@ Our goal is to make Portfolio Builder natively available across all major platfo
 - [ ] **Linux** 
 - [ ] **Windows** 
 
+## 🔌 Supported Integrations
+
+- [ ] **GitHub**: Auto-import repositories, stats, and languages.
+- [ ] **Figma**: Embed design prototypes and UI showcases.
+- [ ] **LinkedIn**: Sync professional experience and generate PDF CVs.
+- [ ] **Medium / Dev.to**: Auto-fetch your latest articles and blog posts.
+- [ ] **WakaTime**: Display real-time coding stats and habits.
+- [ ] **Notion**: Export or sync your portfolio data to a Notion database.
+
 ## Open Source & Contributing
 
 This project is entirely **Open Source**. We believe that community collaboration builds the best developer tools.
@@ -87,7 +96,7 @@ Em vez de criar manualmente um portfólio em HTML/CSS, lutar com templates gené
 3. **Gerador de Currículo (CV)**: Exporte seu perfil técnico diretamente para um PDF limpo e amigável para ATS (sistemas de RH).
 
 ### Motivação
-A principal motivação por trás do Portfolio Builder é simples: **Desenvolvedores devem gastar seu tempo programando, não desenhando seus próprios portfólios do zero todo ano.** Queríamos criar uma experiência premium, pronta para uso, que destaque o que realmente importa: seu código e seus projetos.
+A principal motivação por trás do Portfolio Builder é simples: **Desenvolvedores devem gastar seu tempo programando, não desenhando seus próprios portfólios do zero todo ano.** Queríamos criar uma experiência premium, pronta para uso, que destaque o que realmente importa: seu código e seus projetos. Longe de assinaturas e propagandas. E melhor: com integrações diretas às ferramentas usadas no seu dia a dia.
 
 ## Metodologia e Estrutura
 
@@ -124,6 +133,15 @@ Nosso objetivo é tornar o Portfolio Builder disponível nativamente em todas as
 - [ ] **AppStore** (iOS / iPadOS)
 - [ ] **Linux** 
 - [ ] **Windows** 
+
+## 🔌 Integrações Suportadas
+
+- [ ] **GitHub**: Importação automática de repositórios, estatísticas e linguagens.
+- [ ] **Figma**: Inserção de protótipos de design e vitrines de UI interativas.
+- [ ] **LinkedIn**: Sincronização de experiências profissionais e geração de CV em PDF.
+- [ ] **Medium / Dev.to**: Busca automática dos seus artigos e tutoriais mais recentes.
+- [ ] **WakaTime**: Exibição de estatísticas e hábitos de programação em tempo real.
+- [ ] **Notion**: Exportação ou sincronização dos dados do portfólio para uma base do Notion.
 
 ## Open Source e Contribuição
 
