@@ -1,5 +1,5 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react-native';
 import { LanguageSelector } from '@/components/ui/language-selector';
 import { useTranslation } from 'react-i18next';
 
@@ -16,8 +16,9 @@ describe('LanguageSelector Component', () => {
       },
     });
 
-    const tree = renderer.create(<LanguageSelector />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { getByText, toJSON } = render(<LanguageSelector />);
+    expect(getByText('EN-US')).toBeTruthy();
+    expect(toJSON()).toMatchSnapshot();
   });
 
   it('renders PT-BR correctly', () => {
