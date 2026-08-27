@@ -73,10 +73,8 @@ Our goal is to make Portfolio Builder natively available across all major platfo
 
 ## Open Source & Contributing
 
-This project is entirely **Open Source**. We believe that community collaboration builds the best developer tools.
-
-**We gladly accept Pull Requests (PRs)!** 
-Whether you want to fix a bug, add a new AI model integration for descriptions, or create a new template for the generated portfolios, feel free to fork the repository and submit your PR.
+This project is open-source. 
+Pull Requests are welcome. To contribute bug fixes, new AI model integrations, or templates, please fork the repository and submit your PR for review.
 
 ---
 
@@ -145,7 +143,5 @@ Nosso objetivo é tornar o Portfolio Builder disponível nativamente em todas as
 
 ## Open Source e Contribuição
 
-Este projeto é inteiramente **Open Source**. Acreditamos que a colaboração da comunidade constrói as melhores ferramentas para desenvolvedores.
-
-**Nós aceitamos Pull Requests (PRs) com prazer!** 
-Seja para corrigir um bug, adicionar uma nova integração de modelo de IA para descrições, ou criar um novo template para os portfólios gerados, sinta-se à vontade para fazer um _fork_ do repositório e enviar seu PR.
+Este projeto é de código aberto. 
+Pull Requests são bem-vindos. Para contribuir com correções de bugs, novas integrações de IA ou novos templates, faça um _fork_ do repositório e submeta seu PR para revisão.
