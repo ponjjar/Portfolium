@@ -1,0 +1,76 @@
+{
+  "translation": {
+    "common": {
+      "portfolio_builder": "PORTFOLIO BUILDER",
+      "scroll_to_discover": "Role para descobrir",
+      "step_of": "Etapa {{step}} de {{total}}",
+      "continue": "Continuar",
+      "back": "Voltar",
+      "saved_automatically": "Salvo automaticamente"
+    },
+    "welcome": {
+      "title": "Transforme\n seus projetos \n em um portfólio.",
+      "subtitle": "Importe seus projetos, organize suas tecnologias e gere um portfólio profissional pronto para publicar.",
+      "start": "Iniciar",
+      "import_session": "Importar sessão",
+      "terms": "Ao continuar, você concorda com os Termos de Uso e a Política de Privacidade.",
+      "drop_here": "Solte seu arquivo .json aqui",
+      "import_success": "Sessão importada com sucesso!",
+      "import_invalid": "Arquivo JSON inválido ou incompatível.",
+      "import_error": "Erro ao processar o arquivo JSON.",
+      "pick_error": "Erro ao selecionar o arquivo.",
+      "drop_json_only": "Por favor, solte apenas arquivos .json"
+    },
+    "profile": {
+      "title": "Primeiro, quem é você?",
+      "subtitle": "Essas informações serão usadas na apresentação do seu portfólio.",
+      "name_label": "Como deseja ser chamado?",
+      "name_placeholder": "Ex.: Caique Ponjjar",
+      "headline_label": "Título Profissional",
+      "headline_placeholder": "Ex.: Frontend Engineer",
+      "about_label": "Sobre Você",
+      "about_placeholder": "Conte brevemente o que você faz. Você poderá melhorar esse texto depois.",
+      "avatar_label": "Foto ou Avatar",
+      "upload_image": "[ Enviar imagem ]",
+      "use_url": "[ Usar URL ]",
+      "links_label": "Links",
+      "github_placeholder": "GitHub URL",
+      "linkedin_placeholder": "LinkedIn URL",
+      "website_placeholder": "Site pessoal"
+    },
+    "projects": {
+      "title": "Mostre o que você construiu.",
+      "subtitle": "Adicione seus melhores projetos manualmente ou importe seus repositórios do GitHub.",
+      "import_github": "Importar do GitHub",
+      "add_project": "Adicionar projeto",
+      "your_projects": "Seus projetos",
+      "empty_state": "Você ainda não adicionou projetos. Adicione manualmente ou importe seus repositórios do GitHub."
+    },
+    "skills": {
+      "title": "Quais tecnologias representam você?",
+      "subtitle": "Encontramos estas tecnologias nos seus projetos. Confirme aquelas que você realmente utiliza.",
+      "found_message": "✨ {{count}} tecnologias encontradas em {{projects}} projetos",
+      "info_message": "Encontramos algo errado? Você pode adicionar, remover ou reorganizar qualquer tecnologia.",
+      "frontend": "FRONTEND",
+      "backend": "BACKEND",
+      "add_technology": "Adicionar tecnologia"
+    },
+    "ai": {
+      "title": "Quer melhorar a apresentação?",
+      "subtitle": "A IA pode resumir seus projetos, melhorar suas descrições e organizar seu conteúdo sem inventar novas experiências.",
+      "recommended": "Recomendado",
+      "use_my_ai": "Usar minha IA",
+      "use_my_ai_desc": "Use ChatGPT, Gemini ou outra IA que você já utiliza.",
+      "use_my_ai_info": "Nós preparamos as informações. Você envia para sua IA e importa a resposta de volta.",
+      "start_btn": "COMEÇAR",
+      "free_ai": "IA gratuita",
+      "free_ai_desc": "Use o modelo disponibilizado pelo Portfolio Builder.",
+      "free_ai_info": "⏱ Pode haver limite de uso ou fila.",
+      "generate_ai_btn": "GERAR COM IA",
+      "no_ai": "Continuar sem IA",
+      "no_ai_desc": "Seus dados já estão prontos. Você pode gerar seu portfólio sem utilizar inteligência artificial.",
+      "no_ai_btn": "CONTINUAR SEM IA",
+      "finish": "Finalizar"
+    }
+  }
+}
