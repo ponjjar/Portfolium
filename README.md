@@ -1,6 +1,6 @@
 <div align="center">
   
-  <h1>🌟 Portfolio Builder</h1>
+  <h1>Portfolio Builder</h1>
   <p><b>Automate the creation of stunning portfolios, READMEs, and resumes in one place.</b></p>
   
   <p>
@@ -14,7 +14,7 @@
 
 <a id="english"></a>
 
-## 🚀 The Idea
+## The Idea
 
 **Portfolio Builder** is an open-source, universal application designed to completely automate and simplify how developers showcase their work. 
 
@@ -23,10 +23,10 @@ Instead of manually crafting an HTML/CSS portfolio, struggling with a generic te
 2. **README Generator**: Standardize and generate high-quality `.md` documentation for your open-source projects.
 3. **Resume (CV) Generator**: Export your technical profile directly to a clean, ATS-friendly PDF.
 
-### 💡 Motivation
+### Motivation
 The main motivation behind Portfolio Builder is simple: **Developers should spend their time coding, not designing their own portfolios from scratch every year.** We wanted to create an out-of-the-box, premium-looking experience that highlights what really matters: your code and your projects.
 
-## 🛠 Methodology & Structure
+## Methodology & Structure
 
 The project is built on a **Universal Architecture** (write once, run anywhere). It shares a single codebase for Web, Android, iOS, and Desktop platforms. 
 
@@ -43,7 +43,7 @@ graph TD
     F --> |Electron/Tauri| I[Windows & Linux]
 ```
 
-## 💻 Technologies
+## Technologies
 
 - **Framework**: [Expo](https://expo.dev/) (SDK 57) / [React Native](https://reactnative.dev/)
 - **Styling**: [NativeWind v4](https://www.nativewind.dev/) (Tailwind CSS universal)
@@ -52,7 +52,7 @@ graph TD
 - **Schema Validation**: [Zod](https://zod.dev/)
 - **Internationalization (i18n)**: [i18next](https://www.i18next.com/) & `expo-localization`
 
-## 🎯 Availability Checklist
+## Availability Checklist
 
 Our goal is to make Portfolio Builder natively available across all major platforms. Track our progress below:
 
@@ -62,7 +62,7 @@ Our goal is to make Portfolio Builder natively available across all major platfo
 - [ ] **Linux** 
 - [ ] **Windows** 
 
-## 🤝 Open Source & Contributing
+## Open Source & Contributing
 
 This project is entirely **Open Source**. We believe that community collaboration builds the best developer tools.
 
@@ -75,9 +75,9 @@ Whether you want to fix a bug, add a new AI model integration for descriptions, 
 
 <a id="português-br"></a>
 
-# 🇧🇷 Versão em Português
+# Versão em Português
 
-## 🚀 A Ideia
+## A Ideia
 
 O **Portfolio Builder** é uma aplicação universal de código aberto projetada para automatizar e simplificar completamente como desenvolvedores apresentam seu trabalho.
 
@@ -86,10 +86,10 @@ Em vez de criar manualmente um portfólio em HTML/CSS, lutar com templates gené
 2. **Gerador de README**: Padronize e gere documentação `.md` de alta qualidade para seus projetos open-source.
 3. **Gerador de Currículo (CV)**: Exporte seu perfil técnico diretamente para um PDF limpo e amigável para ATS (sistemas de RH).
 
-### 💡 Motivação
+### Motivação
 A principal motivação por trás do Portfolio Builder é simples: **Desenvolvedores devem gastar seu tempo programando, não desenhando seus próprios portfólios do zero todo ano.** Queríamos criar uma experiência premium, pronta para uso, que destaque o que realmente importa: seu código e seus projetos.
 
-## 🛠 Metodologia e Estrutura
+## Metodologia e Estrutura
 
 O projeto é construído em uma **Arquitetura Universal** (escreva uma vez, rode em qualquer lugar). Ele compartilha uma base de código única para as plataformas Web, Android, iOS e Desktop.
 
@@ -106,7 +106,7 @@ graph TD
     F --> |Electron/Tauri| I[Windows & Linux]
 ```
 
-## 💻 Tecnologias
+## Tecnologias
 
 - **Framework**: [Expo](https://expo.dev/) (SDK 57) / [React Native](https://reactnative.dev/)
 - **Estilização**: [NativeWind v4](https://www.nativewind.dev/) (Tailwind CSS universal)
@@ -115,7 +115,7 @@ graph TD
 - **Validação de Schema**: [Zod](https://zod.dev/)
 - **Internacionalização (i18n)**: [i18next](https://www.i18next.com/) & `expo-localization`
 
-## 🎯 Checklist de Disponibilidade
+## Checklist de Disponibilidade
 
 Nosso objetivo é tornar o Portfolio Builder disponível nativamente em todas as principais plataformas. Acompanhe nosso progresso:
 
@@ -125,7 +125,7 @@ Nosso objetivo é tornar o Portfolio Builder disponível nativamente em todas as
 - [ ] **Linux** 
 - [ ] **Windows** 
 
-## 🤝 Open Source e Contribuição
+## Open Source e Contribuição
 
 Este projeto é inteiramente **Open Source**. Acreditamos que a colaboração da comunidade constrói as melhores ferramentas para desenvolvedores.
 
