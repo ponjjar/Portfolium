@@ -23,6 +23,8 @@ Instead of manually crafting an HTML/CSS portfolio, struggling with a generic te
 2. **README Generator**: Standardize and generate high-quality `.md` documentation for your open-source projects.
 3. **Resume (CV) Generator**: Export your technical profile directly to a clean, ATS-friendly PDF.
 
+Under the hood, the architecture is designed to support semantic data processing—parsing your raw repositories and commit history to synthesize compelling project descriptions with minimal manual intervention.
+
 ### Motivation
 The main motivation behind Portfolio Builder is simple: **Developers should spend their time coding, not designing their own portfolios from scratch every year.** We wanted to create an out-of-the-box, premium-looking experience that highlights what really matters: your code and your projects. Far from subscriptions or intrusive ads. Even better: with built-in integrations for the tools you use daily.
 
@@ -92,6 +94,8 @@ Em vez de criar manualmente um portfólio em HTML/CSS, lutar com templates gené
 1. **Gerador de Portfólio**: Importe seus repositórios do GitHub, escolha suas tecnologias e gere um portfólio bonito e responsivo.
 2. **Gerador de README**: Padronize e gere documentação `.md` de alta qualidade para seus projetos open-source.
 3. **Gerador de Currículo (CV)**: Exporte seu perfil técnico diretamente para um PDF limpo e amigável para ATS (sistemas de RH).
+
+Sob o capô, a arquitetura foi projetada para suportar processamento semântico de dados — interpretando seus repositórios e histórico de commits para sintetizar automaticamente descrições e métricas com o mínimo de intervenção manual.
 
 ### Motivação
 A principal motivação por trás do Portfolio Builder é simples: **Desenvolvedores devem gastar seu tempo programando, não desenhando seus próprios portfólios do zero todo ano.** Queríamos criar uma experiência premium, pronta para uso, que destaque o que realmente importa: seu código e seus projetos. Longe de assinaturas e propagandas. E melhor: com integrações diretas às ferramentas usadas no seu dia a dia.
