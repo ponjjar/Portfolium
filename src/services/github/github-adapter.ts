@@ -57,7 +57,7 @@ export function convertToProject(
       repository: summary.htmlUrl,
       demo: summary.homepage || undefined,
     },
-    image: undefined, // GitHub API doesn't provide a reliable project image
+    image: summary.selectedImage || undefined,
     technologies: detectedTechnologies,
     githubMetadata: {
       primaryLanguage: summary.language || undefined,
