@@ -4,6 +4,15 @@ import { PortfolioSessionSchema } from '../domain/portfolio/schema';
 
 const SESSION_KEY = 'portfolio-builder:session:v1';
 
+export const migratePortfolioSession = (data: any): any => {
+  if (!data || typeof data !== 'object') return data;
+  
+  // Future migrations can be placed here based on data.schemaVersion
+  // e.g., if (data.schemaVersion === 1) { ... data.schemaVersion = 2; }
+
+  return data;
+};
+
 export const saveSession = async (session: PortfolioSession): Promise<void> => {
   try {
     const jsonValue = JSON.stringify(session);
@@ -18,11 +27,12 @@ export const loadSession = async (): Promise<PortfolioSession | null> => {
     const jsonValue = await AsyncStorage.getItem(SESSION_KEY);
     if (jsonValue != null) {
       const parsed = JSON.parse(jsonValue);
-      const result = PortfolioSessionSchema.safeParse(parsed);
+      const migrated = migratePortfolioSession(parsed);
+      const result = PortfolioSessionSchema.safeParse(migrated);
       if (result.success) {
         return result.data;
       } else {
-        console.warn('Stored session is invalid according to current schema');
+        console.warn('Stored session is invalid according to current schema', result.error);
       }
     }
   } catch (e) {

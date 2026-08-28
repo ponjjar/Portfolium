@@ -1,34 +1,64 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, ScrollView, Text } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { WizardHeader } from '@/components/layout/wizard-header';
 import { BottomNav } from '@/components/layout/bottom-nav';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { User, Code2, Briefcase, Globe } from 'lucide-react-native';
+import { getNextWizardStep, getWizardRoute } from '@/utils/wizard';
+
+import { FormField } from '@/components/ui/form-field';
+import { ImagePickerField } from '@/components/ui/image-picker-field';
+import { Code2, Briefcase, Globe } from 'lucide-react-native';
 import { usePortfolioStore } from '@/store';
 import { useTranslation } from 'react-i18next';
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { session, updateProfile } = usePortfolioStore();
+  const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
+  const { session, updateProfile, updateSocialLinks } = usePortfolioStore();
   const profile = session.profile;
+  const socialLinks = session.socialLinks;
 
-  const [name, setName] = useState(profile.name);
-  const [headline, setHeadline] = useState(profile.headline);
-  const [bio, setBio] = useState(profile.bio);
-  const [github, setGithub] = useState(profile.github || '');
-  const [linkedin, setLinkedin] = useState(profile.linkedin || '');
-  const [website, setWebsite] = useState(profile.website || '');
+  const [errors, setErrors] = React.useState<{ name?: string, headline?: string, bio?: string }>({});
+
+  const getSocialLink = (type: string) => socialLinks.find(l => l.type === type)?.url || '';
+
+  const setSocialLink = (type: 'github' | 'linkedin' | 'website', url: string) => {
+    const existing = [...socialLinks];
+    const index = existing.findIndex(l => l.type === type);
+    if (index >= 0) {
+      if (!url) {
+        existing.splice(index, 1);
+      } else {
+        existing[index].url = url;
+      }
+    } else if (url) {
+      existing.push({ type, label: type.charAt(0).toUpperCase() + type.slice(1), url });
+    }
+    updateSocialLinks(existing);
+  };
 
   const handleNext = () => {
-    updateProfile({ name, headline, bio, github, linkedin, website });
-    router.push('/(wizard)/projects');
+    const newErrors: typeof errors = {};
+    if (!profile.name.trim()) newErrors.name = 'Informe seu nome para continuar.';
+    if (!profile.headline.trim()) newErrors.headline = 'Adicione um título profissional.';
+    if (!profile.bio.trim()) newErrors.bio = 'Escreva uma breve apresentação.';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    if (returnTo === 'editor') {
+      router.push('/(wizard)/editor');
+    } else {
+      router.push(getWizardRoute(getNextWizardStep('profile')!));
+    }
   };
 
   return (
-    <View className="flex-1 bg-black">
+    <View className="flex-1 bg-background">
       <WizardHeader 
         step={1} 
         title={t('profile.title')} 
@@ -36,96 +66,95 @@ export default function ProfileScreen() {
       />
       
       <ScrollView className="flex-1 px-6">
-        <View className="max-w-2xl w-full self-center pb-8">
+        <View className="max-w-2xl w-full self-center pb-12">
           
-          <Input 
-            label={t('profile.name_label')}
-            placeholder={t('profile.name_placeholder')}
-            value={name}
-            onChangeText={setName}
-          />
-          
-          <Input 
-            label={t('profile.headline_label')}
-            placeholder={t('profile.headline_placeholder')}
-            value={headline}
-            onChangeText={setHeadline}
-          />
-          
-          <View className="mb-8">
-            <Text className="text-[10px] font-bold text-text-secondary tracking-widest uppercase mb-2">
-              {t('profile.about_label')}
-            </Text>
-            <Input 
-              placeholder={t('profile.about_placeholder')}
-              multiline
-              numberOfLines={4}
-              value={bio}
-              onChangeText={setBio}
-              className="h-32 text-left"
-              style={{ textAlignVertical: 'top' }}
+          <View className="mb-10">
+            <FormField 
+              label={t('profile.name_label')}
+              placeholder={t('profile.name_placeholder')}
+              value={profile.name}
+              onChangeText={(text) => {
+                updateProfile({ name: text });
+                if (errors.name) setErrors(e => ({ ...e, name: undefined }));
+              }}
+              error={errors.name}
             />
-            <Text className="text-text-secondary text-[10px] text-right mt-1">
-              {bio.length} / 500
-            </Text>
+            
+            <FormField 
+              label={t('profile.headline_label')}
+              placeholder={t('profile.headline_placeholder')}
+              value={profile.headline}
+              onChangeText={(text) => {
+                updateProfile({ headline: text });
+                if (errors.headline) setErrors(e => ({ ...e, headline: undefined }));
+              }}
+              error={errors.headline}
+            />
+            
+            <FormField 
+              variant="textarea"
+              label={t('profile.about_label')}
+              placeholder={t('profile.about_placeholder')}
+              value={profile.bio}
+              onChangeText={(text) => {
+                updateProfile({ bio: text });
+                if (errors.bio) setErrors(e => ({ ...e, bio: undefined }));
+              }}
+              error={errors.bio}
+              maxLength={500}
+              showCounter
+            />
+          </View>
+          
+          <View className="mb-10">
+            <ImagePickerField 
+              label={t('profile.avatar_label')}
+              value={profile.avatar?.value}
+              isUrl={profile.avatar?.type === 'url'}
+              onChange={(value, isUrl) => {
+                if (value) {
+                  updateProfile({ avatar: { type: isUrl ? 'url' : 'embedded', value } });
+                } else {
+                  updateProfile({ avatar: undefined });
+                }
+              }}
+            />
           </View>
           
           <View className="mb-8">
-            <Text className="text-[10px] font-bold text-text-secondary tracking-widest uppercase mb-2">
-              {t('profile.avatar_label')}
-            </Text>
-            <View className="flex-row items-center">
-              <View className="w-20 h-20 bg-surface rounded items-center justify-center mr-4">
-                <User color="#666" size={32} />
-              </View>
-              <View className="flex-row gap-4">
-                <Button variant="ghost" size="sm">
-                  <Text className="text-xs text-white">{t('profile.upload_image')}</Text>
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Text className="text-xs text-white">{t('profile.use_url')}</Text>
-                </Button>
-              </View>
-            </View>
-          </View>
-          
-          <View className="mb-8">
-            <Text className="text-[10px] font-bold text-text-secondary tracking-widest uppercase mb-2">
+            <Text className="text-[10px] font-bold text-text-secondary tracking-widest uppercase mb-4">
               {t('profile.links_label')}
             </Text>
-            <View className="flex-row items-center mb-2">
-              <Code2 color="#666" size={20} className="mr-3" />
-              <Input 
-                className="flex-1 mb-0" 
-                placeholder={t('profile.github_placeholder')} 
-                value={github}
-                onChangeText={setGithub}
-              />
-            </View>
-            <View className="flex-row items-center mb-2">
-              <Briefcase color="#666" size={20} className="mr-3" />
-              <Input 
-                className="flex-1 mb-0" 
-                placeholder={t('profile.linkedin_placeholder')} 
-                value={linkedin}
-                onChangeText={setLinkedin}
-              />
-            </View>
-            <View className="flex-row items-center mb-2">
-              <Globe color="#666" size={20} className="mr-3" />
-              <Input 
-                className="flex-1 mb-0" 
-                placeholder={t('profile.website_placeholder')} 
-                value={website}
-                onChangeText={setWebsite}
-              />
-            </View>
+            
+            <FormField 
+              placeholder={t('profile.github_placeholder')} 
+              value={getSocialLink('github')}
+              onChangeText={(text) => setSocialLink('github', text)}
+              leadingIcon={<Code2 color="var(--text-secondary)" size={18} />}
+            />
+            
+            <FormField 
+              placeholder={t('profile.linkedin_placeholder')} 
+              value={getSocialLink('linkedin')}
+              onChangeText={(text) => setSocialLink('linkedin', text)}
+              leadingIcon={<Briefcase color="var(--text-secondary)" size={18} />}
+            />
+            
+            <FormField 
+              placeholder={t('profile.website_placeholder')} 
+              value={getSocialLink('website')}
+              onChangeText={(text) => setSocialLink('website', text)}
+              leadingIcon={<Globe color="var(--text-secondary)" size={18} />}
+            />
           </View>
           
         </View>
       </ScrollView>
 
-      <BottomNav onNext={handleNext} />
+      <BottomNav 
+        onNext={handleNext} 
+        nextLabel={returnTo === 'editor' ? 'Salvar e Voltar' : 'Continuar'} 
+      />
     </View>
   );
 }

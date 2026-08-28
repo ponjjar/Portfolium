@@ -16,10 +16,10 @@ export function LanguageSelector() {
   return (
     <Pressable 
       onPress={toggleLanguage}
-      className="flex-row items-center bg-[#111] rounded-full px-3 py-1.5 border border-border"
+      className="flex-row items-center bg-input-background rounded-full px-3 py-1.5 border border-border"
     >
-      <Globe color="#888" size={12} className="mr-2" />
-      <Text className="text-text-secondary text-[10px] font-bold uppercase tracking-wider">
+      <Globe color="var(--text-secondary)" size={12} className="mr-2" />
+      <Text className="text-text-secondary font-bold text-xs uppercase tracking-wider">
         {label}
       </Text>
     </Pressable>

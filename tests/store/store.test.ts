@@ -18,17 +18,28 @@ describe('Portfolio Store', () => {
   it('should initialize with default state', () => {
     const state = usePortfolioStore.getState();
     const defaultSession = PortfolioSessionSchema.parse({});
-    expect(state.session).toEqual(defaultSession);
+    
+    // Ignore timestamps for equality check
+    const stateSession = { ...state.session, metadata: { ...state.session.metadata, createdAt: '', updatedAt: '' } };
+    const expectedSession = { ...defaultSession, metadata: { ...defaultSession.metadata, createdAt: '', updatedAt: '' } };
+    
+    expect(stateSession).toEqual(expectedSession);
   });
 
   it('should update profile', () => {
+    jest.useFakeTimers();
     usePortfolioStore.getState().updateProfile({ name: 'John Doe' });
+    
     const state = usePortfolioStore.getState();
     expect(state.session.profile.name).toBe('John Doe');
-    expect(saveSession).toHaveBeenCalledWith(state.session);
+    
+    jest.advanceTimersByTime(1000);
+    expect(saveSession).toHaveBeenCalledWith(usePortfolioStore.getState().session);
+    jest.useRealTimers();
   });
 
   it('should import valid session JSON', () => {
+    jest.useFakeTimers();
     const state = usePortfolioStore.getState();
     const validJson = {
       schemaVersion: 1,
@@ -38,7 +49,10 @@ describe('Portfolio Store', () => {
     const success = state.importSession(validJson);
     expect(success).toBe(true);
     expect(usePortfolioStore.getState().session.profile.name).toBe('Alice');
+    
+    jest.advanceTimersByTime(1000);
     expect(saveSession).toHaveBeenCalled();
+    jest.useRealTimers();
   });
 
   it('should reject invalid session JSON on import', () => {

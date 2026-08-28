@@ -7,14 +7,24 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: '#080808',
-        surface: '#121212',
-        primary: '#FFFFFF',
-        text: {
-          main: '#FFFFFF',
-          secondary: '#888888',
+        background: 'var(--background)',
+        surface: 'var(--surface)',
+        'surface-elevated': 'var(--surface-elevated)',
+        primary: {
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
         },
-        border: '#222222',
+        text: {
+          DEFAULT: 'var(--text)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
+        },
+        border: {
+          DEFAULT: 'var(--border)',
+          strong: 'var(--border-strong)',
+        },
+        'input-background': 'var(--input-background)',
+        overlay: 'var(--overlay)',
       }
     },
   },

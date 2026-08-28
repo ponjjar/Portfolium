@@ -5,7 +5,7 @@ import { Stack } from 'expo-router';
 import { loadSession } from '../storage';
 import { usePortfolioStore } from '../store';
 import { View, ActivityIndicator } from 'react-native';
-import { tokens } from '../theme/tokens';
+import { ThemeProvider } from '../theme/ThemeContext';
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
@@ -24,20 +24,22 @@ export default function RootLayout() {
 
   if (!isReady) {
     return (
-      <View style={{ flex: 1, backgroundColor: tokens.colors.background, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator color={tokens.colors.primary} />
+      <View style={{ flex: 1, backgroundColor: '#101010', justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator color="#F5F5F5" />
       </View>
     );
   }
 
   return (
-    <Stack screenOptions={{ 
-      headerShown: false,
-      contentStyle: { backgroundColor: tokens.colors.background }
-    }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(wizard)" />
-      <Stack.Screen name="+not-found" />
-    </Stack>
+    <ThemeProvider>
+      <Stack screenOptions={{ 
+        headerShown: false,
+        contentStyle: { backgroundColor: 'transparent' } // Let ThemeProvider handle background
+      }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(wizard)" />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+    </ThemeProvider>
   );
 }
