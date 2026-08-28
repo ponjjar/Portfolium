@@ -1,4 +1,5 @@
 import { GitHubRepositorySummary } from './github.schemas';
+import { fetchFromGitHub, GitHubNotFoundError } from './github-client';
 
 export interface ImageCandidate {
   url: string;
@@ -74,20 +75,21 @@ function checkImageDimensions(url: string): Promise<{ width: number; height: num
  */
 export async function extractReadmeImages(repo: GitHubRepositorySummary): Promise<ImageCandidate[]> {
   try {
-    const response = await fetch(`https://api.github.com/repos/${repo.ownerLogin}/${repo.name}/readme`, {
-      headers: {
-        'Accept': 'application/vnd.github.html+json',
-        'User-Agent': 'Portfolio-Builder-App'
-      },
-      // Timeout to avoid hanging imports
-      signal: AbortSignal.timeout(5000)
-    });
+    const endpoint = `/repos/${repo.ownerLogin}/${repo.name}/readme`;
     
-    if (!response.ok) {
-      return []; // No readme or error, just return empty
+    // We expect HTML+JSON
+    let html = '';
+    try {
+      html = await fetchFromGitHub<any>(endpoint, {
+        headers: {
+          'Accept': 'application/vnd.github.html+json',
+        },
+        timeoutMs: 5000,
+      });
+    } catch (error) {
+      if (error instanceof GitHubNotFoundError) return [];
+      throw error;
     }
-    
-    const html = await response.text();
     
     // Extract all img src attributes
     // This regex looks for <img ... src="url" ... >
@@ -135,36 +137,19 @@ export async function fetchRepositoryReadme(
   signal?: AbortSignal
 ): Promise<string | null> {
   try {
-    const url = `https://api.github.com/repos/${repo.ownerLogin}/${repo.name}/readme`;
+    const endpoint = `/repos/${repo.ownerLogin}/${repo.name}/readme`;
     
-    const requestHeaders = new Headers({
-      Accept: 'application/vnd.github.v3.raw',
+    return await fetchFromGitHub<string>(endpoint, {
+      headers: {
+        'Accept': 'application/vnd.github.v3.raw',
+      },
+      signal,
+      timeoutMs: 10000,
     });
-    requestHeaders.set('User-Agent', 'Portfolio-Builder-App');
-
-    const controller = new AbortController();
-    if (signal) {
-      signal.addEventListener('abort', () => controller.abort());
-    }
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-    const response = await fetch(url, {
-      headers: requestHeaders,
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeoutId);
-
-    if (response.status === 404) {
-      return null;
-    }
-
-    if (!response.ok) {
-      return null;
-    }
-
-    return await response.text();
   } catch (error) {
+    if (error instanceof GitHubNotFoundError) {
+      return null;
+    }
     if (error instanceof Error && error.name === 'AbortError') {
       throw error;
     }

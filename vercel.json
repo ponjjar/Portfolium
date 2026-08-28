@@ -6,6 +6,10 @@
     "framework": null,
     "rewrites": [
         {
+            "source": "/api/:match*",
+            "destination": "/api/:match*"
+        },
+        {
             "source": "/:path*",
             "destination": "/"
         }

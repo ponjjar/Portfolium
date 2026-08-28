@@ -1,3 +1,4 @@
+import { fetchFromGitHub, GitHubNotFoundError } from "./github-client";
 import { GitHubRepositorySummary } from './github.schemas';
 
 // Mapping known files to technologies
@@ -30,49 +31,37 @@ const JS_DEP_TO_TECH: Record<string, string> = {
   'zod': 'Zod',
 };
 
-async function checkFileExists(owner: string, repo: string, path: string, signal?: AbortSignal): Promise<boolean> {
-  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-  const controller = new AbortController();
-  if (signal) {
-    signal.addEventListener('abort', () => controller.abort());
-  }
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
 
+async function checkFileExists(owner: string, repo: string, path: string, signal?: AbortSignal): Promise<boolean> {
+  const endpoint = `/repos/${owner}/${repo}/contents/${path}`;
   try {
-    const response = await fetch(url, {
+    // We use a small timeout and fetch metadata
+    await fetchFromGitHub(endpoint, {
       method: 'HEAD',
-      headers: { 'User-Agent': 'Portfolio-Builder-App' },
-      signal: controller.signal,
+      signal,
+      timeoutMs: 10000,
     });
-    clearTimeout(timeoutId);
-    return response.ok;
-  } catch {
-    clearTimeout(timeoutId);
+    return true;
+  } catch (error) {
+    if (error instanceof GitHubNotFoundError) return false;
+    // For other errors, assume false to continue processing
     return false;
   }
 }
 
 async function fetchPackageJson(owner: string, repo: string, signal?: AbortSignal): Promise<any | null> {
-  const url = `https://api.github.com/repos/${owner}/${repo}/contents/package.json`;
-  const controller = new AbortController();
-  if (signal) {
-    signal.addEventListener('abort', () => controller.abort());
-  }
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
-
+  const endpoint = `/repos/${owner}/${repo}/contents/package.json`;
   try {
-    const response = await fetch(url, {
+    const pkg = await fetchFromGitHub<any>(endpoint, {
       headers: {
         'Accept': 'application/vnd.github.v3.raw',
-        'User-Agent': 'Portfolio-Builder-App',
       },
-      signal: controller.signal,
+      signal,
+      timeoutMs: 10000,
     });
-    clearTimeout(timeoutId);
-    if (!response.ok) return null;
-    return await response.json();
+    // fetchFromGitHub returns raw string because of the .raw header
+    return typeof pkg === 'string' ? JSON.parse(pkg) : pkg;
   } catch {
-    clearTimeout(timeoutId);
     return null;
   }
 }
