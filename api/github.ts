@@ -36,9 +36,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const url = `https://api.github.com${endpoint}`;
 
   try {
+    const clientAccept = req.headers['accept'] || req.headers['Accept'];
+    const acceptHeader = typeof clientAccept === 'string' && clientAccept.includes('application/vnd.github')
+      ? clientAccept
+      : 'application/vnd.github.v3+json';
+
     const ghResponse = await fetch(url, {
       headers: {
-        'Accept': 'application/vnd.github.v3+json',
+        'Accept': acceptHeader,
         'User-Agent': 'Portfolio-Builder-App',
         'Authorization': `Bearer ${apiKey}`,
       }

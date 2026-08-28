@@ -49,8 +49,6 @@ function isBadgeOrTracking(url: string): boolean {
 
 /**
  * Validates dimensions by loading the image in the DOM (Web only implementation).
- * React Native could use Image.getSize but since Portfolio Builder is running primarily in Web,
- * we use the Image object for quick intrinsic dimension checks.
  */
 function checkImageDimensions(url: string): Promise<{ width: number; height: number } | null> {
   return new Promise((resolve) => {
@@ -68,6 +66,94 @@ function checkImageDimensions(url: string): Promise<{ width: number; height: num
     };
     img.src = url;
   });
+}
+
+/**
+ * Decodes a base64 string handling UTF-8 characters safely in both browser and node/react-native.
+ */
+export function decodeBase64Utf8(base64Str: string): string {
+  try {
+    const clean = base64Str.replace(/\s/g, '');
+    if (typeof atob === 'function') {
+      const binary = atob(clean);
+      const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+      return new TextDecoder('utf-8').decode(bytes);
+    }
+    if (typeof Buffer !== 'undefined') {
+      return Buffer.from(clean, 'base64').toString('utf-8');
+    }
+    return '';
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Sanitizes markdown content for AI consumption:
+ * 1. Strips base64/data URI inline images
+ * 2. Strips shields/badges and tracking URLs
+ * 3. Strips HTML comments and large embedded scripts/SVGs
+ * 4. Truncates cleanly to maxChars (default 5000 chars ~ 1200 tokens)
+ */
+export function sanitizeReadmeForAi(rawReadme: string, maxChars = 5000): string {
+  if (!rawReadme || typeof rawReadme !== 'string') return '';
+
+  let text = rawReadme;
+
+  // 1. Remove base64 data URIs (huge memory footprint)
+  text = text.replace(/data:image\/[^;]+;base64,[^\s"')]+/gi, '[Image]');
+
+  // 2. Remove HTML comments
+  text = text.replace(/<!--[\s\S]*?-->/g, '');
+
+  // 3. Remove SVG embeds
+  text = text.replace(/<svg[\s\S]*?<\/svg>/gi, '');
+
+  // 4. Remove badge/shield links like [![...](...)](...) or <a><img></a>
+  text = text.replace(/\[!\[.*?\]\(.*?\)\]\(.*?\)/gi, '');
+  text = text.replace(/<a\b[^>]*><img\b[^>]*><\/a>/gi, '');
+
+  // 5. Clean up redundant whitespace
+  text = text.replace(/\n{3,}/g, '\n\n').trim();
+
+  // 6. Truncate cleanly up to maxChars
+  if (text.length > maxChars) {
+    text = text.substring(0, maxChars) + '\n\n... (truncated for AI processing)';
+  }
+
+  return text;
+}
+
+/**
+ * Extracts a concise clean text summary from README to serve as an initial description.
+ */
+export function extractCleanSummaryFromReadme(rawReadme: string, maxChars = 300): string {
+  if (!rawReadme) return '';
+  const sanitized = sanitizeReadmeForAi(rawReadme, 3000);
+
+  const lines = sanitized.split('\n');
+  const paragraphLines: string[] = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      if (paragraphLines.length > 0) break;
+      continue;
+    }
+    // Skip Markdown headers, images, badges, code blocks
+    if (trimmed.startsWith('#') || trimmed.startsWith('!') || trimmed.startsWith('```') || trimmed.startsWith('<')) {
+      continue;
+    }
+    paragraphLines.push(trimmed);
+  }
+
+  let summary = paragraphLines.join(' ').trim();
+  if (!summary) return '';
+
+  if (summary.length > maxChars) {
+    summary = summary.substring(0, maxChars - 3) + '...';
+  }
+  return summary;
 }
 
 /**
@@ -92,7 +178,6 @@ export async function extractReadmeImages(repo: GitHubRepositorySummary): Promis
     }
     
     // Extract all img src attributes
-    // This regex looks for <img ... src="url" ... >
     const imgRegex = /<img[^>]+src=["']([^"']+)["']/gi;
     const candidates = new Set<string>();
     
@@ -106,11 +191,9 @@ export async function extractReadmeImages(repo: GitHubRepositorySummary): Promis
     
     const validCandidates: ImageCandidate[] = [];
     
-    // Process candidates and check dimensions
     const promises = Array.from(candidates).map(async (url) => {
       try {
         const dimensions = await checkImageDimensions(url);
-        // Exclude if it failed to load or is smaller than 100x100
         if (dimensions && dimensions.width >= 100 && dimensions.height >= 100) {
           validCandidates.push({
             url,
@@ -118,7 +201,7 @@ export async function extractReadmeImages(repo: GitHubRepositorySummary): Promis
             height: dimensions.height
           });
         }
-      } catch (e) {
+      } catch {
         // Ignore broken images
       }
     });
@@ -132,6 +215,9 @@ export async function extractReadmeImages(repo: GitHubRepositorySummary): Promis
   }
 }
 
+/**
+ * Fetches and decodes the repository README content as raw Markdown text.
+ */
 export async function fetchRepositoryReadme(
   repo: GitHubRepositorySummary,
   signal?: AbortSignal
@@ -139,13 +225,43 @@ export async function fetchRepositoryReadme(
   try {
     const endpoint = `/repos/${repo.ownerLogin}/${repo.name}/readme`;
     
-    return await fetchFromGitHub<string>(endpoint, {
+    const rawResponse = await fetchFromGitHub<any>(endpoint, {
       headers: {
         'Accept': 'application/vnd.github.v3.raw',
       },
       signal,
       timeoutMs: 10000,
     });
+
+    if (!rawResponse) return null;
+
+    // Case 1: Text format returned directly
+    if (typeof rawResponse === 'string') {
+      // Check if it's stringified JSON from fallback/proxy
+      if (rawResponse.trim().startsWith('{') && rawResponse.includes('"content":')) {
+        try {
+          const parsed = JSON.parse(rawResponse);
+          if (parsed.content && parsed.encoding === 'base64') {
+            return decodeBase64Utf8(parsed.content);
+          }
+        } catch {
+          // Continue with raw text
+        }
+      }
+      return rawResponse;
+    }
+
+    // Case 2: Object from GitHub JSON API with base64 content
+    if (typeof rawResponse === 'object') {
+      if (rawResponse.content && rawResponse.encoding === 'base64') {
+        return decodeBase64Utf8(rawResponse.content);
+      }
+      if (typeof rawResponse.content === 'string') {
+        return rawResponse.content;
+      }
+    }
+
+    return null;
   } catch (error) {
     if (error instanceof GitHubNotFoundError) {
       return null;
