@@ -94,15 +94,16 @@ export default function EditorScreen() {
             <View className="flex-row gap-2 mb-6">
               <TouchableOpacity 
                 onPress={() => updateTheme({ mode: 'light' })}
-                className={`flex-1 py-2 rounded items-center border ${session.portfolio.theme.mode === 'light' ? 'border-white bg-white' : 'border-border bg-transparent'}`}
+                className={`flex-1 py-2 rounded items-center border ${session.portfolio.theme.mode === 'light' ? 'border-primary bg-primary' : 'border-border bg-transparent'}`}
               >
                 <Text className={session.portfolio.theme.mode === 'light' ? 'text-primary-foreground font-bold' : 'text-text'}>Claro</Text>
               </TouchableOpacity>
+              
               <TouchableOpacity 
                 onPress={() => updateTheme({ mode: 'dark' })}
                 className={`flex-1 py-2 rounded items-center border ${session.portfolio.theme.mode === 'dark' ? 'border-primary bg-primary' : 'border-border bg-transparent'}`}
               >
-                <Text className={session.portfolio.theme.mode === 'dark' ? 'text-text font-bold' : 'text-text-secondary'}>Escuro</Text>
+                <Text className={session.portfolio.theme.mode === 'dark' ? 'text-primary-foreground font-bold' : 'text-text'}>Escuro</Text>
               </TouchableOpacity>
             </View>
             

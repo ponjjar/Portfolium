@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text, Modal as RNModal, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown, ZoomIn, ZoomOut } from 'react-native-reanimated';
 import { X } from 'lucide-react-native';
+import { useTheme } from '@/theme/ThemeContext';
 
 export interface ModalProps {
   visible: boolean;
@@ -22,6 +23,7 @@ export function Modal({
   footer,
   hideCloseButton = false 
 }: ModalProps) {
+  const { theme } = useTheme();
   
   const getWidthClass = () => {
     switch (size) {
@@ -44,7 +46,7 @@ export function Modal({
       <Animated.View 
         entering={FadeIn.duration(250)}
         exiting={FadeOut.duration(200)}
-        className="flex-1 bg-[#000000cc] justify-center items-center p-4"
+        className={`flex-1 bg-[#000000cc] justify-center items-center p-4 theme-${theme}`}
       >
         {/* Modal Container */}
         <Animated.View 
