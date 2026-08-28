@@ -1,12 +1,16 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import renderer, { act } from 'react-test-renderer';
 import { Button } from '@/components/ui/button';
 
 describe('Button Component', () => {
   it('renders correctly', () => {
-    const { getByText, toJSON } = render(<Button>Click Me!</Button>);
+    let tree: renderer.ReactTestRenderer;
+    act(() => {
+      tree = renderer.create(<Button>Click Me!</Button>);
+    });
 
-    expect(getByText('Click Me!')).toBeTruthy();
-    expect(toJSON()).toMatchSnapshot();
+    const textNode = tree!.root.findByProps({ children: 'Click Me!' });
+    expect(textNode).toBeTruthy();
+    expect(tree!.toJSON()).toMatchSnapshot();
   });
 });
