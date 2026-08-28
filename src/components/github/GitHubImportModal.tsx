@@ -1,15 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { FormField } from '@/components/ui/form-field';
 import { Modal } from '@/components/ui/modal';
-import { GitHubNotFoundError, GitHubRateLimitError, normalizeGitHubUsername } from '@/services/github/github-client';
+import { GitHubNotFoundError, normalizeGitHubUsername } from '@/services/github/github-client';
 import { fetchAllPublicRepositories, fetchGitHubUser } from '@/services/github/github-repositories';
 import { extractReadmeImages, ImageCandidate } from '@/services/github/github-readme';
 import { GitHubRepositorySummary } from '@/services/github/github.schemas';
 import { usePortfolioStore } from '@/store';
 import { AlertCircle, CheckCircle2, Circle, Code2, Search, Edit2, ImageIcon } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View, Image } from 'react-native';
 import { ProjectImageSelectionModal } from '../modals/ProjectImageSelectionModal';
 
 interface GitHubImportModalProps {
@@ -19,7 +18,6 @@ interface GitHubImportModalProps {
 }
 
 export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportModalProps) {
-  const { t } = useTranslation();
   const existingProjects = usePortfolioStore((s) => s.session.projects);
   const socialLinks = usePortfolioStore((s) => s.session.socialLinks);
   const [step, setStep] = useState<'input' | 'loading' | 'select'>('input');
@@ -30,7 +28,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'sources' | 'forks' | 'archived'>('all');
   const [error, setError] = useState<string | null>(null);
-  const [, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Tracks the image candidates and selected index for each repo
   const [repoImages, setRepoImages] = useState<Record<number, { status: 'loading' | 'done', candidates: ImageCandidate[], selectedCandidateIndex: number | null }>>({});
@@ -40,10 +38,13 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
 
   useEffect(() => {
     if (visible) {
+      // Avoid setting state unconditionally here if it causes loops, but we can set it via a timeout or before opening
       const githubLink = socialLinks.find(link => link.type === 'github');
       if (githubLink) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setUsernameInput(normalizeGitHubUsername(githubLink.url));
       } else {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setUsernameInput('');
       }
 
@@ -67,13 +68,10 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
       setRepositories(repos);
       setStep('select');
     } catch (err: any) {
-      const isDev = process.env.NODE_ENV === 'development' || (typeof __DEV__ !== 'undefined' && __DEV__);
       if (err instanceof GitHubNotFoundError) {
-        setError(t('github.user_not_found'));
-      } else if (err instanceof GitHubRateLimitError || err.name === 'GitHubRateLimitError') {
-        setError(t(isDev ? 'github.rate_limit_exceeded_dev' : 'github.rate_limit_exceeded'));
+        setError('Não encontramos esse usuário no GitHub.');
       } else {
-        setError(t('github.fetch_error'));
+        setError('Não foi possível acessar o GitHub. Verifique sua conexão e tente novamente.');
       }
     } finally {
       setIsLoading(false);
@@ -82,13 +80,14 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
 
   const handleConfirmImport = () => {
     const toImport = repositories.filter(r => selectedIds.has(r.id)).map(r => {
+      // Attach selected image to the repo summary
       const imgState = repoImages[r.id];
       if (imgState && imgState.status === 'done' && imgState.selectedCandidateIndex !== null && imgState.selectedCandidateIndex >= 0) {
         const candidate = imgState.candidates[imgState.selectedCandidateIndex];
         return {
           ...r,
           selectedImage: {
-            type: 'url' as const,
+            type: 'url',
             value: candidate.url,
             source: 'github-readme',
             width: candidate.width,
@@ -96,6 +95,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
           }
         };
       } else if (imgState && imgState.status === 'done' && r.selectedImage) {
+        // manual image might already be attached to r if edited
         return r;
       }
       return r;
@@ -104,7 +104,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
   };
 
   const extractImagesForRepo = async (repo: GitHubRepositorySummary) => {
-    if (repoImages[repo.id]) return;
+    if (repoImages[repo.id]) return; // Already loading or done
     
     setRepoImages(prev => ({ ...prev, [repo.id]: { status: 'loading', candidates: [], selectedCandidateIndex: null } }));
     
@@ -154,11 +154,10 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
 
   const renderFooter = () => {
     if (step !== 'select') return null;
-    const isSingle = selectedIds.size === 1;
     return (
       <View className="flex-1 flex-row items-center justify-between w-full">
         <Text className="text-text-secondary text-sm">
-          {t(isSingle ? 'github.selected_count' : 'github.selected_count_plural', { count: selectedIds.size })}
+          {selectedIds.size} projeto{selectedIds.size !== 1 ? 's' : ''} selecionado{selectedIds.size !== 1 ? 's' : ''}
         </Text>
         <Button
           onPress={handleConfirmImport}
@@ -166,7 +165,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
           className="px-6"
         >
           <Text className="text-primary-foreground font-bold">
-            {t(isSingle ? 'github.import_btn' : 'github.import_btn_plural', { count: selectedIds.size })}
+            Importar projeto{selectedIds.size !== 1 ? 's' : ''}
           </Text>
         </Button>
       </View>
@@ -178,18 +177,18 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
 
   return (
     <>
-      <Modal visible={visible} onClose={onClose} title={t('github.modal_title')} size="lg" footer={renderFooter()}>
+      <Modal visible={visible} onClose={onClose} title="Importar projetos do GitHub" size="lg" footer={renderFooter()}>
         <View className="flex-1">
           {step === 'input' && (
             <View className="flex-1 py-6 justify-center">
               <View className="mb-6 items-center">
                 <Code2 color="var(--text)" size={48} className="mb-4" />
-                <Text className="text-text font-bold text-xl mb-2 text-center">{t('github.confirm_user')}</Text>
+                <Text className="text-text font-bold text-xl mb-2 text-center">Confirme o usuário do GitHub</Text>
               </View>
 
               <FormField
-                label={t('github.username_label')}
-                placeholder={t('github.username_placeholder')}
+                label="Username ou URL do perfil"
+                placeholder="ex: github.com/seu-usuario ou apenas 'seu-usuario'"
                 value={usernameInput}
                 onChangeText={setUsernameInput}
                 onSubmitEditing={handleSearch}
@@ -206,7 +205,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
               )}
 
               <Button onPress={handleSearch} disabled={!usernameInput.trim()}>
-                <Text className="text-primary-foreground font-bold">{t('github.search_btn')}</Text>
+                <Text className="text-primary-foreground font-bold">Buscar repositórios</Text>
               </Button>
             </View>
           )}
@@ -214,7 +213,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
           {step === 'loading' && (
             <View className="flex-1 p-6 items-center justify-center">
               <ActivityIndicator size="large" color="var(--text)" className="mb-4" />
-              <Text className="text-text text-lg font-bold">{t('github.searching')}</Text>
+              <Text className="text-text text-lg font-bold">Buscando repositórios...</Text>
             </View>
           )}
 
@@ -222,7 +221,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
             <View className="flex-1">
               <View className="pb-4 border-b border-border">
                 <FormField
-                  placeholder={t('github.filter_placeholder')}
+                  placeholder="Filtrar projetos..."
                   value={searchQuery}
                   onChangeText={setSearchQuery}
                   autoCapitalize="none"
@@ -253,18 +252,18 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
                   ) : (
                     <Circle color="#666" size={20} className="mr-2" />
                   )}
-                  <Text className="text-text font-bold">{t('github.choose_projects', { count: filteredRepos.length })}</Text>
+                  <Text className="text-text font-bold">Escolha os projetos que deseja importar ({filteredRepos.length})</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => setSelectedIds(new Set())}>
-                  <Text className="text-text-secondary">{t('github.clear')}</Text>
+                  <Text className="text-text-secondary">Clear</Text>
                 </TouchableOpacity>
               </View>
 
               <View className="pt-4">
                 {filteredRepos.length === 0 ? (
                   <View className="py-10 items-center justify-center">
-                    <Text className="text-text-secondary text-center">{t('github.no_repos_found')}</Text>
+                    <Text className="text-text-secondary text-center">Nenhum repositório encontrado com esses filtros.</Text>
                   </View>
                 ) : (
                   filteredRepos.map(repo => {
@@ -318,7 +317,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
                             <Text className="text-text font-bold text-base mr-2">{repo.name}</Text>
                             {isAlreadyImported && (
                               <View className="bg-green-500/20 px-1.5 py-0.5 rounded mr-2">
-                                <Text className="text-green-500 text-[9px] font-bold">{t('github.imported_badge')}</Text>
+                                <Text className="text-green-500 text-[9px] font-bold">IMPORTED</Text>
                               </View>
                             )}
                             {repo.isFork && (
@@ -338,7 +337,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
                               <Text className="text-xs text-blue-400">{repo.language}</Text>
                             )}
                             <Text className="text-[10px] text-text-secondary" numberOfLines={1} style={{ maxWidth: 200 }}>
-                              {repo.description || t('github.no_description')}
+                              {repo.description || "Sem descrição"}
                             </Text>
                           </View>
                         </View>
@@ -368,12 +367,14 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
           projectName={editingRepo.name}
           candidates={editingRepoImageState.candidates}
           onConfirm={(image) => {
+            // Update the repo manually selected image or candidate index
             if (image && image.source === 'manual') {
               const updatedRepo = { ...editingRepo, selectedImage: image };
               
               setRepoImages(prev => ({
                 ...prev,
                 [editingRepo.id]: {
+                  status: 'done',
                   candidates: prev[editingRepo.id]?.candidates || [],
                   selectedCandidateIndex: null
                 }
@@ -386,16 +387,19 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
               setRepoImages(prev => ({
                 ...prev,
                 [editingRepo.id]: {
-                  ...prev[editingRepo.id],
+                  status: 'done',
+                  candidates: prev[editingRepo.id]?.candidates || [],
                   selectedCandidateIndex: idx >= 0 ? idx : null
                 }
               }));
-              editingRepo.selectedImage = undefined;
+              const updatedRepo = { ...editingRepo, selectedImage: undefined };
+              setRepositories(repos => repos.map(r => r.id === updatedRepo.id ? updatedRepo : r));
             } else {
               setRepoImages(prev => ({
                 ...prev,
                 [editingRepo.id]: {
-                  ...prev[editingRepo.id],
+                  status: 'done',
+                  candidates: prev[editingRepo.id]?.candidates || [],
                   selectedCandidateIndex: null
                 }
               }));

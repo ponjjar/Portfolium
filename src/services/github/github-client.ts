@@ -45,11 +45,13 @@ export async function fetchFromGitHub<T>(endpoint: string, options: FetchOptions
   if (!headers.has('Accept')) {
     headers.set('Accept', 'application/vnd.github.v3+json');
   }
+  
   // Injetar token opcional de autenticação se disponível para elevar limite para 5000 reqs/h
-  const authToken = process.env.EXPO_PUBLIC_GITHUB_TOKEN || process.env.readRepoGHKey;
+  const authToken = process.env.GITHUB_TOKEN || process.env.EXPO_PUBLIC_GITHUB_TOKEN || process.env.readRepoGHKey;
   if (authToken && !headers.has('Authorization')) {
     headers.set('Authorization', `Bearer ${authToken}`);
   }
+  
   // Explicitly adding User-Agent as it's required by GitHub API, though browsers might override it
   headers.set('User-Agent', 'Portfolio-Builder-App');
 
@@ -94,7 +96,13 @@ export async function fetchFromGitHub<T>(endpoint: string, options: FetchOptions
       }
     }
 
-    return await response.json() as T;
+    if (typeof response.json === 'function') {
+      return await response.json() as T;
+    }
+    if (typeof response.text === 'function') {
+      return await response.text() as unknown as T;
+    }
+    return null as unknown as T;
   } catch (error) {
     clearTimeout(timeoutId);
     if (error instanceof Error && error.name === 'AbortError') {

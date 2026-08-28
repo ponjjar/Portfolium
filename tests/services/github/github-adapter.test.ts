@@ -48,7 +48,7 @@ describe('GitHub Adapter', () => {
         id: 456,
         name: 'empty-desc-repo',
         fullName: 'user/empty-desc-repo',
-        description: null,
+        description: '',
         htmlUrl: 'https://github.com/user/empty-desc-repo',
         homepage: null,
         language: 'Python',
