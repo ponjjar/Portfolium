@@ -134,7 +134,7 @@ export default function EditorScreen() {
 
             <TouchableOpacity 
               onPress={() => handleEdit('profile')}
-              className="flex-row items-center bg-[#1a1a1a] p-3 rounded mb-2 border border-border"
+              className="flex-row items-center bg-surface hover:bg-surface-elevated p-3 rounded mb-2 border border-border"
             >
               <User color="var(--text)" size={16} className="mr-3" />
               <Text className="text-text flex-1">Editar Perfil</Text>
@@ -142,7 +142,7 @@ export default function EditorScreen() {
 
             <TouchableOpacity 
               onPress={() => handleEdit('projects')}
-              className="flex-row items-center bg-[#1a1a1a] p-3 rounded mb-2 border border-border"
+              className="flex-row items-center bg-surface hover:bg-surface-elevated p-3 rounded mb-2 border border-border"
             >
               <Briefcase color="var(--text)" size={16} className="mr-3" />
               <Text className="text-text flex-1">Editar Projetos</Text>
@@ -150,7 +150,7 @@ export default function EditorScreen() {
 
             <TouchableOpacity 
               onPress={() => handleEdit('skills')}
-              className="flex-row items-center bg-[#1a1a1a] p-3 rounded mb-2 border border-border"
+              className="flex-row items-center bg-surface hover:bg-surface-elevated p-3 rounded mb-2 border border-border"
             >
               <Code color="var(--text)" size={16} className="mr-3" />
               <Text className="text-text flex-1">Editar Tecnologias</Text>
@@ -160,10 +160,8 @@ export default function EditorScreen() {
 
         <View className="p-6 border-t border-border">
           <Button onPress={() => setIsExportVisible(true)} className="w-full">
-            <View className="flex-row items-center justify-center w-full">
-              <Download color="#000" size={16} className="mr-2" />
-              <Text className="text-black font-bold">Exportar Portfólio</Text>
-            </View>
+            <Download color="var(--primary-foreground)" size={16} />
+            Exportar Portfólio
           </Button>
         </View>
       </View>
@@ -176,13 +174,13 @@ export default function EditorScreen() {
           <View className="flex-row bg-surface-elevated p-1 rounded-lg">
             <TouchableOpacity 
               onPress={() => setViewport('desktop')}
-              className={`p-2 rounded ${viewport === 'desktop' ? 'bg-[#333]' : 'bg-transparent'}`}
+              className={`p-2 rounded ${viewport === 'desktop' ? 'bg-border' : 'bg-transparent'}`}
             >
               <Laptop color={viewport === 'desktop' ? 'var(--text)' : 'var(--text-secondary)'} size={18} />
             </TouchableOpacity>
             <TouchableOpacity 
               onPress={() => setViewport('mobile')}
-              className={`p-2 rounded ${viewport === 'mobile' ? 'bg-[#333]' : 'bg-transparent'}`}
+              className={`p-2 rounded ${viewport === 'mobile' ? 'bg-border' : 'bg-transparent'}`}
             >
               <Smartphone color={viewport === 'mobile' ? 'var(--text)' : 'var(--text-secondary)'} size={18} />
             </TouchableOpacity>
@@ -192,7 +190,7 @@ export default function EditorScreen() {
         {/* Live Preview */}
         <View className="flex-1 items-center justify-center p-4">
           <View 
-            className="bg-white border border-border shadow-lg overflow-hidden transition-all duration-300 ease-in-out"
+            className="bg-background border border-border shadow-lg overflow-hidden transition-all duration-300 ease-in-out"
             style={{ 
               width: viewport === 'mobile' ? 375 : '100%', 
               height: '100%',
@@ -204,7 +202,7 @@ export default function EditorScreen() {
               <iframe 
                 srcDoc={htmlContent} 
                 style={{ width: '100%', height: '100%', border: 'none' }} 
-                sandbox="allow-scripts"
+                sandbox="allow-scripts allow-same-origin"
               />
             ) : (
               <WebView 

@@ -323,6 +323,17 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
   <style>
     ${css}
   </style>
+  <script>
+    // Restore scroll position
+    document.addEventListener("DOMContentLoaded", () => {
+      const scrollY = sessionStorage.getItem("portfolio_preview_scroll");
+      if (scrollY) window.scrollTo(0, parseInt(scrollY));
+    });
+    // Save scroll position
+    window.addEventListener("scroll", () => {
+      sessionStorage.setItem("portfolio_preview_scroll", window.scrollY);
+    });
+  </script>
 </head>
 <body>
   <main class="container">

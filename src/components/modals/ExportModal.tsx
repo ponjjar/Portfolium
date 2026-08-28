@@ -26,7 +26,7 @@ export function ExportModal({
       visible={visible}
       onClose={onClose}
       title="Pronto para exportar"
-      size="md"
+      size="sm"
     >
       <View className="py-2">
         <Text className="text-text-secondary text-sm mb-6">

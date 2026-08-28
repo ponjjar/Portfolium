@@ -4,15 +4,21 @@ export const PortfolioImageSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('url'),
     value: z.string(),
+    source: z.string().optional(),
+    width: z.number().optional(),
+    height: z.number().optional(),
   }),
   z.object({
     type: z.literal('embedded'),
     value: z.string(), // base64 data URL
+    source: z.string().optional(),
+    width: z.number().optional(),
+    height: z.number().optional(),
   }),
 ]);
 
 export const SocialLinkSchema = z.object({
-  type: z.enum(['github', 'linkedin', 'website', 'twitter', 'other']),
+  type: z.string(),
   label: z.string(),
   url: z.string(),
 });
@@ -138,6 +144,7 @@ export const PortfolioSessionSchema = z.object({
     bio: '',
   }),
   socialLinks: z.array(SocialLinkSchema).default([]),
+  customSkillCategories: z.array(z.string()).default([]),
   projects: z.array(ProjectSchema).default([]),
   skills: z.array(SkillSchema).default([]),
   skillGroups: z.array(SkillGroupSchema).default([]),

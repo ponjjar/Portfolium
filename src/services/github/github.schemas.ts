@@ -46,6 +46,7 @@ export interface GitHubRepositorySummary {
   updatedAt: string;
   defaultBranch: string;
   ownerLogin: string;
+  selectedImage?: any; // PortfolioImage
 }
 
 export interface GitHubRepoDetails {

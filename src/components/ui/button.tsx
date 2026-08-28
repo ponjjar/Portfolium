@@ -12,7 +12,7 @@ interface ButtonProps extends PressableProps {
 export function Button({ variant = 'default', size = 'default', children, isLoading, className, disabled, ...props }: ButtonProps) {
   
   const getBaseClasses = () => {
-    let classes = 'flex-row items-center justify-center rounded-md ';
+    let classes = 'flex-row items-center justify-center flex-nowrap gap-2 rounded-md ';
     
     // Variants
     if (variant === 'default') classes += 'bg-primary hover:bg-primary/90 active:bg-primary/80 ';
@@ -30,7 +30,7 @@ export function Button({ variant = 'default', size = 'default', children, isLoad
   };
 
   const getTextClasses = () => {
-    let classes = 'font-medium ';
+    let classes = 'font-medium shrink whitespace-nowrap ';
     if (variant === 'default') classes += 'text-primary-foreground ';
     else classes += 'text-text ';
     
@@ -47,11 +47,18 @@ export function Button({ variant = 'default', size = 'default', children, isLoad
       {...props}
     >
       {isLoading && (
-        <Loader2 className="w-5 h-5 mr-2 text-current animate-spin" />
+        <Loader2 className="w-5 h-5 text-current animate-spin" />
       )}
-      <Text className={getTextClasses()}>
-        {children}
-      </Text>
+      {React.Children.map(children, (child) => {
+        if (typeof child === 'string' || typeof child === 'number') {
+          return (
+            <Text numberOfLines={1} className={getTextClasses()}>
+              {child}
+            </Text>
+          );
+        }
+        return child;
+      })}
     </Pressable>
   );
 }

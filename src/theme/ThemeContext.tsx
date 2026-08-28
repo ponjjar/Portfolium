@@ -8,6 +8,7 @@ import Animated, {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
+import { AmbientBackground } from '@/components/ui/ambient-background';
 
 export type ThemeId = 'light' | 'lava' | 'dark' | 'amoled';
 
@@ -137,7 +138,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ThemeContext.Provider value={{ theme, setTheme, isTransitioning }}>
       <View className={`flex-1 theme-${theme}`}>
-        {children}
+        <AmbientBackground theme={theme} />
         
         {nextTheme && (
           <View pointerEvents="none" style={StyleSheet.absoluteFill}>
@@ -154,6 +155,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
             />
           </View>
         )}
+        
+        <View className="flex-1 z-10" style={{ elevation: 1, zIndex: 10 }}>
+          {children}
+        </View>
       </View>
     </ThemeContext.Provider>
   );

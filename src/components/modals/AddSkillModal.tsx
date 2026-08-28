@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { Modal } from '@/components/ui/modal';
 import { FormField } from '@/components/ui/form-field';
 import { Button } from '@/components/ui/button';
-import { Check } from 'lucide-react-native';
+import { Check, Plus, X } from 'lucide-react-native';
+import { usePortfolioStore } from '@/store';
 
 interface AddSkillModalProps {
   visible: boolean;
@@ -12,7 +13,7 @@ interface AddSkillModalProps {
   existingSkills: string[];
 }
 
-const CATEGORIES = [
+const DEFAULT_CATEGORIES = [
   'Frontend',
   'Backend',
   'Mobile',
@@ -25,9 +26,25 @@ const CATEGORIES = [
 ];
 
 export function AddSkillModal({ visible, onClose, onAdd, existingSkills }: AddSkillModalProps) {
+  const customCategories = usePortfolioStore(s => s.session.customSkillCategories);
+  const addCustomSkillCategory = usePortfolioStore(s => s.addCustomSkillCategory);
+
+  const allCategories = useMemo(() => {
+    const list = [...DEFAULT_CATEGORIES];
+    for (const customCat of customCategories) {
+      if (!list.some(c => c.toLowerCase() === customCat.toLowerCase())) {
+        list.push(customCat);
+      }
+    }
+    return list;
+  }, [customCategories]);
+
   const [name, setName] = useState('');
-  const [category, setCategory] = useState(CATEGORIES[0]);
+  const [category, setCategory] = useState(allCategories[0]);
   const [error, setError] = useState<string | null>(null);
+
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
 
   const handleAdd = () => {
     const trimmedName = name.trim();
@@ -45,16 +62,34 @@ export function AddSkillModal({ visible, onClose, onAdd, existingSkills }: AddSk
 
     onAdd(trimmedName, category);
     setName('');
-    setCategory(CATEGORIES[0]);
+    setCategory(allCategories[0]);
     setError(null);
+    setIsAddingCategory(false);
     onClose();
   };
 
   const handleClose = () => {
     setName('');
-    setCategory(CATEGORIES[0]);
+    setCategory(allCategories[0]);
     setError(null);
+    setIsAddingCategory(false);
     onClose();
+  };
+
+  const handleConfirmNewCategory = () => {
+    const trimmed = newCategoryName.trim();
+    if (trimmed) {
+      addCustomSkillCategory(trimmed);
+      
+      // Look up exactly how it was saved (could be case variation)
+      const exactMatch = [...DEFAULT_CATEGORIES, ...customCategories, trimmed].find(
+        c => c.toLowerCase() === trimmed.toLowerCase()
+      );
+      
+      setCategory(exactMatch || trimmed);
+    }
+    setIsAddingCategory(false);
+    setNewCategoryName('');
   };
 
   return (
@@ -62,7 +97,7 @@ export function AddSkillModal({ visible, onClose, onAdd, existingSkills }: AddSk
       visible={visible}
       onClose={handleClose}
       title="Adicionar tecnologia"
-      size="sm"
+      size="md"
       footer={
         <>
           <Button variant="ghost" className="flex-1 mr-2" onPress={handleClose}>
@@ -92,23 +127,58 @@ export function AddSkillModal({ visible, onClose, onAdd, existingSkills }: AddSk
           Categoria
         </Text>
         
-        <View className="flex-row flex-wrap gap-2">
-          {CATEGORIES.map(cat => (
+        <View className="flex-row flex-wrap gap-2 items-center">
+          {allCategories.map(cat => (
             <TouchableOpacity
               key={cat}
-              onPress={() => setCategory(cat)}
-              className={`px-4 py-2 rounded-full border ${
+              onPress={() => {
+                setCategory(cat);
+                setIsAddingCategory(false);
+              }}
+              className={`flex-row items-center flex-nowrap px-4 py-2 rounded-full border ${
                 category === cat 
                   ? 'bg-primary border-primary' 
                   : 'bg-transparent border-border'
               }`}
             >
-              <Text className={`${category === cat ? 'text-primary-foreground font-bold' : 'text-text-secondary'} text-xs mr-1`}>
+              <Text numberOfLines={1} className={`whitespace-nowrap ${category === cat ? 'text-primary-foreground font-bold' : 'text-text-secondary'} text-xs mr-1`}>
                 {cat}
               </Text>
               {category === cat && <Check color="var(--primary-foreground)" size={12} />}
             </TouchableOpacity>
           ))}
+
+          {isAddingCategory ? (
+            <View className="flex-row items-center bg-surface-elevated rounded-full border border-primary pl-4 pr-1 py-1">
+              <TextInput
+                value={newCategoryName}
+                onChangeText={setNewCategoryName}
+                placeholder="Nome..."
+                placeholderTextColor="var(--text-muted)"
+                className="text-text text-xs mr-2 py-1 outline-none"
+                autoFocus
+                onSubmitEditing={handleConfirmNewCategory}
+                style={{ minWidth: 80 }}
+              />
+              <TouchableOpacity onPress={handleConfirmNewCategory} className="p-1 bg-primary rounded-full">
+                <Check color="var(--primary-foreground)" size={12} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setIsAddingCategory(false)} className="p-1 ml-1">
+                <X color="var(--text-secondary)" size={12} />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                setIsAddingCategory(true);
+                setNewCategoryName('');
+              }}
+              className="flex-row items-center flex-nowrap px-4 py-2 rounded-full border border-dashed border-border hover:bg-surface-elevated transition-colors"
+            >
+              <Plus color="var(--text-secondary)" size={12} className="mr-1.5" />
+              <Text className="text-text-secondary font-bold text-xs">Nova categoria</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </Modal>

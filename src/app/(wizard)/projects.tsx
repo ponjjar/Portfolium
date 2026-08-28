@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, ScrollView, Text, TouchableOpacity } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { WizardHeader } from "@/components/layout/wizard-header";
+import { WizardScreen } from "@/components/layout/wizard-screen";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import {
   getNextWizardStep,
@@ -112,16 +112,14 @@ export default function ProjectsScreen() {
   };
 
   return (
-    <View className="flex-1 bg-background">
-      <WizardHeader
+    <>
+      <WizardScreen
         step={2}
         title={t("projects.title")}
         subtitle={t("projects.subtitle")}
-      />
-
-      <ScrollView className="flex-1 px-6">
-        <View className="max-w-3xl w-full self-center pb-8">
-          <View className="flex-row gap-4 mb-10">
+        bottomNav={<BottomNav onNext={handleNext} onBack={handleBack} nextLabel={returnTo === "editor" ? "Salvar e Voltar" : "Continuar"} />}
+      >
+        <View className="flex-row gap-4 mb-10">
             <Button
               variant="default"
               onPress={() => setIsImportModalVisible(true)}
@@ -265,20 +263,13 @@ export default function ProjectsScreen() {
               ))}
             </View>
           )}
-        </View>
 
         {errorMsg && (
           <View className="mb-6 bg-[#ef444420] border border-[#ef444440] p-4 rounded-lg flex-row items-center">
             <Text className="text-red-400 flex-1">{errorMsg}</Text>
           </View>
         )}
-      </ScrollView>
-
-      <BottomNav
-        onNext={handleNext}
-        onBack={handleBack}
-        nextLabel={returnTo === "editor" ? "Salvar e Voltar" : "Continuar"}
-      />
+      </WizardScreen>
 
       <GitHubImportModal
         visible={isImportModalVisible}
@@ -292,6 +283,6 @@ export default function ProjectsScreen() {
         onComplete={handleFinishProcessing}
         onCancel={() => setIsProcessingModalVisible(false)}
       />
-    </View>
+    </>
   );
 }
