@@ -102,6 +102,7 @@
       "selected_count": "{{count}} project selected",
       "selected_count_plural": "{{count}} projects selected",
       "imported_badge": "IMPORTED",
+      "archived_badge": "ARCHIVED",
       "no_description": "No description provided",
       "user_not_found": "GitHub user not found.",
       "rate_limit_exceeded": "Request limit reached. Please try again later.",

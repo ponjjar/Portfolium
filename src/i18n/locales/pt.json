@@ -102,6 +102,7 @@
       "selected_count": "{{count}} projeto selecionado",
       "selected_count_plural": "{{count}} projetos selecionados",
       "imported_badge": "IMPORTADO",
+      "archived_badge": "ARQUIVADO",
       "no_description": "Sem descrição",
       "user_not_found": "Não encontramos esse usuário no GitHub.",
       "rate_limit_exceeded": "Limite de requisições atingido. Tente novamente mais tarde.",

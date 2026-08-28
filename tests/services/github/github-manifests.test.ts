@@ -13,23 +13,23 @@ describe('GitHub Manifests', () => {
   });
 
   it('should detect technologies from package.json', async () => {
+    const pkgData = {
+      dependencies: {
+        'react': '^18.0.0',
+        'zustand': '1.0.0'
+      },
+      devDependencies: {
+        'typescript': '^4.0.0'
+      }
+    };
+
     globalThis.fetch = jest.fn().mockImplementation(async (url: string) => {
       if (url.endsWith('package.json')) {
-        const data = {
-          dependencies: {
-            'react': '^18.0.0',
-            'zustand': '1.0.0',
-          },
-          devDependencies: {
-            'typescript': '^4.0.0',
-          },
-        };
         return {
           ok: true,
           status: 200,
-          headers: new Headers({ 'content-type': 'application/json' }),
-          text: async () => JSON.stringify(data),
-          json: async () => data,
+          text: async () => JSON.stringify(pkgData),
+          json: async () => pkgData,
         };
       }
       return { ok: false, status: 404 };
