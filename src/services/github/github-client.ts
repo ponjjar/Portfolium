@@ -45,6 +45,11 @@ export async function fetchFromGitHub<T>(endpoint: string, options: FetchOptions
   if (!headers.has('Accept')) {
     headers.set('Accept', 'application/vnd.github.v3+json');
   }
+  // Injetar token opcional de autenticação se disponível para elevar limite para 5000 reqs/h
+  const authToken = process.env.EXPO_PUBLIC_GITHUB_TOKEN || process.env.readRepoGHKey;
+  if (authToken && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${authToken}`);
+  }
   // Explicitly adding User-Agent as it's required by GitHub API, though browsers might override it
   headers.set('User-Agent', 'Portfolio-Builder-App');
 

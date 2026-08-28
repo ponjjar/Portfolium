@@ -85,6 +85,28 @@
       "no_ai_desc": "Seus dados já estão prontos. Você pode gerar seu portfólio sem utilizar inteligência artificial.",
       "no_ai_btn": "CONTINUAR SEM IA",
       "finish": "Finalizar"
+    },
+    "github": {
+      "modal_title": "Importar projetos do GitHub",
+      "confirm_user": "Confirme o usuário do GitHub",
+      "username_label": "Username ou URL do perfil",
+      "username_placeholder": "ex: github.com/seu-usuario ou apenas 'seu-usuario'",
+      "search_btn": "Buscar repositórios",
+      "searching": "Buscando repositórios...",
+      "filter_placeholder": "Filtrar projetos...",
+      "choose_projects": "Escolha os projetos que deseja importar ({{count}})",
+      "clear": "Limpar",
+      "no_repos_found": "Nenhum repositório encontrado com esses filtros.",
+      "import_btn": "Importar {{count}} projeto",
+      "import_btn_plural": "Importar {{count}} projetos",
+      "selected_count": "{{count}} projeto selecionado",
+      "selected_count_plural": "{{count}} projetos selecionados",
+      "imported_badge": "IMPORTADO",
+      "no_description": "Sem descrição",
+      "user_not_found": "Não encontramos esse usuário no GitHub.",
+      "rate_limit_exceeded": "Limite de requisições atingido. Tente novamente mais tarde.",
+      "rate_limit_exceeded_dev": "Limite de requisições da API do GitHub atingido para este IP. Adicione um token EXPO_PUBLIC_GITHUB_TOKEN no arquivo .env para ter 5.000 requisições/hora.",
+      "fetch_error": "Não foi possível acessar o GitHub. Verifique sua conexão e tente novamente."
     }
   }
 }
