@@ -42,7 +42,14 @@ export async function fetchFromGitHub<T>(endpoint: string, options: FetchOptions
     : `/api/github?endpoint=${encodeURIComponent(path)}`;
   
   const headers = new Headers(options.headers || {});
-  headers.set('Accept', 'application/vnd.github.v3+json');
+  if (!headers.has('Accept')) {
+    headers.set('Accept', 'application/vnd.github.v3+json');
+  }
+  // Injetar token opcional de autenticação se disponível para elevar limite para 5000 reqs/h
+  const authToken = process.env.EXPO_PUBLIC_GITHUB_TOKEN || process.env.readRepoGHKey;
+  if (authToken && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${authToken}`);
+  }
   // Explicitly adding User-Agent as it's required by GitHub API, though browsers might override it
   headers.set('User-Agent', 'Portfolio-Builder-App');
 
@@ -78,7 +85,13 @@ export async function fetchFromGitHub<T>(endpoint: string, options: FetchOptions
 
     const acceptHeader = headers.get('Accept') || '';
     if (acceptHeader.includes('.raw') || acceptHeader.includes('.html')) {
-      return await response.text() as unknown as T;
+      if (typeof response.text === 'function') {
+        return await response.text() as unknown as T;
+      }
+      if (typeof response.json === 'function') {
+        const json = await response.json();
+        return (typeof json === 'string' ? json : JSON.stringify(json)) as unknown as T;
+      }
     }
 
     return await response.json() as T;

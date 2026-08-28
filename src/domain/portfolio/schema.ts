@@ -64,6 +64,7 @@ export const ProjectSchema = z.object({
     topics: z.array(z.string()).default([]),
     stars: z.number().optional(),
     readmeFound: z.boolean().optional(),
+    rawReadme: z.string().optional(),
   }).optional(),
   selected: z.boolean().default(true),
   featured: z.boolean().default(false),
@@ -170,8 +171,8 @@ export const PortfolioSessionSchema = z.object({
     changes: { profileBio: false, projectDescriptions: [] }
   }),
   metadata: z.object({
-    createdAt: z.string(),
-    updatedAt: z.string(),
+    createdAt: z.string().default(() => new Date().toISOString()),
+    updatedAt: z.string().default(() => new Date().toISOString()),
     language: z.string().default('en'),
     generator: z.string().default('portfolio-builder'),
   }).default({

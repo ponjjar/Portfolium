@@ -1,8 +1,16 @@
-import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
-import Animated, { Easing, Extrapolation, FadeIn, interpolate, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  Extrapolation,
+  FadeIn,
+  interpolate,
+  SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 interface WizardHeaderProps {
   step: number;
@@ -12,9 +20,14 @@ interface WizardHeaderProps {
   scrollY?: SharedValue<number>;
 }
 
-export function WizardHeader({ step, totalSteps = 5, title, subtitle, scrollY }: WizardHeaderProps) {
+export function WizardHeader({
+  step,
+  totalSteps = 5,
+  title,
+  subtitle,
+  scrollY,
+}: WizardHeaderProps) {
   const { t } = useTranslation();
-  const router = useRouter();
   const percentage = Math.round((step / totalSteps) * 100);
 
   const progress = useSharedValue(percentage);
@@ -44,7 +57,7 @@ export function WizardHeader({ step, totalSteps = 5, title, subtitle, scrollY }:
     const translateY = interpolate(scrollY.value, [0, 100], [0, -4], Extrapolation.CLAMP);
     return {
       transformOrigin: '0% 0%',
-      transform: [{ scale }, { translateY }]
+      transform: [{ scale }, { translateY }],
     };
   });
 
@@ -61,12 +74,16 @@ export function WizardHeader({ step, totalSteps = 5, title, subtitle, scrollY }:
         {/* Progress */}
         <View className="mb-4">
           <View className="flex-row items-center justify-between mb-3">
-            <Animated.Text entering={FadeIn} key={`step-${step}`} className="text-text text-[10px] uppercase tracking-wider font-bold">
-              {t('common.step_of', { step, total: totalSteps })}
-            </Animated.Text>
-            <Animated.Text entering={FadeIn} key={`perc-${percentage}`} className="text-text text-[10px] uppercase tracking-wider font-bold">
-              {percentage}%
-            </Animated.Text>
+            <Animated.View entering={FadeIn} key={`step-${step}`}>
+              <Text className="text-text text-[10px] uppercase tracking-wider font-bold">
+                {t('common.step_of', { step, total: totalSteps })}
+              </Text>
+            </Animated.View>
+            <Animated.View entering={FadeIn} key={`perc-${percentage}`}>
+              <Text className="text-text-secondary text-[10px] uppercase tracking-wider font-bold">
+                {`${percentage}%`}
+              </Text>
+            </Animated.View>
           </View>
           <View className="h-[2px] bg-border w-full relative rounded-full overflow-hidden">
             <Animated.View
@@ -79,7 +96,9 @@ export function WizardHeader({ step, totalSteps = 5, title, subtitle, scrollY }:
         {/* Titles */}
         <View className="flex-col justify-end min-h-[40px]">
           <Animated.View style={animatedTitleStyle} entering={FadeIn.duration(400)}>
-            <Text className="text-text text-2xl md:text-3xl font-bold mb-1" numberOfLines={1}>{title}</Text>
+            <Text className="text-text text-2xl md:text-3xl font-bold mb-1" numberOfLines={1}>
+              {title}
+            </Text>
           </Animated.View>
 
           {subtitle && (
