@@ -46,7 +46,7 @@ export function Modal({
       <Animated.View 
         entering={FadeIn.duration(250)}
         exiting={FadeOut.duration(200)}
-        className={`flex-1 bg-[#000000cc] justify-center items-center p-4 theme-${theme}`}
+        className="flex-1 bg-[#000000cc] justify-center items-center p-4"
       >
         {/* Modal Container */}
         <Animated.View 
@@ -54,7 +54,7 @@ export function Modal({
           exiting={SlideOutDown.duration(200)}
           className={`w-full ${getWidthClass()} max-h-[90%]`}
         >
-          <View className="w-full bg-surface border border-border rounded-xl shadow-lg overflow-hidden">
+          <View className={`w-full bg-surface border border-border rounded-xl shadow-lg overflow-hidden theme-${theme}`}>
             {/* Header */}
             {(title || (!hideCloseButton && onClose)) && (
               <View className="flex-row items-center justify-between p-4 border-b border-border bg-surface-elevated">
