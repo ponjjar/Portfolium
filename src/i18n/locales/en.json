@@ -102,11 +102,19 @@
       "selected_count": "{{count}} project selected",
       "selected_count_plural": "{{count}} projects selected",
       "imported_badge": "IMPORTED",
+      "archived_badge": "ARCHIVED",
       "no_description": "No description provided",
       "user_not_found": "GitHub user not found.",
       "rate_limit_exceeded": "Request limit reached. Please try again later.",
-      "rate_limit_exceeded_dev": "GitHub API rate limit exceeded for this IP. Add an EXPO_PUBLIC_GITHUB_TOKEN in your .env file to enable 5,000 requests/hour.",
+      "rate_limit_exceeded_dev": "GitHub API rate limit exceeded for this IP. Add a GITHUB_TOKEN in your .env file to enable 5,000 requests/hour.",
       "fetch_error": "Could not connect to GitHub. Please check your connection and try again."
+    },
+    "theme": {
+      "light": "Light",
+      "lava": "Lava",
+      "dark": "Dark",
+      "amoled": "AMOLED",
+      "change_theme": "Change theme"
     }
   }
 }

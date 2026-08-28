@@ -7,7 +7,7 @@ import { extractReadmeImages, ImageCandidate } from '@/services/github/github-re
 import { GitHubRepositorySummary } from '@/services/github/github.schemas';
 import { usePortfolioStore } from '@/store';
 import { AlertCircle, CheckCircle2, Circle, Code2, Search, Edit2, ImageIcon } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import { ProjectImageSelectionModal } from '../modals/ProjectImageSelectionModal';
@@ -22,15 +22,18 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
   const { t } = useTranslation();
   const existingProjects = usePortfolioStore((s) => s.session.projects);
   const socialLinks = usePortfolioStore((s) => s.session.socialLinks);
-  const [step, setStep] = useState<'input' | 'loading' | 'select'>('input');
 
-  const [usernameInput, setUsernameInput] = useState('');
+  // Derive initial username directly without cascading effect
+  const githubLink = socialLinks.find((link) => link.type === 'github');
+  const defaultUsername = githubLink ? normalizeGitHubUsername(githubLink.url) : '';
+
+  const [step, setStep] = useState<'input' | 'loading' | 'select'>('input');
+  const [usernameInput, setUsernameInput] = useState(defaultUsername);
   const [repositories, setRepositories] = useState<GitHubRepositorySummary[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'sources' | 'forks' | 'archived'>('all');
   const [error, setError] = useState<string | null>(null);
-  const [, setIsLoading] = useState(false);
 
   // Tracks the image candidates and selected index for each repo
   const [repoImages, setRepoImages] = useState<Record<number, { status: 'loading' | 'done', candidates: ImageCandidate[], selectedCandidateIndex: number | null }>>({});
@@ -38,28 +41,21 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
   // Image editing modal state
   const [editingRepoId, setEditingRepoId] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (visible) {
-      const githubLink = socialLinks.find(link => link.type === 'github');
-      if (githubLink) {
-        setUsernameInput(normalizeGitHubUsername(githubLink.url));
-      } else {
-        setUsernameInput('');
-      }
-
-      setRepositories([]);
-      setSelectedIds(new Set());
-      setSearchQuery('');
-      setFilter('all');
-      setError(null);
-      setRepoImages({});
-      setEditingRepoId(null);
-    }
-  }, [visible, socialLinks]);
+  const handleClose = () => {
+    setStep('input');
+    setRepositories([]);
+    setSelectedIds(new Set());
+    setSearchQuery('');
+    setFilter('all');
+    setError(null);
+    setRepoImages({});
+    setEditingRepoId(null);
+    onClose();
+  };
 
   const handleSearch = async () => {
     try {
-      setIsLoading(true);
+      setStep('loading');
       setError(null);
       const username = normalizeGitHubUsername(usernameInput);
       const user = await fetchGitHubUser(username);
@@ -67,6 +63,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
       setRepositories(repos);
       setStep('select');
     } catch (err: any) {
+      setStep('input');
       const isDev = process.env.NODE_ENV === 'development' || (typeof __DEV__ !== 'undefined' && __DEV__);
       if (err instanceof GitHubNotFoundError) {
         setError(t('github.user_not_found'));
@@ -75,8 +72,6 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
       } else {
         setError(t('github.fetch_error'));
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -178,7 +173,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
 
   return (
     <>
-      <Modal visible={visible} onClose={onClose} title={t('github.modal_title')} size="lg" footer={renderFooter()}>
+      <Modal visible={visible} onClose={handleClose} title={t('github.modal_title')} size="lg" footer={renderFooter()}>
         <View className="flex-1">
           {step === 'input' && (
             <View className="flex-1 py-6 justify-center">
@@ -328,7 +323,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
                             )}
                             {repo.isArchived && (
                               <View className="bg-yellow-500/20 px-1.5 py-0.5 rounded mr-2">
-                                <Text className="text-yellow-500 text-[9px] font-bold">ARCHIVED</Text>
+                                <Text className="text-yellow-500 text-[9px] font-bold">{t('github.archived_badge', { defaultValue: 'ARCHIVED' })}</Text>
                               </View>
                             )}
                           </View>
@@ -374,6 +369,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
               setRepoImages(prev => ({
                 ...prev,
                 [editingRepo.id]: {
+                  status: 'done',
                   candidates: prev[editingRepo.id]?.candidates || [],
                   selectedCandidateIndex: null
                 }
@@ -386,16 +382,19 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
               setRepoImages(prev => ({
                 ...prev,
                 [editingRepo.id]: {
-                  ...prev[editingRepo.id],
+                  status: 'done',
+                  candidates: prev[editingRepo.id]?.candidates || [],
                   selectedCandidateIndex: idx >= 0 ? idx : null
                 }
               }));
-              editingRepo.selectedImage = undefined;
+              const updatedRepo = { ...editingRepo, selectedImage: undefined };
+              setRepositories(repos => repos.map(r => r.id === updatedRepo.id ? updatedRepo : r));
             } else {
               setRepoImages(prev => ({
                 ...prev,
                 [editingRepo.id]: {
-                  ...prev[editingRepo.id],
+                  status: 'done',
+                  candidates: prev[editingRepo.id]?.candidates || [],
                   selectedCandidateIndex: null
                 }
               }));

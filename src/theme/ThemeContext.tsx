@@ -28,13 +28,13 @@ export const useTheme = () => useContext(ThemeContext);
 
 const THEME_STORAGE_KEY = 'portfolio-builder:theme:v1';
 
-const getThemeBackground = (id: ThemeId) => {
+export const getThemeBackground = (id: ThemeId) => {
   switch (id) {
     case 'light': return '#F7F7F5';
-    case 'lava': return '#090303';
+    case 'lava': return '#211515';
     case 'amoled': return '#000000';
     case 'dark':
-    default: return '#101010';
+    default: return '#222222';
   }
 };
 
@@ -44,7 +44,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
-  // Transition state
+  // Transition state for fallback / mobile
   const [origin, setOrigin] = useState({ x: 0, y: 0 });
   const radius = useSharedValue(0);
 
@@ -55,7 +55,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         if (savedTheme && ['light', 'lava', 'dark', 'amoled'].includes(savedTheme)) {
           setThemeState(savedTheme as ThemeId);
         }
-      } catch (e) {
+      } catch {
         // Fallback to dark
       } finally {
         setIsReady(true);
@@ -66,22 +66,66 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   const setTheme = (id: ThemeId, x = 0, y = 0) => {
     if (isTransitioning || id === theme) return;
-    
-    // Check for reduced motion in a real app, here we assume full animation or we could check Platform
-    // Actually Expo/Reanimated doesn't have a simple synchronous prefers-reduced-motion hook yet without an async listener, 
-    // but we can skip animation if x and y are 0 (no coordinates provided)
+
+    // Direct change if no coordinates provided
     if (x === 0 && y === 0) {
       setThemeState(id);
       AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => {});
       return;
     }
 
+    // Modern Web: Native GPU View Transition API with radial circle clipPath
+    if (
+      Platform.OS === 'web' &&
+      typeof document !== 'undefined' &&
+      typeof (document as any).startViewTransition === 'function'
+    ) {
+      try {
+        const right = window.innerWidth - x;
+        const bottom = window.innerHeight - y;
+        const maxRadius = Math.hypot(Math.max(x, right), Math.max(y, bottom));
+
+        setIsTransitioning(true);
+        const transition = (document as any).startViewTransition(() => {
+          setThemeState(id);
+          AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => {});
+        });
+
+        transition.ready
+          .then(() => {
+            document.documentElement.animate(
+              {
+                clipPath: [
+                  `circle(0px at ${x}px ${y}px)`,
+                  `circle(${maxRadius}px at ${x}px ${y}px)`,
+                ],
+              },
+              {
+                duration: 500,
+                easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                pseudoElement: '::view-transition-new(root)',
+              }
+            );
+          })
+          .catch(() => {
+            setThemeState(id);
+            AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => {});
+          })
+          .finally(() => {
+            setIsTransitioning(false);
+          });
+        return;
+      } catch {
+        // Fallback to reanimated overlay if browser errors
+      }
+    }
+
+    // Universal Fallback (Mobile Native & legacy Web)
     setIsTransitioning(true);
     setNextTheme(id);
     setOrigin({ x, y });
-    
+
     const { width, height } = Dimensions.get('window');
-    // Calculate maximum distance to the 4 corners from (x,y)
     const corners = [
       { cx: 0, cy: 0 },
       { cx: width, cy: 0 },
@@ -94,13 +138,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       if (dist > maxDist) maxDist = dist;
     }
 
-    // Start with scale 0
     radius.value = 0;
-    
-    // Animate to cover the screen
     radius.value = withTiming(
-      maxDist, 
-      { duration: 600, easing: Easing.inOut(Easing.ease) }, 
+      maxDist,
+      { duration: 550, easing: Easing.bezier(0.22, 1, 0.36, 1) },
       (finished) => {
         if (finished) {
           runOnJS(completeTransition)(id);
@@ -112,13 +153,12 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const completeTransition = (id: ThemeId) => {
     setThemeState(id);
     AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => {});
-    
-    // Allow React to commit the new theme tokens
+
     setTimeout(() => {
-      radius.value = 0; // reset overlay instantly because the background underneath is now the same color
+      radius.value = 0;
       setNextTheme(null);
       setIsTransitioning(false);
-    }, 50);
+    }, 40);
   };
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -139,9 +179,19 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     <ThemeContext.Provider value={{ theme, setTheme, isTransitioning }}>
       <View className={`flex-1 theme-${theme}`}>
         <AmbientBackground theme={theme} />
-        
+
+        <View className="flex-1 z-10" style={{ elevation: 1, zIndex: 10 }}>
+          {children}
+        </View>
+
+        {/* Top-layer GPU overlay for circular reveal animation on native/fallback */}
         {nextTheme && (
-          <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              { zIndex: 99999, elevation: 99999, pointerEvents: 'none' },
+            ]}
+          >
             <Animated.View
               style={[
                 {
@@ -149,16 +199,13 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
                   left: origin.x,
                   top: origin.y,
                   backgroundColor: getThemeBackground(nextTheme),
+                  opacity: 0.96,
                 },
                 animatedStyle,
               ]}
             />
           </View>
         )}
-        
-        <View className="flex-1 z-10" style={{ elevation: 1, zIndex: 10 }}>
-          {children}
-        </View>
       </View>
     </ThemeContext.Provider>
   );
