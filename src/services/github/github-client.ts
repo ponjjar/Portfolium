@@ -24,7 +24,22 @@ interface FetchOptions extends RequestInit {
 }
 
 export async function fetchFromGitHub<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-  const url = endpoint.startsWith('http') ? endpoint : `https://api.github.com${endpoint}`;
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  
+  // Extract just the path if a full URL was accidentally passed
+  let path = endpoint;
+  if (path.startsWith('http')) {
+    try {
+      const urlObj = new URL(path);
+      path = urlObj.pathname + urlObj.search;
+    } catch {
+      // Fallback
+    }
+  }
+
+  const url = isDevelopment 
+    ? `https://api.github.com${path}`
+    : `/api/github?endpoint=${encodeURIComponent(path)}`;
   
   const headers = new Headers(options.headers || {});
   headers.set('Accept', 'application/vnd.github.v3+json');
@@ -59,6 +74,11 @@ export async function fetchFromGitHub<T>(endpoint: string, options: FetchOptions
 
     if (!response.ok) {
       throw new GitHubApiError(`GitHub API error: ${response.statusText}`, response.status);
+    }
+
+    const acceptHeader = headers.get('Accept') || '';
+    if (acceptHeader.includes('.raw') || acceptHeader.includes('.html')) {
+      return await response.text() as unknown as T;
     }
 
     return await response.json() as T;
