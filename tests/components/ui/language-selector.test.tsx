@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import renderer, { act } from 'react-test-renderer';
 import { LanguageSelector } from '@/components/ui/language-selector';
 import { useTranslation } from 'react-i18next';
 
@@ -16,9 +16,14 @@ describe('LanguageSelector Component', () => {
       },
     });
 
-    const { getByText, toJSON } = render(<LanguageSelector />);
-    expect(getByText('EN-US')).toBeTruthy();
-    expect(toJSON()).toMatchSnapshot();
+    let tree: renderer.ReactTestRenderer;
+    act(() => {
+      tree = renderer.create(<LanguageSelector />);
+    });
+
+    const textNode = tree!.root.findByProps({ children: 'EN-US' });
+    expect(textNode).toBeTruthy();
+    expect(tree!.toJSON()).toMatchSnapshot();
   });
 
   it('renders PT-BR correctly', () => {
@@ -29,7 +34,13 @@ describe('LanguageSelector Component', () => {
       },
     });
 
-    const tree = renderer.create(<LanguageSelector />).toJSON();
-    expect(tree).toMatchSnapshot();
+    let tree: renderer.ReactTestRenderer;
+    act(() => {
+      tree = renderer.create(<LanguageSelector />);
+    });
+
+    const textNode = tree!.root.findByProps({ children: 'PT-BR' });
+    expect(textNode).toBeTruthy();
+    expect(tree!.toJSON()).toMatchSnapshot();
   });
 });
