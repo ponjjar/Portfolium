@@ -21,18 +21,14 @@ export function convertToProject(
   }
 
   // Extract a short description
-  // If description exists, use it. Else if readme exists, we could extract the first paragraph, 
-  // but for simplicity and safety, we just use the description or leave blank.
   let shortDesc = summary.description || '';
   if (shortDesc.length > 150) {
     shortDesc = shortDesc.substring(0, 147) + '...';
   }
 
-  // The full description could be the README content. If no readme, use the repository description.
+  // The full description could be the README content. If no readme or not a string, use the repository description.
   let fullDesc = '';
-  if (readme) {
-    // We don't save the full raw README into the JSON to save space, but we could save a truncated version
-    // or just the raw readme up to a limit. Let's save up to 1000 characters.
+  if (typeof readme === 'string' && readme.trim()) {
     fullDesc = readme.substring(0, 1000);
     if (readme.length > 1000) fullDesc += '\n... (truncated)';
   } else {

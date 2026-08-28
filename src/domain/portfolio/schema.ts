@@ -170,8 +170,8 @@ export const PortfolioSessionSchema = z.object({
     changes: { profileBio: false, projectDescriptions: [] }
   }),
   metadata: z.object({
-    createdAt: z.string(),
-    updatedAt: z.string(),
+    createdAt: z.string().default(() => new Date().toISOString()),
+    updatedAt: z.string().default(() => new Date().toISOString()),
     language: z.string().default('en'),
     generator: z.string().default('portfolio-builder'),
   }).default({
