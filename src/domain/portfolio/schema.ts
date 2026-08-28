@@ -64,6 +64,7 @@ export const ProjectSchema = z.object({
     topics: z.array(z.string()).default([]),
     stars: z.number().optional(),
     readmeFound: z.boolean().optional(),
+    rawReadme: z.string().optional(),
   }).optional(),
   selected: z.boolean().default(true),
   featured: z.boolean().default(false),

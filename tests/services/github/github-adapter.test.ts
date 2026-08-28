@@ -3,7 +3,7 @@ import { GitHubRepoDetails } from '../../../src/services/github/github.schemas';
 import { Project } from '../../../src/domain/portfolio/types';
 
 describe('GitHub Adapter', () => {
-  it('should convert GitHubRepoDetails to a Project', () => {
+  it('should convert GitHubRepoDetails to a Project with sanitized rawReadme', () => {
     const details: GitHubRepoDetails = {
       summary: {
         id: 123,
@@ -22,7 +22,7 @@ describe('GitHub Adapter', () => {
         defaultBranch: 'main',
         ownerLogin: 'user',
       },
-      readme: '# Test Repo\n\nThis is a readme.',
+      readme: '# Test Repo\n\nThis is the markdown body of the readme.',
       manifests: { packageJson: true },
       detectedTechnologies: ['TypeScript', 'React', 'Node.js'],
     };
@@ -31,7 +31,8 @@ describe('GitHub Adapter', () => {
 
     expect(project.id).toBe('project_github_123');
     expect(project.title).toBe('test-repo');
-    expect(project.description).toContain('This is a readme');
+    expect(project.description).toBe('Test description');
+    expect(project.githubMetadata?.rawReadme).toContain('This is the markdown body of the readme.');
     expect(project.source.type).toBe('github');
     expect(project.links.repository).toBe('https://github.com/user/test-repo');
     expect(project.links.demo).toBe('https://test-repo.com');
@@ -39,6 +40,37 @@ describe('GitHub Adapter', () => {
     expect(project.githubMetadata?.stars).toBe(10);
     expect(project.githubMetadata?.readmeFound).toBe(true);
     expect(project.order).toBe(0);
+  });
+
+  it('should extract clean summary from readme if repository description is empty', () => {
+    const details: GitHubRepoDetails = {
+      summary: {
+        id: 456,
+        name: 'empty-desc-repo',
+        fullName: 'user/empty-desc-repo',
+        description: null,
+        htmlUrl: 'https://github.com/user/empty-desc-repo',
+        homepage: null,
+        language: 'Python',
+        topics: [],
+        stars: 5,
+        forks: 0,
+        isFork: false,
+        isArchived: false,
+        updatedAt: '',
+        defaultBranch: 'main',
+        ownerLogin: 'user',
+      },
+      readme: '# AI Framework\n\n[![Badge](badge.svg)](link)\n\nA high-performance automated pipeline for code synthesis.\n\n## Setup',
+      manifests: {},
+      detectedTechnologies: ['Python'],
+    };
+
+    const project = convertToProject(details, [], 1);
+
+    expect(project.description).toBe('A high-performance automated pipeline for code synthesis.');
+    expect(project.shortDescription).toBe('A high-performance automated pipeline for code synthesis.');
+    expect(project.githubMetadata?.rawReadme).toContain('A high-performance automated pipeline for code synthesis.');
   });
 
   it('should return existing project if already imported', () => {
@@ -87,7 +119,6 @@ describe('GitHub Adapter', () => {
 
     const result = convertToProject(details, [existingProject], 0);
 
-    // It should not overwrite manually edited projects, just return the existing one
     expect(result).toBe(existingProject);
     expect(result.title).toBe('Edited Title');
   });
