@@ -20,6 +20,7 @@ describe('Validation', () => {
         bio: 'Test Bio'
       },
       socialLinks: [],
+      customSkillCategories: [],
       projects: [
         {
           id: 'p1',

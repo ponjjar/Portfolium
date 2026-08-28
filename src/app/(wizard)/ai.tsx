@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, Text } from 'react-native';
 import { useRouter } from 'expo-router';
-import { WizardHeader } from '@/components/layout/wizard-header';
+import { WizardScreen } from '@/components/layout/wizard-screen';
 import { BottomNav } from '@/components/layout/bottom-nav';
 import { getNextWizardStep, getPreviousWizardStep, getWizardRoute } from '@/utils/wizard';
 import { Button } from '@/components/ui/button';
@@ -21,17 +21,13 @@ export default function AiScreen() {
   };
 
   return (
-    <View className="flex-1 bg-background">
-      <WizardHeader 
-        step={4} 
-        title={t('ai.title')} 
-        subtitle={t('ai.subtitle')}
-      />
-      
-      <ScrollView className="flex-1 px-6">
-        <View className="max-w-4xl w-full self-center pb-8 pt-4">
-          
-          <View className="flex-col md:flex-row gap-6">
+    <WizardScreen 
+      step={4} 
+      title={t('ai.title')} 
+      subtitle={t('ai.subtitle')}
+      bottomNav={<BottomNav onNext={handleNext} onBack={handleBack} nextLabel="Continuar" />}
+    >
+      <View className="flex-col md:flex-row gap-6">
             {/* Option 1 */}
             <View className="flex-1 border border-border rounded-xl p-6 bg-surface relative">
               <View className="absolute -top-3 left-6 bg-primary px-3 py-1 rounded-full">
@@ -102,15 +98,6 @@ export default function AiScreen() {
               </View>
             </View>
           </View>
-
-        </View>
-      </ScrollView>
-
-      <BottomNav 
-        onNext={handleNext} 
-        onBack={handleBack}
-        nextLabel="Continuar" 
-      />
-    </View>
+    </WizardScreen>
   );
 }

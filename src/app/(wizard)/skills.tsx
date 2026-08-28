@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { WizardHeader } from '@/components/layout/wizard-header';
+import { WizardScreen } from '@/components/layout/wizard-screen';
 import { BottomNav } from '@/components/layout/bottom-nav';
 import { getNextWizardStep, getPreviousWizardStep, getWizardRoute } from '@/utils/wizard';
 import { Info, Check, Plus } from 'lucide-react-native';
@@ -13,9 +13,9 @@ import { isSkillsComplete } from '@/domain/portfolio/validation';
 const Badge = ({ label, selected = true, onPress }: { label: string, selected?: boolean, onPress?: () => void }) => (
   <TouchableOpacity 
     onPress={onPress}
-    className={`flex-row items-center rounded-full px-4 py-2 border ${selected ? 'bg-primary border-primary' : 'bg-transparent border-border'}`}
+    className={`flex-row items-center flex-nowrap rounded-full px-4 py-2 border ${selected ? 'bg-primary border-primary' : 'bg-transparent border-border'}`}
   >
-    <Text className={`${selected ? 'text-primary-foreground' : 'text-text-secondary'} font-bold mr-2`}>{label}</Text>
+    <Text numberOfLines={1} className={`whitespace-nowrap ${selected ? 'text-primary-foreground' : 'text-text-secondary'} font-bold mr-2`}>{label}</Text>
     {selected && <Check color="var(--primary-foreground)" size={14} />}
   </TouchableOpacity>
 );
@@ -77,17 +77,14 @@ export default function SkillsScreen() {
   const categories = Object.keys(skillsByCategory).sort();
 
   return (
-    <View className="flex-1 bg-background">
-      <WizardHeader 
+    <>
+      <WizardScreen 
         step={3} 
         title={t('skills.title')} 
         subtitle={t('skills.subtitle')}
-      />
-      
-      <ScrollView className="flex-1 px-6">
-        <View className="max-w-3xl w-full self-center pb-8">
-          
-          <View className="flex-row items-center mb-6">
+        bottomNav={<BottomNav onNext={handleNext} onBack={handleBack} nextLabel={returnTo === 'editor' ? 'Salvar e Voltar' : 'Continuar'} />}
+      >
+        <View className="flex-row items-center mb-6">
             <View className="border border-border bg-input-background px-4 py-2 rounded flex-row items-center">
               <Text className="text-text-secondary text-xs">
                 {selectedCount} tecnologia(s) selecionada(s)
@@ -136,15 +133,7 @@ export default function SkillsScreen() {
               <Text className="text-text-secondary font-bold text-sm">{t('skills.add_technology')}</Text>
             </TouchableOpacity>
           </View>
-
-        </View>
-      </ScrollView>
-
-      <BottomNav 
-        onNext={handleNext} 
-        onBack={handleBack}
-        nextLabel={returnTo === 'editor' ? 'Salvar e Voltar' : 'Continuar'}
-      />
+    </WizardScreen>
 
       <AddSkillModal
         visible={isAddModalVisible}
@@ -152,6 +141,6 @@ export default function SkillsScreen() {
         onAdd={handleAddSkill}
         existingSkills={skills.map(s => s.name)}
       />
-    </View>
+    </>
   );
 }

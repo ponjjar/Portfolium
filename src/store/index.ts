@@ -9,6 +9,7 @@ interface PortfolioState {
   // Actions
   updateProfile: (profile: Partial<Profile>) => void;
   updateSocialLinks: (links: SocialLink[]) => void;
+  addCustomSkillCategory: (category: string) => void;
   addProject: (project: Project) => void;
   updateProject: (id: string, project: Partial<Project>) => void;
   removeProject: (id: string) => void;
@@ -55,6 +56,21 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => {
         ...session,
         socialLinks: links,
       }));
+    },
+
+    addCustomSkillCategory: (category) => {
+      updateSession((session) => {
+        // Prevent duplicates case-insensitively
+        const exists = session.customSkillCategories.some(
+          c => c.toLowerCase() === category.toLowerCase()
+        );
+        if (exists) return session;
+        
+        return {
+          ...session,
+          customSkillCategories: [...session.customSkillCategories, category],
+        };
+      });
     },
 
     addProject: (project) => {
