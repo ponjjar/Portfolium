@@ -13,11 +13,11 @@ describe('PortfolioSession Schema', () => {
       });
       expect(result.data.projects).toEqual([]);
       expect(result.data.skills).toEqual([]);
-      expect(result.data.theme).toEqual({
-        template: 'minimal',
+      expect(result.data.portfolio.theme).toEqual({
         mode: 'dark',
         accent: '#FFFFFF',
       });
+      expect(result.data.portfolio.template).toBe('minimal');
     }
   });
 

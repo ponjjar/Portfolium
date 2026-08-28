@@ -1,28 +1,83 @@
-import React from 'react';
-import { View, ScrollView, Text } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { WizardHeader } from '@/components/layout/wizard-header';
 import { BottomNav } from '@/components/layout/bottom-nav';
+import { getNextWizardStep, getPreviousWizardStep, getWizardRoute } from '@/utils/wizard';
 import { Info, Check, Plus } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
+import { usePortfolioStore } from '@/store';
+import { AddSkillModal } from '@/components/modals/AddSkillModal';
+import { isSkillsComplete } from '@/domain/portfolio/validation';
 
-const Badge = ({ label, selected = true }: { label: string, selected?: boolean }) => (
-  <View className={`flex-row items-center rounded-full px-4 py-2 border ${selected ? 'bg-white border-white' : 'bg-transparent border-border'}`}>
-    <Text className={`${selected ? 'text-black' : 'text-white'} font-bold mr-2`}>{label}</Text>
-    {selected && <Check color="#000" size={14} />}
-  </View>
+const Badge = ({ label, selected = true, onPress }: { label: string, selected?: boolean, onPress?: () => void }) => (
+  <TouchableOpacity 
+    onPress={onPress}
+    className={`flex-row items-center rounded-full px-4 py-2 border ${selected ? 'bg-primary border-primary' : 'bg-transparent border-border'}`}
+  >
+    <Text className={`${selected ? 'text-primary-foreground' : 'text-text-secondary'} font-bold mr-2`}>{label}</Text>
+    {selected && <Check color="var(--primary-foreground)" size={14} />}
+  </TouchableOpacity>
 );
 
 export default function SkillsScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
+  const { session, toggleSkill, setSkills } = usePortfolioStore();
+  const skills = session.skills;
+
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleNext = () => {
-    router.push('/(wizard)/ai');
+    if (!isSkillsComplete(session)) {
+      setErrorMsg('Selecione pelo menos uma tecnologia.');
+      return;
+    }
+
+    setErrorMsg(null);
+    if (returnTo === 'editor') {
+      router.push('/(wizard)/editor');
+    } else {
+      router.push(getWizardRoute(getNextWizardStep('skills')!));
+    }
   };
 
+  const handleBack = () => {
+    if (returnTo === 'editor') {
+      router.push('/(wizard)/editor');
+    } else {
+      router.push(getWizardRoute(getPreviousWizardStep('skills')!));
+    }
+  };
+
+  const handleAddSkill = (name: string, category: string) => {
+    const newSkill = {
+      id: `skill_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      name,
+      category,
+      selected: true,
+      sources: []
+    };
+    setSkills([...skills, newSkill]);
+  };
+
+  const selectedCount = skills.filter(s => s.selected).length;
+  
+  // Group skills by category
+  const skillsByCategory = skills.reduce((acc, skill) => {
+    const cat = skill.category || 'Other';
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(skill);
+    return acc;
+  }, {} as Record<string, typeof skills>);
+  
+  // Sort categories alphabetically
+  const categories = Object.keys(skillsByCategory).sort();
+
   return (
-    <View className="flex-1 bg-black">
+    <View className="flex-1 bg-background">
       <WizardHeader 
         step={3} 
         title={t('skills.title')} 
@@ -33,62 +88,70 @@ export default function SkillsScreen() {
         <View className="max-w-3xl w-full self-center pb-8">
           
           <View className="flex-row items-center mb-6">
-            <View className="border border-border bg-[#111] px-4 py-2 rounded flex-row items-center">
+            <View className="border border-border bg-input-background px-4 py-2 rounded flex-row items-center">
               <Text className="text-text-secondary text-xs">
-                {t('skills.found_message', { count: 0, projects: 0 })}
+                {selectedCount} tecnologia(s) selecionada(s)
               </Text>
             </View>
           </View>
           
-          <View className="bg-surface border border-border p-4 rounded mb-10 flex-row items-center">
-            <Info color="#888" size={18} className="mr-3" />
+          <View className="bg-surface border border-border p-4 rounded mb-8 flex-row items-center">
+            <Info color="var(--text-secondary)" size={18} className="mr-3" />
             <Text className="text-text-secondary text-sm flex-1">
               {t('skills.info_message')}
             </Text>
           </View>
 
-          {/* Frontend Category */}
-          <View className="mb-8">
-            <Text className="text-[10px] font-bold text-text-secondary tracking-widest uppercase mb-4">
-              {t('skills.frontend')}
-            </Text>
-            <View className="flex-row flex-wrap gap-3">
-              <Badge label="React" />
-              <Badge label="Next.js" />
-              <Badge label="TypeScript" />
-              <Badge label="Redux" />
-              <Badge label="Tailwind CSS" selected={false} />
-              
-              <View className="flex-row items-center rounded-full px-4 py-2 border border-border border-dashed">
-                <Plus color="#888" size={14} className="mr-2" />
-                <Text className="text-text-secondary font-bold text-xs">{t('skills.add_technology')}</Text>
-              </View>
+          {errorMsg && (
+            <View className="mb-6 bg-[#ef444420] border border-[#ef444440] p-4 rounded-lg flex-row items-center">
+              <Text className="text-red-400 flex-1">{errorMsg}</Text>
             </View>
-            <View className="w-full h-[1px] bg-border mt-6" />
-          </View>
+          )}
+
+          {categories.map((cat) => (
+            <View key={cat} className="mb-8">
+              <Text className="text-[10px] font-bold text-text-secondary tracking-widest uppercase mb-4">
+                {cat}
+              </Text>
+              <View className="flex-row flex-wrap gap-3">
+                {skillsByCategory[cat].map(skill => (
+                  <Badge 
+                    key={skill.id} 
+                    label={skill.name} 
+                    selected={skill.selected} 
+                    onPress={() => toggleSkill(skill.id)}
+                  />
+                ))}
+              </View>
+              <View className="w-full h-[1px] bg-border mt-6" />
+            </View>
+          ))}
           
-          {/* Backend Category */}
-          <View className="mb-8">
-            <Text className="text-[10px] font-bold text-text-secondary tracking-widest uppercase mb-4">
-              {t('skills.backend')}
-            </Text>
-            <View className="flex-row flex-wrap gap-3">
-              <Badge label="Node.js" />
-              <Badge label="PostgreSQL" />
-              <Badge label="Prisma" selected={false} />
-              
-              <View className="flex-row items-center rounded-full px-4 py-2 border border-border border-dashed">
-                <Plus color="#888" size={14} className="mr-2" />
-                <Text className="text-text-secondary font-bold text-xs">{t('skills.add_technology')}</Text>
-              </View>
-            </View>
-            <View className="w-full h-[1px] bg-border mt-6" />
+          <View className="mt-4 items-start">
+            <TouchableOpacity 
+              onPress={() => setIsAddModalVisible(true)}
+              className="flex-row items-center rounded-full px-6 py-3 border border-border border-dashed bg-input-background"
+            >
+              <Plus color="var(--text-secondary)" size={16} className="mr-2" />
+              <Text className="text-text-secondary font-bold text-sm">{t('skills.add_technology')}</Text>
+            </TouchableOpacity>
           </View>
 
         </View>
       </ScrollView>
 
-      <BottomNav onNext={handleNext} />
+      <BottomNav 
+        onNext={handleNext} 
+        onBack={handleBack}
+        nextLabel={returnTo === 'editor' ? 'Salvar e Voltar' : 'Continuar'}
+      />
+
+      <AddSkillModal
+        visible={isAddModalVisible}
+        onClose={() => setIsAddModalVisible(false)}
+        onAdd={handleAddSkill}
+        existingSkills={skills.map(s => s.name)}
+      />
     </View>
   );
 }

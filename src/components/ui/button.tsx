@@ -15,9 +15,9 @@ export function Button({ variant = 'default', size = 'default', children, isLoad
     let classes = 'flex-row items-center justify-center rounded-md ';
     
     // Variants
-    if (variant === 'default') classes += 'bg-white hover:bg-gray-200 active:bg-gray-300 ';
-    if (variant === 'outline') classes += 'border border-border bg-transparent hover:bg-surface active:bg-[#1a1a1a] ';
-    if (variant === 'ghost') classes += 'bg-transparent hover:bg-surface active:bg-[#1a1a1a] ';
+    if (variant === 'default') classes += 'bg-primary hover:bg-primary/90 active:bg-primary/80 ';
+    if (variant === 'outline') classes += 'border border-border bg-transparent hover:bg-surface active:bg-surface-elevated ';
+    if (variant === 'ghost') classes += 'bg-transparent hover:bg-surface active:bg-surface-elevated ';
     
     // Sizes
     if (size === 'default') classes += 'h-11 px-5 py-2 ';
@@ -31,8 +31,8 @@ export function Button({ variant = 'default', size = 'default', children, isLoad
 
   const getTextClasses = () => {
     let classes = 'font-medium ';
-    if (variant === 'default') classes += 'text-black ';
-    else classes += 'text-white ';
+    if (variant === 'default') classes += 'text-primary-foreground ';
+    else classes += 'text-text ';
     
     if (size === 'sm') classes += 'text-sm ';
     else classes += 'text-base ';

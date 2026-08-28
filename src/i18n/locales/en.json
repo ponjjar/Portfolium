@@ -6,7 +6,7 @@
       "step_of": "Step {{step}} of {{total}}",
       "continue": "Continue",
       "back": "Back",
-      "saved_automatically": "Saved automatically"
+      "saved_automatically": "Saved"
     },
     "welcome": {
       "title": "Turn your\n projects into\n a portfolio.",
@@ -22,14 +22,14 @@
       "drop_json_only": "Please drop only .json files"
     },
     "profile": {
-      "title": "First, who are you?",
-      "subtitle": "This information will be used to present your portfolio.",
-      "name_label": "What should we call you?",
-      "name_placeholder": "E.g., John Doe",
-      "headline_label": "Professional Headline",
+      "title": "Let's start with your profile",
+      "subtitle": "Tell us a bit about yourself and how you want to be presented.",
+      "name_label": "Name",
+      "name_placeholder": "E.g., Your name",
+      "headline_label": "Professional headline",
       "headline_placeholder": "E.g., Frontend Engineer",
-      "about_label": "About You",
-      "about_placeholder": "Briefly tell us what you do. You can improve this text later.",
+      "about_label": "About you",
+      "about_placeholder": "Write a brief professional introduction.",
       "avatar_label": "Photo or Avatar",
       "upload_image": "[ Upload image ]",
       "use_url": "[ Use URL ]",
@@ -39,29 +39,29 @@
       "website_placeholder": "Personal website"
     },
     "projects": {
-      "title": "Show what you've built.",
-      "subtitle": "Add your best projects manually or import your GitHub repositories.",
+      "title": "Add your projects",
+      "subtitle": "Choose the projects you want to include in your portfolio.",
       "import_github": "Import from GitHub",
       "add_project": "Add project",
       "your_projects": "Your projects",
-      "empty_state": "You haven't added any projects yet. Add them manually or import your GitHub repositories."
+      "empty_state": "No projects added yet. Add one manually or import your GitHub repositories."
     },
     "skills": {
-      "title": "Which technologies represent you?",
-      "subtitle": "We found these technologies in your projects. Confirm the ones you actually use.",
+      "title": "Review your technologies",
+      "subtitle": "Select the technologies you want to highlight.",
       "found_message": "✨ {{count}} technologies found in {{projects}} projects",
-      "info_message": "Found something wrong? You can add, remove, or reorganize any technology.",
+      "info_message": "You can add, remove, or reorganize any technology.",
       "frontend": "FRONTEND",
       "backend": "BACKEND",
       "add_technology": "Add technology"
     },
     "ai": {
-      "title": "Want to improve the presentation?",
-      "subtitle": "AI can summarize your projects, improve your descriptions, and organize your content without making up new experiences.",
+      "title": "Want to review texts with AI?",
+      "subtitle": "This step is optional.",
       "recommended": "Recommended",
-      "use_my_ai": "Use my own AI",
-      "use_my_ai_desc": "Use ChatGPT, Gemini, or any other AI you already use.",
-      "use_my_ai_info": "We prepare the information. You send it to your AI and import the response back.",
+      "use_my_ai": "Use external AI",
+      "use_my_ai_desc": "Use your preferred artificial intelligence tool.",
+      "use_my_ai_info": "Copy the data, review it in your preferred tool, and import the result.",
       "start_btn": "START",
       "free_ai": "Free AI",
       "free_ai_desc": "Use the model provided by Portfolio Builder.",

@@ -26,7 +26,7 @@ export function BottomNav({
 
   const handleBack = () => {
     if (onBack) onBack();
-    else router.back();
+    else router.replace('/');
   };
 
   return (
@@ -37,9 +37,11 @@ export function BottomNav({
       
       {/* Em telas muito pequenas o texto "Salvo" some */}
       <View className="flex-row justify-end flex-1 md:flex-none gap-4">
-        <Button variant="ghost" onPress={handleBack}>
-          {backLabel === 'Voltar' ? t('common.back') : backLabel}
-        </Button>
+        {onBack && (
+          <Button variant="ghost" onPress={handleBack}>
+            {backLabel === 'Voltar' ? t('common.back') : backLabel}
+          </Button>
+        )}
         <Button 
           variant="default" 
           onPress={onNext} 

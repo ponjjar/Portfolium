@@ -11,6 +11,7 @@ import * as FileSystem from 'expo-file-system';
 import { usePortfolioStore } from '@/store';
 import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from '@/components/ui/language-selector';
+import { ThemeSelector } from '@/components/ui/ThemeSelector';
 
 export default function WelcomeScreen() {
   const { t } = useTranslation();
@@ -19,7 +20,7 @@ export default function WelcomeScreen() {
   const [isDragging, setIsDragging] = useState(false);
   const [importing, setImporting] = useState(false);
 
-  const processJsonContent = (content: string) => {
+  const processJsonContent = React.useCallback((content: string) => {
     try {
       const data = JSON.parse(content);
       const success = importSession(data);
@@ -29,11 +30,11 @@ export default function WelcomeScreen() {
       } else {
         alert(t('welcome.import_invalid'));
       }
-    } catch (e) {
+    } catch {
       alert(t('welcome.import_error'));
     }
     setImporting(false);
-  };
+  }, [importSession, router, t]);
 
   const handlePickFile = async () => {
     try {
@@ -56,7 +57,7 @@ export default function WelcomeScreen() {
       } else {
         setImporting(false);
       }
-    } catch (error) {
+    } catch {
       alert(t('welcome.pick_error'));
       setImporting(false);
     }
@@ -100,22 +101,23 @@ export default function WelcomeScreen() {
       window.removeEventListener('dragleave', handleDragLeave);
       window.removeEventListener('drop', handleDrop);
     };
-  }, []);
+  }, [processJsonContent, t]);
   
   return (
-    <View className="flex-1 bg-black justify-center items-center">
+    <View className="flex-1 bg-background justify-center items-center">
       <HeroAscii />
       
       {/* Overlay Drag and Drop */}
       {isDragging && (
         <View className="absolute inset-0 z-50 bg-[#000000cc] border-4 border-dashed border-[#ffffff44] items-center justify-center">
-          <Upload size={64} color="#fff" className="mb-4" />
-          <Text className="text-white text-3xl font-bold text-center">{t('welcome.drop_here')}</Text>
+          <Upload size={64} color="var(--text)" className="mb-4" />
+          <Text className="text-text text-3xl font-bold text-center">{t('welcome.drop_here')}</Text>
         </View>
       )}
 
-      {/* Language Selector na Home */}
-      <View className="absolute top-12 right-6 z-50">
+      {/* Language and Theme Selectors na Home */}
+      <View className="absolute top-12 right-6 z-50 flex-row gap-2">
+        <ThemeSelector />
         <LanguageSelector />
       </View>
 
@@ -125,7 +127,7 @@ export default function WelcomeScreen() {
           {t('common.portfolio_builder')}
         </Text>
         
-        <Text className="text-white text-5xl md:text-7xl font-bold text-center mb-6 leading-tight tracking-tight">
+        <Text className="text-text text-5xl md:text-7xl font-bold text-center mb-6 leading-tight tracking-tight">
           {t('welcome.title')}
         </Text>
         
@@ -136,11 +138,11 @@ export default function WelcomeScreen() {
         <View className="flex-row flex-wrap justify-center gap-4 mb-16 w-full">
           <Button 
             onPress={() => router.push('/(wizard)/profile')}
-            className="w-full md:w-auto h-14 px-8 bg-white"
+            className="w-full md:w-auto h-14 px-8 bg-primary"
           >
             <View className="flex-row items-center">
-              <Text className="text-black font-bold mr-2 text-base">{t('welcome.start')}</Text>
-              <ArrowRight size={18} color="#000" />
+              <Text className="text-primary-foreground font-bold mr-2 text-base">{t('welcome.start')}</Text>
+              <ArrowRight size={18} color="var(--primary-foreground)" />
             </View>
           </Button>
           
@@ -151,9 +153,9 @@ export default function WelcomeScreen() {
             className="w-full md:w-auto h-14 px-8 border-border"
           >
             <View className="flex-row items-center">
-              <Upload size={18} color="#fff" className="mr-2" />
-              <Text className="text-white font-bold mr-2 text-base">{t('welcome.import_session')}</Text>
-              <View className="bg-[#1a1a1a] px-2 py-1 rounded ml-2">
+              <Upload size={18} color="var(--text)" className="mr-2" />
+              <Text className="text-text font-bold mr-2 text-base">{t('welcome.import_session')}</Text>
+              <View className="bg-surface-elevated px-2 py-1 rounded ml-2">
                 <Text className="text-text-secondary text-[10px] font-mono">.json</Text>
               </View>
             </View>
@@ -169,7 +171,7 @@ export default function WelcomeScreen() {
         <Text className="text-text-secondary text-[10px] mb-2 tracking-widest uppercase">
           {t('common.scroll_to_discover')}
         </Text>
-        <ArrowDown size={16} color="#888888" />
+        <ArrowDown size={16} color="var(--text-secondary)" />
       </View>
     </View>
   );

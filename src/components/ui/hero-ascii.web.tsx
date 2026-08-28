@@ -115,7 +115,7 @@ export default function HeroAscii() {
   }, []);
 
   return (
-    <div className="absolute inset-0 w-full h-full pointer-events-none bg-black overflow-hidden">
+    <div className="absolute inset-0 w-full h-full pointer-events-none bg-background overflow-hidden">
       {/* Background Animation */}
       <div className="absolute inset-0 w-full h-full hidden lg:block opacity-70">
         <div 
