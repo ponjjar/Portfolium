@@ -116,6 +116,8 @@ export function ProjectImageSelectionModal({
           <ImagePickerField
             value={manualImage?.value}
             isUrl={manualImage?.type === 'url'}
+            cropShape="rect"
+            showGuide={true}
             onChange={(val, isUrl) => {
               if (val) {
                 setManualImage({
