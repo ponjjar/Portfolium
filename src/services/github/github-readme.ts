@@ -89,36 +89,101 @@ export function decodeBase64Utf8(base64Str: string): string {
 }
 
 /**
- * Sanitizes markdown content for AI consumption:
- * 1. Strips base64/data URI inline images
- * 2. Strips shields/badges and tracking URLs
- * 3. Strips HTML comments and large embedded scripts/SVGs
- * 4. Truncates cleanly to maxChars (default 5000 chars ~ 1200 tokens)
+ * Sanitizes markdown content for AI consumption following strict rules.
  */
 export function sanitizeReadmeForAi(rawReadme: string, maxChars = 5000): string {
+  // 1. Validate if string is empty
   if (!rawReadme || typeof rawReadme !== 'string') return '';
-
+  
   let text = rawReadme;
 
-  // 1. Remove base64 data URIs (huge memory footprint)
-  text = text.replace(/data:image\/[^;]+;base64,[^\s"')]+/gi, '[Image]');
+  // Handle potential HTML payload (e.g. if we accidentally got rendered GitHub page)
+  if (text.includes('<div id="readme"') || text.includes('class="markdown-body"')) {
+    if (typeof DOMParser !== 'undefined') {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      
+      // 8. Remove unwanted elements before extracting text
+      const unwantedSelectors = ['img', 'picture', 'script', 'style', 'iframe', 'video', 'noscript', 'svg'];
+      unwantedSelectors.forEach(sel => {
+        const elements = doc.querySelectorAll(sel);
+        elements.forEach(el => el.parentNode?.removeChild(el));
+      });
 
-  // 2. Remove HTML comments
+      const article = doc.querySelector('article.markdown-body');
+      const readmeDiv = doc.querySelector('#readme');
+      
+      if (article) {
+        text = article.textContent || '';
+      } else if (readmeDiv) {
+        text = readmeDiv.textContent || '';
+      } else {
+        text = doc.body.textContent || '';
+      }
+    } else {
+      // Node.js fallback for HTML
+      text = text.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+      text = text.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
+      text = text.replace(/<(img|picture|iframe|video|noscript|svg)[^>]*>/gi, '');
+      // Strip all remaining HTML tags
+      text = text.replace(/<[^>]+>/g, ' ');
+    }
+  }
+
+  // 1. Validate if empty after HTML strip
+  if (!text.trim()) return '';
+
+  // 2. Normalize newlines
+  text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+  // 3. Remove HTML comments
   text = text.replace(/<!--[\s\S]*?-->/g, '');
 
-  // 3. Remove SVG embeds
+  // 4. Remove base64 images
+  text = text.replace(/data:image\/[^;]+;base64,[^\s"')]+/gi, '');
+
+  // 5. Remove embedded SVGs
   text = text.replace(/<svg[\s\S]*?<\/svg>/gi, '');
 
-  // 4. Remove badge/shield links like [![...](...)](...) or <a><img></a>
-  text = text.replace(/\[!\[.*?\]\(.*?\)\]\(.*?\)/gi, '');
-  text = text.replace(/<a\b[^>]*><img\b[^>]*><\/a>/gi, '');
+  // 8. Remove specific tags if they are raw HTML inside Markdown
+  text = text.replace(/<(img|picture|script|style|iframe|video|noscript)\b[^>]*>([\s\S]*?<\/\1>)?/gi, '');
 
-  // 5. Clean up redundant whitespace
-  text = text.replace(/\n{3,}/g, '\n\n').trim();
+  // 7. Remove badges: [![badge](imagem)](link)
+  text = text.replace(/\[!\[.*?\]\(.*?\)\]\(.*?\)/g, '');
 
-  // 6. Truncate cleanly up to maxChars
+  // 6. Remove Markdown images: ![alt](url)
+  text = text.replace(/!\[.*?\]\(.*?\)/g, '');
+
+  // 9. Convert Markdown links to visible text: [texto](url) -> texto
+  text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+
+  // 10. Remove code blocks ``` or ~~~
+  text = text.replace(/```[\s\S]*?```/g, '');
+  text = text.replace(/~~~[\s\S]*?~~~/g, '');
+
+  // 11. Preserve inline code but remove backticks
+  text = text.replace(/`([^`]+)`/g, '$1');
+
+  // Removed: Markdown formatting (headers, lists, etc) is kept as AI models process it well
+
+  // 13. Remove redundant spaces/newlines
+  text = text.replace(/[ \t]+/g, ' '); // collapse spaces
+  text = text.replace(/\n\s*\n/g, '\n\n').trim();
+
+  // 14-16. Truncate carefully
   if (text.length > maxChars) {
-    text = text.substring(0, maxChars) + '\n\n... (truncated for AI processing)';
+    const truncationNotice = '\n\n... (truncated for AI processing)';
+    const effectiveLimit = maxChars - truncationNotice.length;
+    
+    // 15. Avoid cutting last word
+    let truncated = text.substring(0, effectiveLimit);
+    const lastSpace = truncated.lastIndexOf(' ');
+    
+    if (lastSpace > effectiveLimit * 0.8) {
+      truncated = truncated.substring(0, lastSpace);
+    }
+    
+    text = truncated + truncationNotice;
   }
 
   return text;
@@ -227,7 +292,7 @@ export async function fetchRepositoryReadme(
     
     const rawResponse = await fetchFromGitHub<any>(endpoint, {
       headers: {
-        'Accept': 'application/vnd.github.v3.raw',
+        'Accept': 'application/vnd.github.raw+json',
       },
       signal,
       timeoutMs: 10000,

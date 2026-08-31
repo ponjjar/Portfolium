@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Platform, useWindowDimensions } from 'react-native';
-import { useRouter } from 'expo-router';
-import { usePortfolioStore } from '@/store';
-import { getFirstIncompleteStep } from '@/domain/portfolio/validation';
-import { buildPortfolioViewModel } from '@/templates/viewModel';
-import { renderMinimalTemplate } from '@/templates/minimal';
-import { exportHtml, exportSessionJson, exportZip, exportGitHubPagesReady } from '@/utils/export';
-import { Button } from '@/components/ui/button';
+import { CustomOrbitBuilderModal } from '@/components/modals/CustomOrbitBuilderModal';
 import { ExportModal } from '@/components/modals/ExportModal';
-import { Laptop, Smartphone, Download, Settings, Palette, Eye, ArrowLeft, LayoutTemplate, User, Briefcase, MonitorSmartphone } from 'lucide-react-native';
-import { SortableSectionList } from '@/components/ui/SortableSectionList';
-import { ProfileCenterOrbitModal, OrbitItem } from '@/components/modals/ProfileCenterOrbitModal';
+import { HeaderConfigModal } from '@/components/modals/HeaderConfigModal';
+import { OrbitItem, ProfileCenterOrbitModal } from '@/components/modals/ProfileCenterOrbitModal';
 import { ProfileLayoutModal } from '@/components/modals/ProfileLayoutModal';
 import { ProjectLayoutModal } from '@/components/modals/ProjectLayoutModal';
-import { HeaderConfigModal } from '@/components/modals/HeaderConfigModal';
 import { VisualThemeModal } from '@/components/modals/VisualThemeModal';
-import { CustomOrbitBuilderModal } from '@/components/modals/CustomOrbitBuilderModal';
+import { Button } from '@/components/ui/button';
+import { SortableSectionList } from '@/components/ui/SortableSectionList';
+import { getFirstIncompleteStep } from '@/domain/portfolio/validation';
+import { usePortfolioStore } from '@/store';
+import { renderMinimalTemplate } from '@/templates/minimal';
+import { buildPortfolioViewModel } from '@/templates/viewModel';
+import { exportGitHubPagesReady, exportHtml, exportSessionJson, exportZip } from '@/utils/export';
+import { useRouter } from 'expo-router';
+import { ArrowLeft, Briefcase, Download, Eye, Laptop, LayoutTemplate, MonitorSmartphone, Palette, Settings, Smartphone, User } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
+import { Platform, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 
 // @ts-ignore
 import { WebView } from 'react-native-webview';
@@ -24,9 +24,9 @@ export default function EditorScreen() {
   const router = useRouter();
   const { session, updateTheme, updateConfig } = usePortfolioStore();
   const { width } = useWindowDimensions();
-  
+
   const isMobile = width < 768;
-  
+
   // State
   const [viewport, setViewport] = useState<'desktop' | 'mobile'>('desktop');
   const [isExportVisible, setIsExportVisible] = useState(false);
@@ -81,7 +81,7 @@ export default function EditorScreen() {
       alert('Erro ao exportar ZIP');
     }
   };
-  
+
   const handleExportGitHubPages = async () => {
     try {
       await exportGitHubPagesReady(session);
@@ -113,7 +113,7 @@ export default function EditorScreen() {
           </View>
 
           <View className="gap-2 mb-6">
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setVisualThemeModalVisible(true)}
               className="flex-row items-center justify-between bg-surface p-3 rounded border border-border"
             >
@@ -127,7 +127,7 @@ export default function EditorScreen() {
 
           {/* Layout Pickers */}
           <View className="gap-2">
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setProfileLayoutModalVisible(true)}
               className="flex-row items-center justify-between bg-surface p-3 rounded border border-border"
             >
@@ -136,12 +136,12 @@ export default function EditorScreen() {
                 <Text className="text-text font-bold text-sm">Layout do Perfil</Text>
               </View>
               <Text className="text-text-secondary text-xs">{
-                session.portfolio.layout.profile.variant === 'stacked-center' ? 'Empilhado' : 
-                session.portfolio.layout.profile.variant === 'avatar-side' ? 'Lateral' : 'Orbital'
+                session.portfolio.layout.profile.variant === 'stacked-center' ? 'Empilhado' :
+                  session.portfolio.layout.profile.variant === 'avatar-side' ? 'Lateral' : 'Orbital'
               } &gt;</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setProjectLayoutModalVisible(true)}
               className="flex-row items-center justify-between bg-surface p-3 rounded border border-border"
             >
@@ -152,7 +152,7 @@ export default function EditorScreen() {
               <Text className="text-text-secondary text-xs">{session.portfolio.layout.projects.carousel?.enabled ? 'Carrossel' : 'Grade'} &gt;</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setHeaderModalVisible(true)}
               className="flex-row items-center justify-between bg-surface p-3 rounded border border-border"
             >
@@ -173,12 +173,12 @@ export default function EditorScreen() {
               Opções
             </Text>
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             className="flex-row items-center mb-2"
-            onPress={() => updateConfig({ animations: { revealOnScroll: !session.portfolio.animations.revealOnScroll } })}
+            onPress={() => updateConfig({ animations: { ...session.portfolio.animations, sectionReveal: !session.portfolio.animations.sectionReveal } as any })}
           >
-            <View className={`w-4 h-4 rounded border mr-2 items-center justify-center ${session.portfolio.animations.revealOnScroll ? 'bg-primary border-primary' : 'border-border bg-input-background'}`}>
-              {session.portfolio.animations.revealOnScroll && <View className="w-2 h-2 bg-primary-foreground rounded-sm" />}
+            <View className={`w-4 h-4 rounded border mr-2 items-center justify-center ${session.portfolio.animations.sectionReveal ? 'bg-primary border-primary' : 'border-border bg-input-background'}`}>
+              {session.portfolio.animations.sectionReveal && <View className="w-2 h-2 bg-primary-foreground rounded-sm" />}
             </View>
             <Text className="text-text text-sm">Animações de rolagem</Text>
           </TouchableOpacity>
@@ -193,17 +193,17 @@ export default function EditorScreen() {
             </Text>
           </View>
 
-          <SortableSectionList 
-            sections={session.portfolio.sections.filter(s => 
+          <SortableSectionList
+            sections={session.portfolio.sections.filter(s =>
               !(s.id === 'skills' && session.portfolio.layout.profile.embedsTechnologies)
-            )} 
+            )}
             onReorder={(sections) => {
               // Maintain any hidden sections in their existing order relative to the updated ones
-              const hiddenSections = session.portfolio.sections.filter(s => 
+              const hiddenSections = session.portfolio.sections.filter(s =>
                 s.id === 'skills' && session.portfolio.layout.profile.embedsTechnologies
               );
               updateConfig({ sections: [...sections, ...hiddenSections] });
-            }} 
+            }}
             onEdit={handleEditSection}
           />
         </View>
@@ -221,7 +221,7 @@ export default function EditorScreen() {
         <View className="absolute bottom-6 left-6 right-6">
           <Button onPress={() => setShowMobilePreview(true)} className="w-full shadow-lg h-14">
             <Eye color="var(--primary-foreground)" size={18} />
-            <Text className="font-bold text-lg">Visualizar portfólio</Text>
+            <Text className="font-bold text-lg var(--primary-foreground)">Visualizar portfólio</Text>
           </Button>
         </View>
       )}
@@ -250,13 +250,13 @@ export default function EditorScreen() {
       {/* Preview Toolbar */}
       <View className="h-14 border-b border-border flex-row items-center justify-center bg-input-background z-10">
         <View className="flex-row bg-surface-elevated p-1 rounded-lg">
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => setViewport('desktop')}
             className={`p-2 rounded ${viewport === 'desktop' ? 'bg-border' : 'bg-transparent'}`}
           >
             <Laptop color={viewport === 'desktop' ? 'var(--text)' : 'var(--text-secondary)'} size={18} />
           </TouchableOpacity>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => setViewport('mobile')}
             className={`p-2 rounded ${viewport === 'mobile' ? 'bg-border' : 'bg-transparent'}`}
           >
@@ -264,31 +264,38 @@ export default function EditorScreen() {
           </TouchableOpacity>
         </View>
       </View>
-
       {/* Live Preview Content */}
       <View className="flex-1 items-center justify-center overflow-hidden bg-background">
-        <View 
-          className="bg-background border border-border shadow-lg transition-all duration-300 ease-in-out"
-          style={{ 
-            width: viewport === 'desktop' && isMobile ? 1440 : (viewport === 'mobile' ? 375 : '100%'), 
-            height: viewport === 'desktop' && isMobile ? (1440 / width) * 100 + '%' : '100%',
-            maxWidth: viewport === 'desktop' && !isMobile ? 1200 : undefined,
-            transform: viewport === 'desktop' && isMobile ? [{ scale: width / 1440 }] : [],
-            transformOrigin: 'top left',
-            borderRadius: viewport === 'mobile' ? 32 : 8,
-            overflow: 'hidden'
+        <View
+          className="bg-background shadow-lg transition-all duration-300 ease-in-out"
+          style={{
+            width: viewport === 'mobile' ?
+              isMobile ? "100%" :
+                600 : '100%',
+            height: '100%',
+            maxWidth: viewport === 'desktop' && !isMobile ? 1900 : undefined,
+            borderRadius: viewport === 'mobile' ? 32 : (isMobile ? 0 : 8),
+            overflow: 'hidden',
+            borderWidth: viewport === 'mobile' ? 8 : (isMobile ? 0 : 1),
+            borderColor: 'var(--border)'
           }}
         >
           {Platform.OS === 'web' ? (
-            <iframe 
-              srcDoc={htmlContent} 
-              style={{ width: '100%', height: '100%', border: 'none' }} 
+            <iframe
+              srcDoc={htmlContent}
+              style={{
+                width: viewport === 'desktop' && isMobile ? '1280px' : '100%',
+                height: viewport === 'desktop' && isMobile ? `${(1 / (width / 1280)) * 100}%` : '100%',
+                border: 'none',
+                transform: viewport === 'desktop' && isMobile ? `scale(${width / 1280})` : 'none',
+                transformOrigin: 'top left'
+              }}
               sandbox="allow-scripts allow-same-origin"
             />
           ) : (
-            <WebView 
-              source={{ html: htmlContent }} 
-              style={{ flex: 1 }} 
+            <WebView
+              source={{ html: htmlContent }}
+              style={{ flex: 1 }}
             />
           )}
         </View>
@@ -304,9 +311,9 @@ export default function EditorScreen() {
       {(!isMobile || showMobilePreview) && renderPreview()}
 
       {/* Modals */}
-      <ExportModal 
-        visible={isExportVisible} 
-        onClose={() => setIsExportVisible(false)} 
+      <ExportModal
+        visible={isExportVisible}
+        onClose={() => setIsExportVisible(false)}
         onExportHtml={handleExportHtml}
         onExportJson={handleExportJson}
         onExportZip={handleExportZip}
@@ -339,7 +346,7 @@ export default function EditorScreen() {
         onClose={() => setProjectLayoutModalVisible(false)}
         config={session.portfolio.layout.projects as any}
         onUpdate={(config) => {
-          updateConfig({ layout: { ...session.portfolio.layout, projects: config } });
+          updateConfig({ layout: { ...session.portfolio.layout, projects: config as any } });
         }}
       />
 
@@ -357,11 +364,11 @@ export default function EditorScreen() {
         onClose={() => setOrbitModalVisible(false)}
         order={session.portfolio.layout.profile.cornerItemsOrder as OrbitItem[]}
         onUpdateOrder={(newOrder) => {
-          updateConfig({ 
-            layout: { 
-              ...session.portfolio.layout, 
-              profile: { ...session.portfolio.layout.profile, cornerItemsOrder: newOrder } 
-            } 
+          updateConfig({
+            layout: {
+              ...session.portfolio.layout,
+              profile: { ...session.portfolio.layout.profile, cornerItemsOrder: newOrder }
+            }
           });
         }}
       />
@@ -369,18 +376,10 @@ export default function EditorScreen() {
       <VisualThemeModal
         visible={visualThemeModalVisible}
         onClose={() => setVisualThemeModalVisible(false)}
-        config={{
-          preset: session.portfolio.visualTheme?.preset || 'dark',
-          accent: session.portfolio.visualTheme?.accent || session.portfolio.theme.accent,
-          backgroundEffects: session.portfolio.visualTheme?.backgroundEffects || {
-            glows: { enabled: false, intensity: 'medium', color: '#3b82f6', count: 2 },
-            microStars: { enabled: false, density: 'low', opacity: 0.3 }
-          }
-        }}
+        config={session.portfolio.visualTheme as any}
         onUpdate={(config) => {
-          // Update both new visualTheme and backwards compatible theme
           updateTheme({ mode: config.preset.includes('light') ? 'light' : 'dark', accent: config.accent });
-          updateConfig({ visualTheme: config });
+          updateConfig({ visualTheme: config as any });
         }}
       />
 
@@ -390,19 +389,19 @@ export default function EditorScreen() {
         zones={session.portfolio.layout.profile.zones as any || { center: 'avatar', topLeft: 'name', topRight: 'headline', left: 'links', right: '', topCenter: '', bottomLeft: 'description', bottomRight: 'technologies' }}
         embedsTechnologies={session.portfolio.layout.profile.embedsTechnologies || false}
         onUpdateZones={(zones) => {
-          updateConfig({ 
-            layout: { 
-              ...session.portfolio.layout, 
-              profile: { ...session.portfolio.layout.profile, zones } 
-            } 
+          updateConfig({
+            layout: {
+              ...session.portfolio.layout,
+              profile: { ...session.portfolio.layout.profile, zones }
+            }
           });
         }}
         onUpdateEmbedsTech={(embedsTechnologies) => {
-          updateConfig({ 
-            layout: { 
-              ...session.portfolio.layout, 
-              profile: { ...session.portfolio.layout.profile, embedsTechnologies } 
-            } 
+          updateConfig({
+            layout: {
+              ...session.portfolio.layout,
+              profile: { ...session.portfolio.layout.profile, embedsTechnologies }
+            }
           });
         }}
       />
