@@ -1,0 +1,16 @@
+---
+description: Consistência de temas e tokens semânticos (Zero cores hardcoded)
+globs: src/components/**/*.{tsx,ts}, src/app/**/*.{tsx,ts}, src/**/*.css
+alwaysApply: false
+---
+
+# Consistência de Temas e Tokens Semânticos (Zero Cores Hardcoded)
+
+- **É proibido** o uso de cores hexadecimais fixas ou classes Tailwind literais (`bg-white`, `bg-black`, `text-white`, `text-black`, `#000`, `#FFF`) em componentes visuais.
+- Utilize sempre os tokens semânticos universais definidos no sistema de temas (`src/global.css`):
+  - **Backgrounds**: `bg-background`, `bg-surface`, `bg-surface-elevated`, `bg-input-background`
+  - **Textos**: `text-text`, `text-text-secondary`, `text-text-muted`
+  - **Bordas**: `border-border`, `border-border-strong`
+  - **Ações/Destaques**: `bg-primary`, `text-primary-foreground`
+- Todo componente, modal ou elemento animado deve ser compatível com os temas: `light`, `dark`, `lava`, `amoled`, `terminal`, `ocean`.
+- Elementos sobrepostos (Modais, Toasts, Dropdowns) devem garantir contraste adequado e backdrop filters consistentes.
