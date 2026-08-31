@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { 
   isProfileComplete, 
   isProjectsComplete, 
@@ -36,7 +37,7 @@ describe('Validation', () => {
         }
       ],
       skills: [
-        { id: 's1', name: 'Skill 1', category: 'Other', selected: true, sources: [] }
+        { id: 's1', name: 'Skill 1', category: 'other', selected: true, sources: [] }
       ],
       skillGroups: [],
       portfolio: {

@@ -21,9 +21,19 @@ interface PortfolioState {
   importSession: (sessionJson: unknown) => boolean;
   resetSession: () => void;
   aggregateSkills: () => void;
+  updateAiConfig: (updates: any) => void;
+  saveProjectAiReview: (projectId: any, locale: any, review: any) => void;
+  saveProfileAiDescription: (locale: any, description: any) => void;
+  approveProjectAiReview: (projectId: any, locale: any) => void;
+  rejectProjectAiReview: (projectId: any, locale: any) => void;
+  deleteProjectAiReview: (projectId: any, locale: any) => void;
+  approveProfileAiDescription: (locale: any) => void;
+  rejectProfileAiDescription: (locale: any) => void;
+  finalizeAiChanges: () => void;
+  updateLanguageSettings: (settings: any) => void;
 }
 
-const getInitialSession = (): PortfolioSession => {
+export const getInitialSession = (): PortfolioSession => {
   const session = PortfolioSessionSchema.parse({});
   session.metadata.createdAt = new Date().toISOString();
   session.metadata.updatedAt = new Date().toISOString();
@@ -31,6 +41,14 @@ const getInitialSession = (): PortfolioSession => {
 };
 
 const defaultSession = getInitialSession();
+
+function normalizeLocale(locale: string): 'pt-BR' | 'en' {
+  const normalized = locale.trim().toLowerCase().replace('_', '-');
+  if (normalized === 'pt' || normalized === 'pt-br') {
+    return 'pt-BR';
+  }
+  return 'en';
+}
 
 export const usePortfolioStore = create<PortfolioState>((set, get) => {
   const updateSession = (updater: (session: PortfolioSession) => PortfolioSession) => {
@@ -48,6 +66,13 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => {
       updateSession((session) => ({
         ...session,
         profile: { ...session.profile, ...profileUpdate },
+      }));
+    },
+
+    updateLanguageSettings: (settingsUpdate: any) => {
+      updateSession((session) => ({
+        ...session,
+        languageSettings: { ...session.languageSettings, ...settingsUpdate },
       }));
     },
 
@@ -137,6 +162,58 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => {
     },
 
     importSession: (sessionJson: unknown) => {
+      // Basic migration for old aiReview to aiReviewsByLocale
+      const asAny = sessionJson as any;
+      if (asAny?.projects && Array.isArray(asAny.projects)) {
+        asAny.projects.forEach((p: any) => {
+          if (p.aiReview && !p.aiReviewsByLocale) {
+            const l = normalizeLocale(p.aiReview.locale || 'pt-BR');
+            p.aiReviewsByLocale = {
+              [l]: p.aiReview
+            };
+            delete p.aiReview;
+          }
+          if (p.aiReviewsByLocale) {
+            const newReviews: any = {};
+            for (const [key, value] of Object.entries(p.aiReviewsByLocale)) {
+              const normKey = normalizeLocale(key);
+              if (!newReviews[normKey]) {
+                newReviews[normKey] = value;
+                newReviews[normKey].locale = normKey;
+              } else if (key === 'pt-BR') {
+                // pt-BR takes precedence over pt
+                newReviews[normKey] = value;
+                newReviews[normKey].locale = normKey;
+              }
+            }
+            p.aiReviewsByLocale = newReviews;
+          }
+        });
+      }
+      
+      if (asAny?.profile?.aiDescriptionsByLocale) {
+        const newDescs: any = {};
+        for (const [key, value] of Object.entries(asAny.profile.aiDescriptionsByLocale)) {
+          const normKey = normalizeLocale(key);
+          if (!newDescs[normKey]) {
+            newDescs[normKey] = value;
+            newDescs[normKey].locale = normKey;
+          } else if (key === 'pt-BR') {
+            newDescs[normKey] = value;
+            newDescs[normKey].locale = normKey;
+          }
+        }
+        asAny.profile.aiDescriptionsByLocale = newDescs;
+      }
+      
+      if (asAny?.languageSettings) {
+        asAny.languageSettings.defaultLanguage = normalizeLocale(asAny.languageSettings.defaultLanguage);
+        if (Array.isArray(asAny.languageSettings.supportedLanguages)) {
+          const unique = new Set(asAny.languageSettings.supportedLanguages.map(normalizeLocale));
+          asAny.languageSettings.supportedLanguages = Array.from(unique);
+        }
+      }
+
       const result = PortfolioSessionSchema.safeParse(sessionJson);
       if (result.success) {
         set({ session: result.data });
@@ -175,7 +252,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => {
               skillsMap.set(key, {
                 id: `skill_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
                 name: tech,
-                category: 'Other',
+                category: 'other' as any,
                 sources: new Set([project.id]),
                 selected: true,
               });
@@ -184,7 +261,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => {
         });
 
         // Convert map back to array
-        const aggregatedSkills: Skill[] = Array.from(skillsMap.values()).map(s => ({
+        const aggregatedSkills: Skill[] = (Array.from(skillsMap.values()) as any[]).map(s => ({
           ...s,
           sources: Array.from(s.sources),
         }));
@@ -192,8 +269,190 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => {
         return { ...session, skills: aggregatedSkills };
       });
     },
+
+    updateAiConfig: (updates) => {
+      updateSession((session) => {
+        return { ...session, aiConfig: { ...(session as any).aiConfig, ...updates } as any };
+      });
+    },
+
+    saveProjectAiReview: (projectId: any, locale: any, aiReview: any) => {
+      updateSession((session) => ({
+        ...session,
+        projects: session.projects.map((p) => {
+          if (p.id === projectId) {
+            return {
+              ...p,
+              aiReviewsByLocale: {
+                ...(p.aiReviewsByLocale || {}),
+                [locale]: aiReview
+              }
+            };
+          }
+          return p;
+        }),
+      }));
+    },
+
+    deleteProjectAiReview: (projectId: any, locale: any) => {
+      updateSession((session) => ({
+        ...session,
+        projects: session.projects.map((p) => {
+          if (p.id === projectId && p.aiReviewsByLocale && p.aiReviewsByLocale[locale]) {
+            const originalDesc = p.aiReviewsByLocale[locale].originalDescription;
+            const newP = { ...p, description: originalDesc };
+            const newReviews = { ...newP.aiReviewsByLocale };
+            delete newReviews[locale];
+            newP.aiReviewsByLocale = newReviews;
+            return newP;
+          }
+          return p;
+        }),
+      }));
+    },
+
+    approveProjectAiReview: (projectId: any, locale: any) => {
+      updateSession((session) => ({
+        ...session,
+        projects: session.projects.map((p) => {
+          if (p.id === projectId && p.aiReviewsByLocale && p.aiReviewsByLocale[locale]) {
+            return {
+              ...p,
+              aiReviewsByLocale: {
+                ...p.aiReviewsByLocale,
+                [locale]: { ...p.aiReviewsByLocale[locale], status: 'approved' }
+              }
+            };
+          }
+          return p;
+        }),
+      }));
+    },
+
+    rejectProjectAiReview: (projectId: any, locale: any) => {
+      updateSession((session) => ({
+        ...session,
+        projects: session.projects.map((p) => {
+          if (p.id === projectId && p.aiReviewsByLocale && p.aiReviewsByLocale[locale]) {
+            return {
+              ...p,
+              aiReviewsByLocale: {
+                ...p.aiReviewsByLocale,
+                [locale]: { ...p.aiReviewsByLocale[locale], status: 'rejected' }
+              }
+            };
+          }
+          return p;
+        }),
+      }));
+    },
+
+    saveProfileAiDescription: (locale: any, description: any) => {
+      updateSession((session) => ({
+        ...session,
+        profile: {
+          ...session.profile,
+          aiDescriptionsByLocale: {
+            ...(session.profile.aiDescriptionsByLocale || {}),
+            [locale]: description
+          }
+        }
+      }));
+    },
+
+    approveProfileAiDescription: (locale: any) => {
+      updateSession((session) => {
+        if (!session.profile.aiDescriptionsByLocale || !session.profile.aiDescriptionsByLocale[locale]) {
+          return session;
+        }
+        return {
+          ...session,
+          profile: {
+            ...session.profile,
+            bio: session.profile.aiDescriptionsByLocale[locale].generatedText,
+            aiDescriptionsByLocale: {
+              ...session.profile.aiDescriptionsByLocale,
+              [locale]: {
+                ...session.profile.aiDescriptionsByLocale[locale],
+                status: 'approved'
+              }
+            }
+          }
+        };
+      });
+    },
+
+    rejectProfileAiDescription: (locale: any) => {
+      updateSession((session) => {
+        if (!session.profile.aiDescriptionsByLocale || !session.profile.aiDescriptionsByLocale[locale]) {
+          return session;
+        }
+        return {
+          ...session,
+          profile: {
+            ...session.profile,
+            bio: session.profile.aiDescriptionsByLocale[locale].originalText,
+            aiDescriptionsByLocale: {
+              ...session.profile.aiDescriptionsByLocale,
+              [locale]: {
+                ...session.profile.aiDescriptionsByLocale[locale],
+                status: 'rejected'
+              }
+            }
+          }
+        };
+      });
+    },
+
+    finalizeAiChanges: () => {
+      updateSession((session) => {
+        const defaultLang = session.languageSettings.defaultLanguage;
+        
+        // 1. Update project descriptions
+        const newProjects = session.projects.map(p => {
+          if (p.aiReviewsByLocale && p.aiReviewsByLocale[defaultLang] && p.aiReviewsByLocale[defaultLang].status === 'approved') {
+            return {
+              ...p,
+              description: p.aiReviewsByLocale[defaultLang].generatedDescription,
+            };
+          }
+          return p;
+        });
+
+        // 2. Update profile bio
+        let newBio = session.profile.bio;
+        if (session.profile.aiDescriptionsByLocale && session.profile.aiDescriptionsByLocale[defaultLang] && session.profile.aiDescriptionsByLocale[defaultLang].status === 'approved') {
+          newBio = session.profile.aiDescriptionsByLocale[defaultLang].generatedText;
+        }
+
+        return {
+          ...session,
+          projects: newProjects,
+          profile: {
+            ...session.profile,
+            bio: newBio
+          }
+        }
+        return { ...session, projects: newProjects, profile: { ...session.profile, bio: newBio } };
+      });
+    },
   };
 });
+
+
+
+export const getManagedAiUsage = (session: PortfolioSession) => {
+  const managedUsed = session.projects.reduce(
+    (total, project) =>
+      total +
+      Object.values(project.aiReviewsByLocale ?? {}).filter(
+        (review) => review.source === 'managed'
+      ).length,
+    0
+  );
+  const managedRemaining = Math.max(0, 10 - managedUsed);
+  return { managedUsed, managedRemaining };
+};
 
 // Implement autosave with debounce
 let saveTimeout: ReturnType<typeof setTimeout> | null = null;

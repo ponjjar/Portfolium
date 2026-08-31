@@ -9,6 +9,10 @@ import {
   PortfolioSessionSchema,
   PortfolioImageSchema,
   SocialLinkSchema,
+  PortfolioSectionSchema,
+  ProjectAiReviewSchema,
+  ProfileAiDescriptionSchema,
+  PortfolioLanguageSettingsSchema,
 } from './schema';
 
 export type Profile = z.infer<typeof ProfileSchema>;
@@ -20,3 +24,8 @@ export type PortfolioConfig = z.infer<typeof PortfolioConfigSchema>;
 export type PortfolioSession = z.infer<typeof PortfolioSessionSchema>;
 export type PortfolioImage = z.infer<typeof PortfolioImageSchema>;
 export type SocialLink = z.infer<typeof SocialLinkSchema>;
+export type PortfolioSection = z.infer<typeof PortfolioSectionSchema>;
+export type ProjectAiReview = z.infer<typeof ProjectAiReviewSchema>;
+export type ProfileAiDescription = z.infer<typeof ProfileAiDescriptionSchema>;
+export type PortfolioLanguageSettings = z.infer<typeof PortfolioLanguageSettingsSchema>;
+export type AiReviewStatus = ProjectAiReview['status'];
