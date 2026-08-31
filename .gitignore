@@ -51,3 +51,5 @@ TASKS.md
 PROJECT.md
 DESIGN.md
 .gemini/
+.vercel
+.env*
