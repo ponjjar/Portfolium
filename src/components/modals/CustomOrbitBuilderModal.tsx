@@ -34,6 +34,45 @@ const AVAILABLE_COMPONENTS = [
   { id: 'otherLinks', label: 'Outros Links', icon: <LinkIcon size={14} color="var(--text)" /> },
 ];
 
+
+
+const getCompLabel = (id: string) => AVAILABLE_COMPONENTS.find(c => c.id === id)?.label || 'Vazio';
+
+const ZoneBox = ({ 
+  zoneKey, 
+  label, 
+  zones, 
+  activeZone, 
+  onSelect 
+}: { 
+  zoneKey: keyof OrbitZones; 
+  label: string; 
+  zones: OrbitZones; 
+  activeZone: keyof OrbitZones | null; 
+  onSelect: (k: keyof OrbitZones) => void 
+}) => {
+  const isCenter = zoneKey === 'center';
+  const compId = zones[zoneKey];
+  const compLabel = isCenter ? 'Avatar (Fixo)' : getCompLabel(compId);
+  
+  return (
+    <TouchableOpacity 
+      className={`flex-1 m-1 border-2 rounded-xl justify-center items-center p-2 h-20 ${activeZone === zoneKey ? 'border-primary bg-primary/20' : isCenter ? 'border-primary/50 bg-primary/10' : compId ? 'border-border bg-surface-elevated' : 'border-dashed border-border bg-transparent'}`}
+      onPress={() => onSelect(zoneKey)}
+      activeOpacity={isCenter ? 1 : 0.7}
+    >
+      {isCenter ? (
+        <View className="w-10 h-10 rounded-full bg-primary/30 items-center justify-center mb-1">
+          <User size={16} color="var(--primary)" />
+        </View>
+      ) : null}
+      <Text className={`text-xs text-center ${compId || isCenter ? 'font-bold text-text' : 'text-text-muted'}`}>
+        {compLabel}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
 export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnologies, onUpdateZones, onUpdateEmbedsTech }: CustomOrbitBuilderModalProps) {
   const [activeZone, setActiveZone] = React.useState<keyof OrbitZones | null>(null);
 
@@ -47,31 +86,6 @@ export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnol
       onUpdateZones({ ...zones, [activeZone]: compId });
       setActiveZone(null);
     }
-  };
-
-  const getCompLabel = (id: string) => AVAILABLE_COMPONENTS.find(c => c.id === id)?.label || 'Vazio';
-
-  const ZoneBox = ({ zoneKey, label }: { zoneKey: keyof OrbitZones, label: string }) => {
-    const isCenter = zoneKey === 'center';
-    const compId = zones[zoneKey];
-    const compLabel = isCenter ? 'Avatar (Fixo)' : getCompLabel(compId);
-    
-    return (
-      <TouchableOpacity 
-        className={`flex-1 m-1 border-2 rounded-xl justify-center items-center p-2 h-20 ${activeZone === zoneKey ? 'border-primary bg-primary/20' : isCenter ? 'border-primary/50 bg-primary/10' : compId ? 'border-border bg-surface-elevated' : 'border-dashed border-border bg-transparent'}`}
-        onPress={() => handleZoneSelect(zoneKey)}
-        activeOpacity={isCenter ? 1 : 0.7}
-      >
-        {isCenter ? (
-          <View className="w-10 h-10 rounded-full bg-primary/30 items-center justify-center mb-1">
-            <User size={16} color="var(--primary)" />
-          </View>
-        ) : null}
-        <Text className={`text-xs text-center ${compId || isCenter ? 'font-bold text-text' : 'text-text-muted'}`}>
-          {compLabel}
-        </Text>
-      </TouchableOpacity>
-    );
   };
 
   return (
@@ -93,19 +107,19 @@ export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnol
 
         <View className="bg-input-background p-4 rounded-xl border border-border mb-6">
           <View className="flex-row">
-            <ZoneBox zoneKey="topLeft" label="Top Left" />
-            <ZoneBox zoneKey="topCenter" label="Top Center" />
-            <ZoneBox zoneKey="topRight" label="Top Right" />
+            <ZoneBox zoneKey="topLeft" label="Top Left" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
+            <ZoneBox zoneKey="topCenter" label="Top Center" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
+            <ZoneBox zoneKey="topRight" label="Top Right" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
           </View>
           <View className="flex-row">
-            <ZoneBox zoneKey="left" label="Left" />
-            <ZoneBox zoneKey="center" label="Center" />
-            <ZoneBox zoneKey="right" label="Right" />
+            <ZoneBox zoneKey="left" label="Left" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
+            <ZoneBox zoneKey="center" label="Center" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
+            <ZoneBox zoneKey="right" label="Right" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
           </View>
           <View className="flex-row">
-            <ZoneBox zoneKey="bottomLeft" label="Bottom Left" />
+            <ZoneBox zoneKey="bottomLeft" label="Bottom Left" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
             <View className="flex-1 m-1" />
-            <ZoneBox zoneKey="bottomRight" label="Bottom Right" />
+            <ZoneBox zoneKey="bottomRight" label="Bottom Right" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
           </View>
         </View>
 

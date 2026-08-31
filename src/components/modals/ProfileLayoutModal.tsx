@@ -29,7 +29,7 @@ export function ProfileLayoutModal({
   onOpenCustomOrbitBuilder
 }: ProfileLayoutModalProps) {
   return (
-    <Modal
+    <Modal variant="popover"
       visible={visible}
       onClose={onClose}
       title="Layout do Perfil"

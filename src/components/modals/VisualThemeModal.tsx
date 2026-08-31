@@ -42,21 +42,22 @@ const PRESETS = [
 
 const ACCENT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#FFFFFF', '#000000'];
 
+const ToggleRow = ({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) => (
+  <TouchableOpacity 
+    className="flex-row items-center justify-between py-3 border-b border-border"
+    onPress={() => onChange(!value)}
+  >
+    <Text className="text-text font-bold">{label}</Text>
+    <View className={`w-10 h-6 rounded-full p-1 justify-center ${value ? 'bg-primary' : 'bg-input-background border border-border'}`}>
+      <View className={`w-4 h-4 rounded-full bg-white shadow-sm ${value ? 'ml-auto' : ''}`} />
+    </View>
+  </TouchableOpacity>
+);
+
 export function VisualThemeModal({ visible, onClose, config, onUpdate }: VisualThemeModalProps) {
-  const ToggleRow = ({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) => (
-    <TouchableOpacity 
-      className="flex-row items-center justify-between py-3 border-b border-border"
-      onPress={() => onChange(!value)}
-    >
-      <Text className="text-text font-bold">{label}</Text>
-      <View className={`w-10 h-6 rounded-full p-1 justify-center ${value ? 'bg-primary' : 'bg-input-background border border-border'}`}>
-        <View className={`w-4 h-4 rounded-full bg-white shadow-sm ${value ? 'ml-auto' : ''}`} />
-      </View>
-    </TouchableOpacity>
-  );
 
   return (
-    <Modal
+    <Modal variant="popover"
       visible={visible}
       onClose={onClose}
       title="Tema e Efeitos Visuais"

@@ -1,7 +1,6 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 interface HeaderConfig {
   enabled: boolean;
@@ -18,21 +17,22 @@ interface HeaderConfigModalProps {
   onUpdate: (config: HeaderConfig) => void;
 }
 
+const ToggleRow = ({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) => (
+  <TouchableOpacity
+    className="flex-row items-center justify-between py-3 border-b border-border"
+    onPress={() => onChange(!value)}
+  >
+    <Text className="text-text">{label}</Text>
+    <View className={`w-10 h-6 rounded-full p-1 justify-center ${value ? 'bg-primary' : 'bg-input-background border border-border'}`}>
+      <View className={`w-4 h-4 rounded-full bg-white shadow-sm ${value ? 'ml-auto' : ''}`} />
+    </View>
+  </TouchableOpacity>
+);
+
 export function HeaderConfigModal({ visible, onClose, config, onUpdate }: HeaderConfigModalProps) {
-  const ToggleRow = ({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) => (
-    <TouchableOpacity 
-      className="flex-row items-center justify-between py-3 border-b border-border"
-      onPress={() => onChange(!value)}
-    >
-      <Text className="text-text">{label}</Text>
-      <View className={`w-10 h-6 rounded-full p-1 justify-center ${value ? 'bg-primary' : 'bg-input-background border border-border'}`}>
-        <View className={`w-4 h-4 rounded-full bg-white shadow-sm ${value ? 'ml-auto' : ''}`} />
-      </View>
-    </TouchableOpacity>
-  );
 
   return (
-    <Modal
+    <Modal variant="popover"
       visible={visible}
       onClose={onClose}
       title="Configuração do Cabeçalho"
@@ -44,41 +44,41 @@ export function HeaderConfigModal({ visible, onClose, config, onUpdate }: Header
       }
     >
       <ScrollView className="py-2">
-        <ToggleRow 
-          label="Habilitar Cabeçalho" 
-          value={config.enabled} 
-          onChange={(v) => onUpdate({ ...config, enabled: v })} 
+        <ToggleRow
+          label="Habilitar Cabeçalho"
+          value={config.enabled}
+          onChange={(v) => onUpdate({ ...config, enabled: v })}
         />
-        
+
         {config.enabled && (
           <View className="pl-4 mt-2 mb-4 border-l-2 border-border">
-            <ToggleRow 
-              label="Menu de Navegação (Seções)" 
-              value={config.showNavigation} 
-              onChange={(v) => onUpdate({ ...config, showNavigation: v })} 
+            <ToggleRow
+              label="Menu de Navegação (Seções)"
+              value={config.showNavigation}
+              onChange={(v) => onUpdate({ ...config, showNavigation: v })}
             />
-            <ToggleRow 
-              label="Exibir Seu Nome" 
-              value={config.showName} 
-              onChange={(v) => onUpdate({ ...config, showName: v })} 
+            <ToggleRow
+              label="Exibir Seu Nome"
+              value={config.showName}
+              onChange={(v) => onUpdate({ ...config, showName: v })}
             />
-            <ToggleRow 
-              label="Exibir Seu Avatar" 
-              value={config.showAvatar} 
-              onChange={(v) => onUpdate({ ...config, showAvatar: v })} 
+            <ToggleRow
+              label="Exibir Seu Avatar"
+              value={config.showAvatar}
+              onChange={(v) => onUpdate({ ...config, showAvatar: v })}
             />
 
             {(config.showName || config.showAvatar) && (
               <View className="mt-4">
                 <Text className="text-text-secondary text-xs mb-2 uppercase tracking-wider font-bold">Posição da Identificação</Text>
                 <View className="flex-row gap-2">
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     onPress={() => onUpdate({ ...config, namePosition: 'left' })}
                     className={`flex-1 py-2 rounded items-center border ${config.namePosition === 'left' ? 'border-primary bg-primary/20' : 'border-border bg-input-background'}`}
                   >
                     <Text className={config.namePosition === 'left' ? 'text-primary font-bold' : 'text-text'}>Esquerda</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     onPress={() => onUpdate({ ...config, namePosition: 'right' })}
                     className={`flex-1 py-2 rounded items-center border ${config.namePosition === 'right' ? 'border-primary bg-primary/20' : 'border-border bg-input-background'}`}
                   >

@@ -23,7 +23,7 @@ interface ProjectLayoutModalProps {
 
 export function ProjectLayoutModal({ visible, onClose, config, onUpdate }: ProjectLayoutModalProps) {
   return (
-    <Modal
+    <Modal variant="popover"
       visible={visible}
       onClose={onClose}
       title="Layout dos Projetos"
