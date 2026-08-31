@@ -3,11 +3,11 @@ import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
 
 import en from './locales/en.json';
-import pt from './locales/pt.json';
+import ptBR from './locales/pt-BR.json';
 
 const resources = {
   en: { translation: en.translation },
-  pt: { translation: pt.translation },
+  'pt-BR': { translation: ptBR.translation },
 };
 
 i18n
