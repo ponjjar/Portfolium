@@ -30,7 +30,7 @@ export function BottomNav({
   };
 
   return (
-    <View className="flex-row items-center justify-between px-6 py-4 border-t border-border bg-surface-elevated">
+    <View className="flex-row items-center justify-between px-6 pt-4 pb-10 md:pb-4 border-t border-border bg-surface-elevated">
       <Text className="text-text-secondary text-[10px] uppercase tracking-widest hidden md:flex">
         {t('common.saved_automatically')}
       </Text>
