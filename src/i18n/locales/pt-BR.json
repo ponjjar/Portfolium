@@ -9,7 +9,8 @@
       "saved_automatically": "Salvo",
       "add": "Adicionar",
       "cancel": "Cancelar",
-      "confirm": "Confirmar"
+      "confirm": "Confirmar",
+      "done": "Concluir"
     },
     "welcome": {
       "title": "Portfolium",
@@ -78,20 +79,7 @@
       "import_github": "Importar do GitHub",
       "add_project": "Adicionar projeto",
       "your_projects": "Seus projetos",
-      "empty_state": "Nenhum projeto adicionado ainda. Adicione um projeto ou importe seus repositórios do GitHub.",
-      "view_project": "Ver projeto",
-      "source_code": "Código-fonte"
-    },
-    "portfolio": {
-      "sections": {
-        "projects": "Projetos selecionados",
-        "skills": "Habilidades e tecnologias",
-        "about": "Sobre",
-        "experience": "Experiência",
-        "contact": "Contato"
-      },
-      "previous_project": "Projeto anterior",
-      "next_project": "Próximo projeto"
+      "empty_state": "Nenhum projeto adicionado ainda. Adicione um projeto ou importe seus repositórios do GitHub."
     },
     "skills": {
       "title": "Revise suas tecnologias",
@@ -103,7 +91,7 @@
       "add_technology": "Adicionar tecnologia"
     },
     "ai": {
-      "title": "Sugestões da IA",
+      "title": "Deseja revisar os textos com IA?",
       "subtitle": "Esta etapa é opcional.",
       "recommended": "Recomendado",
       "use_my_ai": "Usar uma IA externa",
@@ -117,49 +105,7 @@
       "no_ai": "Continuar sem IA",
       "no_ai_desc": "Seus dados já estão prontos. Você pode gerar seu portfólio sem utilizar inteligência artificial.",
       "no_ai_btn": "CONTINUAR SEM IA",
-      "finish": "Finalizar",
-      "limit_title": "Limite de 10 projetos",
-      "limit_desc": "A IA gratuita pode resumir até 10 projetos por vez. Escolha quais projetos deseja processar.",
-      "selected_count": "{{count}} de 10 projetos selecionados",
-      "limit_reached_title": "Limite atingido",
-      "limit_reached_desc": "Você pode selecionar no máximo 10 projetos usando a IA gratuita. Desmarque um projeto para escolher outro.",
-      "no_description": "Sem descrição original",
-      "generating_profile_title": "Criando sugestão de perfil",
-      "generating_profile_desc": "Analisando os projetos aprovados e suas habilidades...",
-      "error_profile_title": "Erro na geração",
-      "error_profile_desc": "Não foi possível gerar a sugestão. A descrição original será mantida.",
-      "generating_projects_title": "Resumindo {{current}} de {{total}} projetos",
-      "generating_projects_desc": "Estamos analisando seus projetos. Isso pode levar alguns instantes.",
-      "total_failure_title": "Não foi possível gerar os resumos",
-      "total_failure_desc": "Nenhuma descrição foi alterada. Tente novamente mais tarde ou utilize sua IA pessoal.",
-      "partial_failure_title": "Alguns resumos não foram gerados",
-      "partial_failure_desc": "Os projetos com falha manterão suas descrições originais.",
-      "success_generated_title": "Resumos gerados",
-      "success_generated_desc": "Revise os textos e indique quais são úteis antes de continuar.",
-      "fallback_alert": "O serviço principal está temporariamente indisponível. Continuaremos usando o serviço de contingência.",
-      "generation_error": "Falha na geração",
-      "discarded_title": "Resumo descartado",
-      "discarded_msg": "Este resumo não será utilizado. A descrição original do projeto será mantida.",
-      "error_kept_original": "A descrição original do projeto será mantida.",
-      "hide_original": "Esconder descrição original",
-      "show_original": "Ver descrição original",
-      "profile_approved_title": "Descrição aprovada",
-      "profile_approved_msg": "A nova descrição profissional será utilizada no seu portfólio.",
-      "profile_rejected_title": "Manter descrição original",
-      "profile_rejected_msg": "A sugestão da IA não será utilizada. Sua descrição profissional original será mantida no portfólio.",
-      "keep_original": "Manter original",
-      "final_description_title": "Nova descrição que será utilizada:",
-      "no_original_profile": "Você não possui uma descrição profissional original. Volte à etapa de perfil para adicionar uma.",
-      "new_suggestion_title": "Nova sugestão de descrição profissional:",
-      "approve_suggestion": "Aprovar sugestão",
-      "original_description_label": "Descrição Atual:",
-      "cancel_flow_title": "Cancelar geração",
-      "cancel_flow_desc": "As descrições originais serão mantidas. Você tem certeza?",
-      "review_projects_title": "Resumos dos projetos",
-      "generate_profile_btn": "Continuar para o perfil",
-      "success_title": "Tudo pronto!",
-      "success_desc": "Os resumos úteis e a descrição profissional (se aprovada) foram aplicados com sucesso ao seu portfólio.",
-      "go_to_next_step": "Ir para a próxima etapa"
+      "finish": "Finalizar"
     },
     "github": {
       "modal_title": "Importar projetos do GitHub",
@@ -189,11 +135,79 @@
       "lava": "Lava",
       "dark": "Escuro",
       "amoled": "AMOLED",
-      "change_theme": "Alterar tema"
+      "change_theme": "Alterar tema",
+      "hold_to_select": "Segure para selecionar outros temas"
     },
-    "languages": {
-      "pt-BR": "Português",
-      "en": "Inglês"
+    "header_config": {
+      "modal_title": "Configuração do Cabeçalho",
+      "enable_header": "Habilitar Cabeçalho",
+      "show_navigation": "Menu de Navegação (Seções)",
+      "show_name": "Exibir Seu Nome",
+      "show_avatar": "Exibir Seu Avatar",
+      "name_position": "Posição da Identificação",
+      "position_left": "Esquerda",
+      "position_right": "Direita"
+    },
+    "profile_orbit": {
+      "modal_title": "Organizar Layout Orbital",
+      "description": "Defina a ordem dos elementos que flutuam ao redor da sua foto. Eles serão distribuídos visualmente nos cantos do layout.",
+      "item_name": "Nome",
+      "item_links": "Links Sociais",
+      "item_headline": "Título Profissional",
+      "pos_top": "Posição: Topo",
+      "pos_middle": "Posição: Meio",
+      "pos_bottom": "Posição: Fundo"
+    },
+    "profile_layout": {
+      "modal_title": "Layout do Perfil",
+      "layout_variant": "Variante de Layout",
+      "variant_stacked": "Empilhado (Centralizado)",
+      "variant_side": "Avatar ao Lado",
+      "variant_orbit": "Avatar Central (Orbital)",
+      "variant_custom_orbit": "Custom Orbit Builder",
+      "btn_organize_orbit": "Organizar Itens Orbitais",
+      "btn_open_builder": "Abrir Construtor de Layout",
+      "avatar_style": "Estilo do Avatar",
+      "shape_label": "Formato",
+      "shape_circle": "Círculo",
+      "shape_square": "Quadrado",
+      "shape_rounded": "Arredondado",
+      "border_label": "Borda",
+      "border_none": "Sem Borda",
+      "border_subtle": "Suave",
+      "border_strong": "Forte",
+      "effect_label": "Efeito",
+      "effect_none": "Nenhum",
+      "effect_fade_in": "Fade-In",
+      "effect_shadow": "Sombra",
+      "effect_glow": "Glow"
+    },
+    "visual_theme": {
+      "modal_title": "Tema e Efeitos Visuais",
+      "preset_title": "Predefinição de Tema",
+      "accent_color": "Cor de Destaque",
+      "background_effects": "Efeitos de Fundo (Background)",
+      "glows_label": "Bolas de Brilho (Glows)",
+      "glow_intensity": "Intensidade do Brilho",
+      "intensity_low": "Suave",
+      "intensity_medium": "Médio",
+      "intensity_high": "Forte",
+      "stars_label": "Micro Estrelas (Pontilhado)",
+      "stars_density": "Densidade",
+      "density_low": "Raro",
+      "density_medium": "Normal",
+      "density_high": "Denso",
+      "presets": {
+        "minimal": "Minimal (Auto)",
+        "dark": "Dark",
+        "clean_light": "Clean Light",
+        "amoled": "AMOLED Black",
+        "cosmic_glow": "Cosmic Glow",
+        "soft_purple": "Soft Purple",
+        "neon_orbit": "Neon Orbit",
+        "lava": "Lava",
+        "grid_stars": "Grid + Stars"
+      }
     }
   }
 }
