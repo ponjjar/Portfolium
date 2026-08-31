@@ -114,7 +114,7 @@ export default function ProfileScreen() {
   const renderMainLinks = () => (
     <>
       <Text className="text-[11px] font-bold text-text-secondary uppercase mb-6 tracking-wide">
-        Links Principais
+        {t('profile.main_links')}
       </Text>
       
       <FormField 
@@ -224,12 +224,12 @@ export default function ProfileScreen() {
             <View className="border-t border-border pt-6 md:border-t-0 md:pt-0">
               <View className="flex-row justify-between items-center mb-6">
                 <Text className="text-[11px] font-bold text-text-secondary uppercase tracking-wide">
-                  Outros Links
+                  {t('profile.other_links')}
                 </Text>
                 {customLinks.length < 5 && (
                   <Pressable onPress={addCustomLink} className="flex-row items-center gap-1.5 bg-surface-elevated px-3 py-1.5 rounded-full border border-border transition-colors hover:bg-border/30">
                     <Plus size={14} color="var(--text)" />
-                    <Text className="text-[12px] font-medium text-text">Adicionar</Text>
+                    <Text className="text-[12px] font-medium text-text">{t('common.add')}</Text>
                   </Pressable>
                 )}
               </View>
@@ -238,8 +238,8 @@ export default function ProfileScreen() {
                 <View key={link.type} className="flex-row gap-3 mb-2 items-start">
                   <View className="flex-1">
                     <FormField
-                      label="Nome do Site"
-                      placeholder="Ex: Medium, Portfólio"
+                      label={t('profile.site_name')}
+                      placeholder={t('profile.site_name_placeholder')}
                       value={link.label}
                       onChangeText={(text) => {
                         updateCustomLink(link.type, { label: text });
@@ -249,8 +249,8 @@ export default function ProfileScreen() {
                   </View>
                   <View className="flex-1">
                     <FormField
-                      label="Link de Acesso"
-                      placeholder="https://..."
+                      label={t('profile.access_link')}
+                      placeholder={t('profile.access_link_placeholder')}
                       value={link.url}
                       onChangeText={(text) => {
                         updateCustomLink(link.type, { url: text });

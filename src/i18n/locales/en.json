@@ -1,16 +1,20 @@
 {
   "translation": {
     "common": {
-      "portfolio_builder": "PORTFOLIO BUILDER",
+      "portfolio_builder": "PORTFOLIUM",
       "scroll_to_discover": "Scroll to discover",
       "step_of": "Step {{step}} of {{total}}",
       "continue": "Continue",
       "back": "Back",
-      "saved_automatically": "Saved"
+      "saved_automatically": "Saved",
+      "add": "Add",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
     },
     "welcome": {
-      "title": "One profile.\n Three ways to\n present yourself.",
-      "subtitle": "Portfolio Builder is your professional identity hub. Gather your data once and generate multiple presentations.",
+      "title": "Portfolium",
+      "subtitleSlogan": "Your professional identity hub.",
+      "subtitle": "Gather your data once and generate multiple presentations.",
       "start": "Start now",
       "import_session": "Import data",
       "terms": "By continuing, you agree to our Terms of Service and Privacy Policy.",
@@ -20,6 +24,14 @@
       "import_error": "Error processing JSON file.",
       "pick_error": "Error picking file.",
       "drop_json_only": "Please drop only .json files",
+      "tags": {
+        "profile": "Profile",
+        "projects": "Projects",
+        "technologies": "Technologies",
+        "experiences": "Experiences",
+        "links": "Links",
+        "social": "Social"
+      },
       "hub_title": "A single source of truth",
       "hub_desc": "Portfolio Builder structures your information, experiences, and tech stack in a centralized format. Keep everything in one place.",
       "results_title": "Generate multiple formats",
@@ -30,10 +42,12 @@
       "result_readme_desc": "A structured Markdown file to make your GitHub profile look amazing.",
       "result_cv": "PDF Resume",
       "result_cv_desc": "A clean, professional, and ATS-friendly document for your next job application.",
-      "integrations_title": "Seamless integration",
-      "integrations_desc": "Use what you already have. Import your GitHub repositories in two clicks and leverage your past work.",
+      "integrations_title": "Integrations",
+      "integrations_desc": "Connect with platforms you already use to automatically import your data.",
+      "integrations_github": "Connect with your GitHub account",
       "privacy_title": "Your data remains yours",
-      "privacy_desc": "No login required. We don't store your data on our servers. Everything is processed locally on your device and can be exported anytime."
+      "privacy_desc": "No login required. We don't store your data on our servers. Everything is processed locally on your device and can be exported anytime.",
+      "ready_to_start": "Ready to get started?"
     },
     "profile": {
       "title": "Let's start with your profile",
@@ -43,14 +57,20 @@
       "headline_label": "Professional headline",
       "headline_placeholder": "E.g., Frontend Engineer",
       "about_label": "About you",
-      "about_placeholder": "Write a brief professional introduction.",
-      "avatar_label": "Photo or Avatar",
-      "upload_image": "[ Upload image ]",
-      "use_url": "[ Use URL ]",
-      "links_label": "Links",
-      "github_placeholder": "GitHub URL",
-      "linkedin_placeholder": "LinkedIn URL",
-      "website_placeholder": "Personal website"
+      "about_placeholder": "A brief summary of who you are, your experience, and what you do.",
+      "main_links": "Main Links",
+      "other_links": "Other Links",
+      "site_name": "Site Name",
+      "site_name_placeholder": "Ex: Medium, Portfolio",
+      "access_link": "Access Link",
+      "access_link_placeholder": "https://..."
+    },
+    "image_picker": {
+      "save_url": "Save URL",
+      "drag_drop": "Drag an image here",
+      "or_choose": "or choose an option below",
+      "choose_file": "Choose file",
+      "use_url": "Use URL"
     },
     "projects": {
       "title": "Add your projects",

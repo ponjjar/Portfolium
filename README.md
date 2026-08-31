@@ -58,13 +58,13 @@ graph TD
 
 Our goal is to make Portfolio Builder natively available across all major platforms. Track our progress below:
 
-- [ ] **Web** (PWA & Web App)
+- [x] **Web** (PWA & Web App)
 - [ ] **PlayStore** (Android)
 - [ ] **AppStore** (iOS / iPadOS)
 - [ ] **Linux** 
 - [ ] **Windows** 
 
-## 🔌 Supported Integrations
+## Supported Integrations
 
 - [ ] **GitHub**: Auto-import repositories, stats, and languages.
 - [ ] **Figma**: Embed design prototypes and UI showcases.
@@ -130,13 +130,13 @@ graph TD
 
 Nosso objetivo é tornar o Portfolio Builder disponível nativamente em todas as principais plataformas. Acompanhe nosso progresso:
 
-- [ ] **Web** (PWA & Web App)
+- [x]] **Web** (PWA & Web App)
 - [ ] **PlayStore** (Android)
 - [ ] **AppStore** (iOS / iPadOS)
 - [ ] **Linux** 
 - [ ] **Windows** 
 
-## 🔌 Integrações Suportadas
+## Integrações Suportadas
 
 - [ ] **GitHub**: Importação automática de repositórios, estatísticas e linguagens.
 - [ ] **Figma**: Inserção de protótipos de design e vitrines de UI interativas.

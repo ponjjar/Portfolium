@@ -9,8 +9,12 @@ export interface PortfolioViewModel {
   skills: Skill[];
   skillGroups: SkillGroup[];
   theme: PortfolioSession['portfolio']['theme'];
+  visualTheme: PortfolioSession['portfolio']['visualTheme'];
   sections: PortfolioSession['portfolio']['sections'];
   settings: PortfolioSession['portfolio']['settings'];
+  layout: PortfolioSession['portfolio']['layout'];
+  animations: PortfolioSession['portfolio']['animations'];
+  navigation: PortfolioSession['portfolio']['navigation'];
 }
 
 export function buildPortfolioViewModel(session: PortfolioSession): PortfolioViewModel {
@@ -34,7 +38,11 @@ export function buildPortfolioViewModel(session: PortfolioSession): PortfolioVie
     skills: validSkills,
     skillGroups: session.skillGroups,
     theme: session.portfolio.theme,
+    visualTheme: session.portfolio.visualTheme,
     sections: validSections,
     settings: session.portfolio.settings,
+    layout: session.portfolio.layout,
+    animations: session.portfolio.animations,
+    navigation: session.portfolio.navigation,
   };
 }

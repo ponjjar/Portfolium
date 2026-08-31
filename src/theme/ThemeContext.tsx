@@ -1,16 +1,16 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { View, StyleSheet, Dimensions, Platform } from 'react-native';
+import { AmbientBackground } from '@/components/ui/ambient-background';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
   Easing,
   runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
-import { AmbientBackground } from '@/components/ui/ambient-background';
 
-export type ThemeId = 'light' | 'lava' | 'dark' | 'amoled';
+export type ThemeId = 'light' | 'lava' | 'dark' | 'amoled' | 'terminal' | 'ocean';
 
 interface ThemeContextType {
   theme: ThemeId;
@@ -20,7 +20,7 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: 'dark',
-  setTheme: () => {},
+  setTheme: () => { },
   isTransitioning: false,
 });
 
@@ -70,7 +70,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     // Direct change if no coordinates provided
     if (x === 0 && y === 0) {
       setThemeState(id);
-      AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => {});
+      AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => { });
       return;
     }
 
@@ -85,10 +85,19 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         const bottom = window.innerHeight - y;
         const maxRadius = Math.hypot(Math.max(x, right), Math.max(y, bottom));
 
+
+        // Set background to current theme to prevent white flash during snapshot
+        document.documentElement.style.backgroundColor = getThemeBackground(theme);
+
+
         setIsTransitioning(true);
         const transition = (document as any).startViewTransition(() => {
+          // Set background to new theme for the new state
+          document.documentElement.style.backgroundColor = getThemeBackground(theme);
+
+
           setThemeState(id);
-          AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => {});
+          AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => { });
         });
 
         transition.ready
@@ -99,9 +108,11 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
                   `circle(0px at ${x}px ${y}px)`,
                   `circle(${maxRadius}px at ${x}px ${y}px)`,
                 ],
+
+
               },
               {
-                duration: 500,
+                duration: 900,
                 easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
                 pseudoElement: '::view-transition-new(root)',
               }
@@ -109,7 +120,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
           })
           .catch(() => {
             setThemeState(id);
-            AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => {});
+            AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => { });
           })
           .finally(() => {
             setIsTransitioning(false);
@@ -152,7 +163,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   const completeTransition = (id: ThemeId) => {
     setThemeState(id);
-    AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => {});
+    AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => { });
 
     setTimeout(() => {
       radius.value = 0;

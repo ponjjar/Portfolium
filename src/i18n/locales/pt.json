@@ -1,16 +1,20 @@
 {
   "translation": {
     "common": {
-      "portfolio_builder": "PORTFOLIO BUILDER",
+      "portfolio_builder": "Portfolium",
       "scroll_to_discover": "Role para descobrir",
       "step_of": "Etapa {{step}} de {{total}}",
       "continue": "Continuar",
       "back": "Voltar",
-      "saved_automatically": "Salvo"
+      "saved_automatically": "Salvo",
+      "add": "Adicionar",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar"
     },
     "welcome": {
-      "title": "Um perfil.\n Três formas de\n se apresentar.",
-      "subtitle": "Portfolio Builder é o seu hub de identidade profissional. Reúna seus dados uma vez e gere múltiplas apresentações.",
+      "title": "Portfolium",
+      "subtitleSlogan": "Seu hub de identidade profissional.",
+      "subtitle": " Reúna seus dados uma vez e gere múltiplas apresentações.",
       "start": "Começar agora",
       "import_session": "Importar dados",
       "terms": "Ao continuar, você concorda com os Termos de Uso e a Política de Privacidade.",
@@ -20,6 +24,14 @@
       "import_error": "Erro ao processar o arquivo JSON.",
       "pick_error": "Erro ao selecionar o arquivo.",
       "drop_json_only": "Por favor, solte apenas arquivos .json",
+      "tags": {
+        "profile": "Perfil",
+        "projects": "Projetos",
+        "technologies": "Tecnologias",
+        "experiences": "Experiências",
+        "links": "Links",
+        "social": "Social"
+      },
       "hub_title": "Uma única base de dados",
       "hub_desc": "O Portfolio Builder estrutura suas informações, experiências e tecnologias em um formato centralizado. Mantenha tudo em um só lugar.",
       "results_title": "Gere múltiplos formatos",
@@ -30,27 +42,35 @@
       "result_readme_desc": "Um arquivo Markdown estruturado para deixar seu perfil do GitHub incrível.",
       "result_cv": "Currículo PDF",
       "result_cv_desc": "Um documento limpo, profissional e amigável para ATS (Sistemas de Recrutamento).",
-      "integrations_title": "Integração direta",
-      "integrations_desc": "Use o que você já tem. Importe seus repositórios do GitHub com dois cliques e aproveite seu trabalho anterior.",
+      "integrations_title": "Integrações",
+      "integrations_desc": "Conecte com plataformas que você já usa para importar dados automaticamente.",
+      "integrations_github": "Conecte com sua conta GitHub",
       "privacy_title": "Seus dados continuam seus",
-      "privacy_desc": "Não precisamos de login. Não guardamos seus dados em nossos servidores. Tudo é processado localmente no seu dispositivo e pode ser exportado a qualquer momento."
+      "privacy_desc": "Não precisamos de login. Não guardamos seus dados em nossos servidores. Tudo é processado localmente no seu dispositivo e pode ser exportado a qualquer momento.",
+      "ready_to_start": "Tudo pronto para começar?"
     },
     "profile": {
-      "title": "Vamos começar pelo seu perfil",
+      "title": "Perfil",
       "subtitle": "Conte um pouco sobre você e como deseja se apresentar.",
       "name_label": "Nome",
       "name_placeholder": "Ex.: Seu nome",
       "headline_label": "Título profissional",
       "headline_placeholder": "Ex.: Frontend Engineer",
       "about_label": "Sobre você",
-      "about_placeholder": "Escreva uma breve apresentação profissional.",
-      "avatar_label": "Foto ou Avatar",
-      "upload_image": "[ Enviar imagem ]",
-      "use_url": "[ Usar URL ]",
-      "links_label": "Links",
-      "github_placeholder": "GitHub URL",
-      "linkedin_placeholder": "LinkedIn URL",
-      "website_placeholder": "Site pessoal"
+      "about_placeholder": "Um breve resumo sobre quem você é, sua experiência e o que você faz.",
+      "main_links": "Links Principais",
+      "other_links": "Outros Links",
+      "site_name": "Nome do Site",
+      "site_name_placeholder": "Ex: Medium, Portfólio",
+      "access_link": "Link de Acesso",
+      "access_link_placeholder": "https://..."
+    },
+    "image_picker": {
+      "save_url": "Salvar URL",
+      "drag_drop": "Arraste uma imagem para cá",
+      "or_choose": "ou escolha uma opção abaixo",
+      "choose_file": "Escolher arquivo",
+      "use_url": "Usar URL"
     },
     "projects": {
       "title": "Adicione seus projetos",
