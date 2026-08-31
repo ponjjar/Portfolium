@@ -1,0 +1,15 @@
+---
+description: Regra rigorosa de internacionalização (i18n) e paridade de idiomas
+globs: src/**/*.{tsx,ts,json}, tests/**/*.{tsx,ts}
+alwaysApply: false
+---
+
+# Internacionalização Rigorosa (Zero Strings Hardcoded)
+
+- **É terminantemente proibido** inserir textos fixos/literais na interface (títulos, botões, modais, placeholders, mensagens de erro, tooltips, tags, etc.).
+- Todo e qualquer texto visível deve utilizar o hook `useTranslation()` (`const { t } = useTranslation()`).
+- Toda nova chave criada deve ser adicionada **obrigatoriamente e em paridade** em ambos os arquivos de dicionário:
+  - `src/i18n/locales/pt.json`
+  - `src/i18n/locales/en.json`
+- Ao refatorar ou tocar em telas com textos fixos, substitua-os imediatamente pelas chaves i18n correspondentes.
+- Execute `npm test -- -t "i18n"` para validar a paridade estrita dos dicionários.

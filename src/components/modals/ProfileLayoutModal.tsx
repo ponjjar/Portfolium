@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
 import { AvatarStyleSchema } from '@/domain/portfolio/schema';
@@ -28,20 +29,47 @@ export function ProfileLayoutModal({
   onOpenOrbitSettings,
   onOpenCustomOrbitBuilder
 }: ProfileLayoutModalProps) {
+  const { t } = useTranslation();
+
+  const getShapeLabel = (shape: 'circle' | 'square' | 'rounded-square') => {
+    switch (shape) {
+      case 'circle': return t('profile_layout.shape_circle');
+      case 'square': return t('profile_layout.shape_square');
+      case 'rounded-square': return t('profile_layout.shape_rounded');
+    }
+  };
+
+  const getBorderLabel = (border: 'none' | 'subtle' | 'strong') => {
+    switch (border) {
+      case 'none': return t('profile_layout.border_none');
+      case 'subtle': return t('profile_layout.border_subtle');
+      case 'strong': return t('profile_layout.border_strong');
+    }
+  };
+
+  const getEffectLabel = (effect: 'none' | 'fade-in' | 'soft-shadow' | 'glow') => {
+    switch (effect) {
+      case 'none': return t('profile_layout.effect_none');
+      case 'fade-in': return t('profile_layout.effect_fade_in');
+      case 'soft-shadow': return t('profile_layout.effect_shadow');
+      case 'glow': return t('profile_layout.effect_glow');
+    }
+  };
+
   return (
     <Modal variant="popover"
       visible={visible}
       onClose={onClose}
-      title="Layout do Perfil"
+      title={t('profile_layout.modal_title')}
       size="md"
       footer={
         <Button variant="default" className="w-full" onPress={onClose}>
-          <Text className="text-primary-foreground font-bold">Concluir</Text>
+          <Text className="text-primary-foreground font-bold">{t('common.done')}</Text>
         </Button>
       }
     >
       <ScrollView className="py-2">
-        <Text className="text-text font-bold text-sm mb-3">Variante de Layout</Text>
+        <Text className="text-text font-bold text-sm mb-3">{t('profile_layout.layout_variant')}</Text>
 
         <View className="gap-3 mb-6">
           {/* Stacked Center */}
@@ -56,7 +84,9 @@ export function ProfileLayoutModal({
                 <View className="w-6 h-1 bg-border rounded" />
               </View>
               <View className="flex-1">
-                <Text className={`font-bold text-sm ${currentVariant === 'stacked-center' ? 'text-primary' : 'text-text'}`}>Empilhado (Centralizado)</Text>
+                <Text className={`font-bold text-sm ${currentVariant === 'stacked-center' ? 'text-primary' : 'text-text'}`}>
+                  {t('profile_layout.variant_stacked')}
+                </Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -76,7 +106,9 @@ export function ProfileLayoutModal({
                 </View>
               </View>
               <View className="flex-1">
-                <Text className={`font-bold text-sm ${currentVariant === 'avatar-side' ? 'text-primary' : 'text-text'}`}>Avatar ao Lado</Text>
+                <Text className={`font-bold text-sm ${currentVariant === 'avatar-side' ? 'text-primary' : 'text-text'}`}>
+                  {t('profile_layout.variant_side')}
+                </Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -91,13 +123,15 @@ export function ProfileLayoutModal({
                 <View className="w-3 h-0.5 bg-border absolute bottom-1 rounded" />
               </View>
               <View className="flex-1">
-                <Text className={`font-bold text-sm ${currentVariant === 'center-orbit' ? 'text-primary' : 'text-text'}`}>Avatar Central (Orbital)</Text>
+                <Text className={`font-bold text-sm ${currentVariant === 'center-orbit' ? 'text-primary' : 'text-text'}`}>
+                  {t('profile_layout.variant_orbit')}
+                </Text>
               </View>
             </TouchableOpacity>
             {currentVariant === 'center-orbit' && (
               <View className="ml-14 mt-1">
                 <Button variant="outline" size="sm" onPress={onOpenOrbitSettings}>
-                  Organizar Itens Orbitais
+                  <Text className="text-text font-bold text-xs">{t('profile_layout.btn_organize_orbit')}</Text>
                 </Button>
               </View>
             )}
@@ -112,13 +146,15 @@ export function ProfileLayoutModal({
                 </View>
               </View>
               <View className="flex-1">
-                <Text className={`font-bold text-sm ${currentVariant === 'custom-orbit-builder' ? 'text-primary' : 'text-text'}`}>Custom Orbit Builder</Text>
+                <Text className={`font-bold text-sm ${currentVariant === 'custom-orbit-builder' ? 'text-primary' : 'text-text'}`}>
+                  {t('profile_layout.variant_custom_orbit')}
+                </Text>
               </View>
             </TouchableOpacity>
             {currentVariant === 'custom-orbit-builder' && (
               <View className="ml-14 mt-1">
                 <Button variant="outline" size="sm" onPress={onOpenCustomOrbitBuilder}>
-                  <Text className="text-text font-bold text-xs">Abrir Construtor de Layout</Text>
+                  <Text className="text-text font-bold text-xs">{t('profile_layout.btn_open_builder')}</Text>
                 </Button>
               </View>
             )}
@@ -126,9 +162,9 @@ export function ProfileLayoutModal({
         </View>
 
         <View className="border-t border-border pt-4 mt-2">
-          <Text className="text-text font-bold text-sm mb-3">Estilo do Avatar</Text>
+          <Text className="text-text font-bold text-sm mb-3">{t('profile_layout.avatar_style')}</Text>
           
-          <Text className="text-text-secondary text-xs mb-2">Formato</Text>
+          <Text className="text-text-secondary text-xs mb-2">{t('profile_layout.shape_label')}</Text>
           <View className="flex-row gap-2 mb-4">
             {(['circle', 'square', 'rounded-square'] as const).map(shape => (
               <TouchableOpacity 
@@ -137,13 +173,13 @@ export function ProfileLayoutModal({
                 className={`flex-1 py-1.5 rounded items-center border ${avatarStyle.shape === shape ? 'border-primary bg-primary/20' : 'border-border bg-surface'}`}
               >
                 <Text className={avatarStyle.shape === shape ? 'text-primary font-bold text-xs' : 'text-text text-xs'}>
-                  {shape === 'circle' ? 'Círculo' : shape === 'square' ? 'Quadrado' : 'Arredondado'}
+                  {getShapeLabel(shape)}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
 
-          <Text className="text-text-secondary text-xs mb-2">Borda</Text>
+          <Text className="text-text-secondary text-xs mb-2">{t('profile_layout.border_label')}</Text>
           <View className="flex-row gap-2 mb-4">
             {(['none', 'subtle', 'strong'] as const).map(border => (
               <TouchableOpacity 
@@ -152,13 +188,13 @@ export function ProfileLayoutModal({
                 className={`flex-1 py-1.5 rounded items-center border ${avatarStyle.border === border ? 'border-primary bg-primary/20' : 'border-border bg-surface'}`}
               >
                 <Text className={avatarStyle.border === border ? 'text-primary font-bold text-xs' : 'text-text text-xs'}>
-                  {border === 'none' ? 'Sem Borda' : border === 'subtle' ? 'Suave' : 'Forte'}
+                  {getBorderLabel(border)}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
 
-          <Text className="text-text-secondary text-xs mb-2">Efeito</Text>
+          <Text className="text-text-secondary text-xs mb-2">{t('profile_layout.effect_label')}</Text>
           <View className="flex-row gap-2 mb-4 flex-wrap">
             {(['none', 'fade-in', 'soft-shadow', 'glow'] as const).map(effect => (
               <TouchableOpacity 
@@ -167,7 +203,7 @@ export function ProfileLayoutModal({
                 className={`px-3 py-1.5 rounded items-center border ${avatarStyle.effect === effect ? 'border-primary bg-primary/20' : 'border-border bg-surface'}`}
               >
                 <Text className={avatarStyle.effect === effect ? 'text-primary font-bold text-xs' : 'text-text text-xs'}>
-                  {effect === 'none' ? 'Nenhum' : effect === 'fade-in' ? 'Fade-In' : effect === 'soft-shadow' ? 'Sombra' : 'Glow'}
+                  {getEffectLabel(effect)}
                 </Text>
               </TouchableOpacity>
             ))}

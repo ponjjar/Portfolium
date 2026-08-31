@@ -44,7 +44,20 @@ describe('i18n Strict Validation (Rule 6 Parity)', () => {
   });
 
   it('should contain all required core namespaces', () => {
-    const requiredNamespaces = ['common', 'welcome', 'profile', 'projects', 'skills', 'ai', 'github', 'theme'];
+    const requiredNamespaces = [
+      'common',
+      'welcome',
+      'profile',
+      'projects',
+      'skills',
+      'ai',
+      'github',
+      'theme',
+      'header_config',
+      'profile_orbit',
+      'profile_layout',
+      'visual_theme'
+    ];
     const ptNamespaces = Object.keys(pt.translation);
     const enNamespaces = Object.keys(en.translation);
 

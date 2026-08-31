@@ -81,7 +81,7 @@ export function ThemeSelector() {
           className="absolute bg-surface-elevated border border-border rounded-lg shadow-lg px-3 py-2 z-50"
           style={{ top: 56, right: 0 }}
         >
-          <Text className="text-text text-xs whitespace-nowrap">Segure para selecionar outros temas</Text>
+          <Text className="text-text text-xs whitespace-nowrap">{t('theme.hold_to_select')}</Text>
         </View>
       )}
 

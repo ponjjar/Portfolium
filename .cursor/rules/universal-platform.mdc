@@ -1,0 +1,14 @@
+---
+description: Isolamento de plataforma e padrão Universal First (Web, Mobile, Desktop)
+globs: src/**/*.{tsx,ts}
+alwaysApply: false
+---
+
+# Isolamento de Plataforma (Universal First)
+
+- O projeto compartilha o mesmo código-base para Web, Android, iOS e Desktop.
+- Componentes ou hooks com dependências específicas de plataforma (Web/DOM vs Mobile Nativo, ex: drag & drop, file download, canvas/crop) **devem** utilizar extensões dedicadas:
+  - `.web.tsx` / `.web.ts`
+  - `.native.tsx` / `.native.ts`
+- Mantenha sempre paridade funcional entre as implementações web e nativas para evitar quebras de build multiplataforma.
+- Evite importar APIs exclusivas do browser (`window`, `document`, `navigator`) fora de arquivos `.web.tsx` ou guards de plataforma.
