@@ -9,7 +9,8 @@
       "saved_automatically": "Saved",
       "add": "Add",
       "cancel": "Cancel",
-      "confirm": "Confirm"
+      "confirm": "Confirm",
+      "done": "Done"
     },
     "welcome": {
       "title": "Portfolium",
@@ -134,7 +135,79 @@
       "lava": "Lava",
       "dark": "Dark",
       "amoled": "AMOLED",
-      "change_theme": "Change theme"
+      "change_theme": "Change theme",
+      "hold_to_select": "Hold to select other themes"
+    },
+    "header_config": {
+      "modal_title": "Header Configuration",
+      "enable_header": "Enable Header",
+      "show_navigation": "Navigation Menu (Sections)",
+      "show_name": "Show Your Name",
+      "show_avatar": "Show Your Avatar",
+      "name_position": "Identity Position",
+      "position_left": "Left",
+      "position_right": "Right"
+    },
+    "profile_orbit": {
+      "modal_title": "Arrange Orbital Layout",
+      "description": "Define the order of elements floating around your photo. They will be visually distributed across the corners of the layout.",
+      "item_name": "Name",
+      "item_links": "Social Links",
+      "item_headline": "Professional Headline",
+      "pos_top": "Position: Top",
+      "pos_middle": "Position: Middle",
+      "pos_bottom": "Position: Bottom"
+    },
+    "profile_layout": {
+      "modal_title": "Profile Layout",
+      "layout_variant": "Layout Variant",
+      "variant_stacked": "Stacked (Centered)",
+      "variant_side": "Side Avatar",
+      "variant_orbit": "Central Avatar (Orbital)",
+      "variant_custom_orbit": "Custom Orbit Builder",
+      "btn_organize_orbit": "Organize Orbital Items",
+      "btn_open_builder": "Open Layout Builder",
+      "avatar_style": "Avatar Style",
+      "shape_label": "Shape",
+      "shape_circle": "Circle",
+      "shape_square": "Square",
+      "shape_rounded": "Rounded",
+      "border_label": "Border",
+      "border_none": "None",
+      "border_subtle": "Subtle",
+      "border_strong": "Strong",
+      "effect_label": "Effect",
+      "effect_none": "None",
+      "effect_fade_in": "Fade-In",
+      "effect_shadow": "Shadow",
+      "effect_glow": "Glow"
+    },
+    "visual_theme": {
+      "modal_title": "Theme & Visual Effects",
+      "preset_title": "Theme Preset",
+      "accent_color": "Accent Color",
+      "background_effects": "Background Effects",
+      "glows_label": "Glow Orbs",
+      "glow_intensity": "Glow Intensity",
+      "intensity_low": "Subtle",
+      "intensity_medium": "Medium",
+      "intensity_high": "Strong",
+      "stars_label": "Micro Stars (Dotted)",
+      "stars_density": "Density",
+      "density_low": "Sparse",
+      "density_medium": "Normal",
+      "density_high": "Dense",
+      "presets": {
+        "minimal": "Minimal (Auto)",
+        "dark": "Dark",
+        "clean_light": "Clean Light",
+        "amoled": "AMOLED Black",
+        "cosmic_glow": "Cosmic Glow",
+        "soft_purple": "Soft Purple",
+        "neon_orbit": "Neon Orbit",
+        "lava": "Lava",
+        "grid_stars": "Grid + Stars"
+      }
     }
   }
 }

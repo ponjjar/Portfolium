@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
 import { ArrowUp, ArrowDown } from 'lucide-react-native';
@@ -13,20 +14,21 @@ interface ProfileCenterOrbitModalProps {
   onUpdateOrder: (newOrder: OrbitItem[]) => void;
 }
 
-const ITEM_LABELS: Record<OrbitItem, string> = {
-  name: 'Nome',
-  links: 'Links Sociais',
-  headline: 'Título Profissional'
-};
-
 export function ProfileCenterOrbitModal({ visible, onClose, order, onUpdateOrder }: ProfileCenterOrbitModalProps) {
-  const currentOrder = order?.length === 3 ? order : ['name', 'links', 'headline'];
+  const { t } = useTranslation();
+  const currentOrder: OrbitItem[] = order?.length === 3 ? order : ['name', 'links', 'headline'];
+
+  const itemLabels: Record<OrbitItem, string> = {
+    name: t('profile_orbit.item_name'),
+    links: t('profile_orbit.item_links'),
+    headline: t('profile_orbit.item_headline')
+  };
 
   const moveItem = (index: number, direction: 'up' | 'down') => {
     if (direction === 'up' && index === 0) return;
     if (direction === 'down' && index === currentOrder.length - 1) return;
 
-    const newOrder = [...currentOrder];
+    const newOrder = [...currentOrder] as OrbitItem[];
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
     
     const temp = newOrder[index];
@@ -40,18 +42,17 @@ export function ProfileCenterOrbitModal({ visible, onClose, order, onUpdateOrder
     <Modal
       visible={visible}
       onClose={onClose}
-      title="Organizar Layout Orbital"
+      title={t('profile_orbit.modal_title')}
       size="sm"
       footer={
         <Button variant="default" className="w-full" onPress={onClose}>
-          <Text className="text-primary-foreground font-bold">Concluir</Text>
+          <Text className="text-primary-foreground font-bold">{t('common.done')}</Text>
         </Button>
       }
     >
       <View className="py-2">
         <Text className="text-text-secondary text-sm mb-4">
-          Defina a ordem dos elementos que flutuam ao redor da sua foto. 
-          Eles serão distribuídos visualmente nos cantos do layout.
+          {t('profile_orbit.description')}
         </Text>
         
         <View className="border border-border rounded-lg bg-input-background overflow-hidden">
@@ -79,9 +80,9 @@ export function ProfileCenterOrbitModal({ visible, onClose, order, onUpdateOrder
                 </TouchableOpacity>
               </View>
               <View className="flex-1">
-                <Text className="text-text font-bold">{ITEM_LABELS[item as OrbitItem] || item}</Text>
+                <Text className="text-text font-bold">{itemLabels[item] || item}</Text>
                 <Text className="text-text-muted text-xs">
-                  {index === 0 ? 'Posição: Topo' : index === 1 ? 'Posição: Meio' : 'Posição: Fundo'}
+                  {index === 0 ? t('profile_orbit.pos_top') : index === 1 ? t('profile_orbit.pos_middle') : t('profile_orbit.pos_bottom')}
                 </Text>
               </View>
             </View>
