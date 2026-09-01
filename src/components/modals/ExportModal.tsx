@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Modal } from '@/components/ui/modal';
 import { Download, FileJson, FileCode, Globe, FolderArchive } from 'lucide-react-native';
@@ -20,12 +22,13 @@ export function ExportModal({
   onExportZip,
   onExportGitHubPages
 }: ExportModalProps) {
+  const { t } = useTranslation();
 
   return (
     <Modal
       visible={visible}
       onClose={onClose}
-      title="Pronto para exportar"
+      title={t("export.modal_title")}
       size="sm"
     >
       <View className="py-2">
@@ -39,7 +42,7 @@ export function ExportModal({
           <View className="border border-border rounded-lg p-4 bg-input-background">
             <View className="flex-row items-center mb-2">
               <FileCode color="var(--text)" size={20} className="mr-2" />
-              <Text className="text-text font-bold text-base">HTML</Text>
+              <Text className="text-text font-bold text-base">{t("export.html_title")}</Text>
             </View>
             <Text className="text-text-secondary text-xs mb-4">
               Baixe um único arquivo pronto para abrir ou publicar.
@@ -49,7 +52,7 @@ export function ExportModal({
               className="bg-primary py-3 rounded items-center flex-row justify-center"
             >
               <Download color="var(--primary-foreground)" size={16} className="mr-2" />
-              <Text className="text-primary-foreground font-bold text-sm">Baixar HTML</Text>
+              <Text className="text-primary-foreground font-bold text-sm">{t("export.html_btn")}</Text>
             </TouchableOpacity>
           </View>
 
@@ -57,7 +60,7 @@ export function ExportModal({
           <View className="border border-border rounded-lg p-4 bg-input-background">
             <View className="flex-row items-center mb-2">
               <FolderArchive color="var(--text)" size={20} className="mr-2" />
-              <Text className="text-text font-bold text-base">Projeto</Text>
+              <Text className="text-text font-bold text-base">{t("export.project_title")}</Text>
             </View>
             <Text className="text-text-secondary text-xs mb-4">
               Baixe os arquivos do seu portfólio para continuar desenvolvendo.
@@ -67,7 +70,7 @@ export function ExportModal({
               className="bg-transparent border border-border py-3 rounded items-center flex-row justify-center"
             >
               <Download color="var(--text)" size={16} className="mr-2" />
-              <Text className="text-text font-bold text-sm">Baixar ZIP</Text>
+              <Text className="text-text font-bold text-sm">{t("export.project_btn")}</Text>
             </TouchableOpacity>
           </View>
 
@@ -75,7 +78,7 @@ export function ExportModal({
           <View className="border border-border rounded-lg p-4 bg-input-background">
             <View className="flex-row items-center mb-2">
               <Globe color="var(--text)" size={20} className="mr-2" />
-              <Text className="text-text font-bold text-base">GitHub Pages</Text>
+              <Text className="text-text font-bold text-base">{t("export.github_title")}</Text>
             </View>
             <Text className="text-text-secondary text-xs mb-4">
               Prepare seu portfólio para publicar gratuitamente no GitHub Pages.
@@ -85,7 +88,7 @@ export function ExportModal({
               className="bg-transparent border border-border py-3 rounded items-center flex-row justify-center"
             >
               <Globe color="var(--text)" size={16} className="mr-2" />
-              <Text className="text-text font-bold text-sm">Preparar para GitHub Pages</Text>
+              <Text className="text-text font-bold text-sm">{t("export.github_btn")}</Text>
             </TouchableOpacity>
           </View>
 
@@ -93,7 +96,7 @@ export function ExportModal({
           <View className="border border-border rounded-lg p-4 bg-input-background">
             <View className="flex-row items-center mb-2">
               <FileJson color="var(--text)" size={20} className="mr-2" />
-              <Text className="text-text font-bold text-base">Sessão</Text>
+              <Text className="text-text font-bold text-base">{t("export.session_title")}</Text>
             </View>
             <Text className="text-text-secondary text-xs mb-4">
               Salve seus dados para continuar editando depois.
@@ -103,7 +106,7 @@ export function ExportModal({
               className="bg-transparent border border-border py-3 rounded items-center flex-row justify-center"
             >
               <Download color="var(--text)" size={16} className="mr-2" />
-              <Text className="text-text font-bold text-sm">Baixar session.json</Text>
+              <Text className="text-text font-bold text-sm">{t("export.session_btn")}</Text>
             </TouchableOpacity>
           </View>
 

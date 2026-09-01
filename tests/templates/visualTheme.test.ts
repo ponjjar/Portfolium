@@ -48,7 +48,7 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
           bottomRight: 'technologies',
         },
       },
-      projects: {
+      skills: { variant: "simple", badges: false }, projects: {
         columns: 2,
         cardStyle: 'banner-card',
         carousel: {

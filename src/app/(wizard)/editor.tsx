@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { CustomOrbitBuilderModal } from '@/components/modals/CustomOrbitBuilderModal';
 import { ExportModal } from '@/components/modals/ExportModal';
 import { HeaderConfigModal } from '@/components/modals/HeaderConfigModal';
@@ -24,6 +25,7 @@ export default function EditorScreen() {
   const router = useRouter();
   const { session, updateTheme, updateConfig } = usePortfolioStore();
   const { width } = useWindowDimensions();
+  const { t } = useTranslation();
 
   const isMobile = width < 768;
 
@@ -98,8 +100,8 @@ export default function EditorScreen() {
   const renderSidebar = () => (
     <View className={`bg-input-background border-r border-border flex-col ${isMobile ? 'flex-1' : 'w-80'}`}>
       <View className="p-6 border-b border-border">
-        <Text className="text-text font-bold text-xl mb-1">Editor Final</Text>
-        <Text className="text-text-secondary text-xs">Revise e customize seu portfólio.</Text>
+        <Text className="text-text font-bold text-xl mb-1">{t('editor.title')}</Text>
+        <Text className="text-text-secondary text-xs">{t('editor.subtitle')}</Text>
       </View>
 
       <ScrollView className="flex-1">
@@ -108,7 +110,7 @@ export default function EditorScreen() {
           <View className="flex-row items-center mb-4">
             <Palette color="var(--text-secondary)" size={16} className="mr-2" />
             <Text className="text-text-secondary text-xs font-bold uppercase tracking-widest">
-              Personalizar
+              {t('editor.customize')}
             </Text>
           </View>
 
@@ -119,7 +121,7 @@ export default function EditorScreen() {
             >
               <View className="flex-row items-center">
                 <Palette color="var(--text)" size={16} className="mr-3" />
-                <Text className="text-text font-bold text-sm">Tema Visual e Efeitos</Text>
+                <Text className="text-text font-bold text-sm">{t('editor.visualTheme')}</Text>
               </View>
               <Text className="text-text-secondary text-xs">{session.portfolio.visualTheme?.preset || 'dark'} &gt;</Text>
             </TouchableOpacity>
@@ -133,11 +135,11 @@ export default function EditorScreen() {
             >
               <View className="flex-row items-center">
                 <User color="var(--text)" size={16} className="mr-3" />
-                <Text className="text-text font-bold text-sm">Layout do Perfil</Text>
+                <Text className="text-text font-bold text-sm">{t('editor.profileLayout')}</Text>
               </View>
               <Text className="text-text-secondary text-xs">{
-                session.portfolio.layout.profile.variant === 'stacked-center' ? 'Empilhado' :
-                  session.portfolio.layout.profile.variant === 'avatar-side' ? 'Lateral' : 'Orbital'
+                session.portfolio.layout.profile.variant === 'stacked-center' ? t('editor.layouts.stacked') :
+                  session.portfolio.layout.profile.variant === 'avatar-side' ? t('editor.layouts.side') : t('editor.layouts.orbital')
               } &gt;</Text>
             </TouchableOpacity>
 
@@ -147,9 +149,9 @@ export default function EditorScreen() {
             >
               <View className="flex-row items-center">
                 <Briefcase color="var(--text)" size={16} className="mr-3" />
-                <Text className="text-text font-bold text-sm">Layout dos Projetos</Text>
+                <Text className="text-text font-bold text-sm">{t('editor.projectsLayout')}</Text>
               </View>
-              <Text className="text-text-secondary text-xs">{session.portfolio.layout.projects.carousel?.enabled ? 'Carrossel' : 'Grade'} &gt;</Text>
+              <Text className="text-text-secondary text-xs">{session.portfolio.layout.projects.carousel?.enabled ? t('editor.layouts.carousel') : t('editor.layouts.grid')} &gt;</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -158,9 +160,9 @@ export default function EditorScreen() {
             >
               <View className="flex-row items-center">
                 <MonitorSmartphone color="var(--text)" size={16} className="mr-3" />
-                <Text className="text-text font-bold text-sm">Cabeçalho</Text>
+                <Text className="text-text font-bold text-sm">{t('editor.header')}</Text>
               </View>
-              <Text className="text-text-secondary text-xs">{session.portfolio.layout.header?.enabled ? 'Ativo' : 'Oculto'} &gt;</Text>
+              <Text className="text-text-secondary text-xs">{session.portfolio.layout.header?.enabled ? t('editor.layouts.active') : t('editor.layouts.hidden')} &gt;</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -180,7 +182,7 @@ export default function EditorScreen() {
             <View className={`w-4 h-4 rounded border mr-2 items-center justify-center ${session.portfolio.animations.sectionReveal ? 'bg-primary border-primary' : 'border-border bg-input-background'}`}>
               {session.portfolio.animations.sectionReveal && <View className="w-2 h-2 bg-primary-foreground rounded-sm" />}
             </View>
-            <Text className="text-text text-sm">Animações de rolagem</Text>
+            <Text className="text-text text-sm">{t('editor.scrollAnimations')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -214,7 +216,7 @@ export default function EditorScreen() {
         <View className="p-6 border-t border-border">
           <Button onPress={() => setIsExportVisible(true)} className="w-full">
             <Download color="var(--primary-foreground)" size={16} />
-            Exportar Portfólio
+            {t('editor.exportPortfolio')}
           </Button>
         </View>
       ) : (

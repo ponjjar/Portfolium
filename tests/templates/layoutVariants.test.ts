@@ -54,7 +54,7 @@ describe('Layout Variants HTML Generation (Issue #35)', () => {
           bottomRight: 'technologies',
         },
       },
-      projects: {
+      skills: { variant: "simple", badges: false }, projects: {
         columns: 2,
         cardStyle: 'banner-card',
         carousel: {

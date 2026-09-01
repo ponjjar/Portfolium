@@ -106,7 +106,7 @@
     "skills": {
       "title": "Review your technologies",
       "subtitle": "Select the technologies you want to highlight.",
-      "found_message": "✨ {{count}} technologies found in {{projects}} projects",
+      "found_message": "\u2728 {{count}} technologies found in {{projects}} projects",
       "info_message": "You can add, remove, or reorganize any technology.",
       "frontend": "FRONTEND",
       "backend": "BACKEND",
@@ -122,7 +122,7 @@
       "start_btn": "START",
       "free_ai": "Free AI",
       "free_ai_desc": "Use the model provided by Portfolio Builder.",
-      "free_ai_info": "⏱ There may be usage limits or a queue.",
+      "free_ai_info": "\u23f1 There may be usage limits or a queue.",
       "generate_ai_btn": "GENERATE WITH AI",
       "no_ai": "Continue without AI",
       "no_ai_desc": "Your data is ready. You can generate your portfolio without using artificial intelligence.",
@@ -276,6 +276,84 @@
         "lava": "Lava",
         "grid_stars": "Grid + Stars"
       }
+    },
+    "editor": {
+      "title": "Final Editor",
+      "subtitle": "Review and customize your portfolio.",
+      "customize": "Customize",
+      "visualTheme": "Visual Theme & Effects",
+      "profileLayout": "Profile Layout",
+      "projectsLayout": "Projects Layout",
+      "header": "Header",
+      "options": "Options",
+      "scrollAnimations": "Scroll Animations",
+      "sections": "Sections",
+      "exportPortfolio": "Export Portfolio",
+      "layouts": {
+        "stacked": "Stacked",
+        "side": "Side",
+        "orbital": "Orbital",
+        "carousel": "Carousel",
+        "grid": "Grid",
+        "active": "Active",
+        "hidden": "Hidden"
+      }
+    },
+    "sections": {
+      "hero": "Profile",
+      "projects": "Projects",
+      "skills": "Technologies",
+      "experience": "Experience",
+      "education": "Education",
+      "contact": "Contact",
+      "about": "About me"
+    },
+    "project_layout": {
+      "modal_title": "Projects Layout",
+      "display_style": "Display Style (Card)",
+      "style_banner": "Banner (Default)",
+      "style_banner_desc": "Image at the top of the card, classic.",
+      "style_logo": "Side Logo",
+      "style_logo_desc": "Square image focused on the left.",
+      "style_text": "Text Only",
+      "style_text_desc": "Focus on description and code (no images).",
+      "structure": "Structure",
+      "grid": "Fixed Grid",
+      "carousel": "Carousel",
+      "columns": "Number of Columns",
+      "autoplay": "Autoplay",
+      "autoplay_desc": "Advances projects every 3s",
+      "pagination": "Show pagination (dots)",
+      "pagination_desc": "Navigation dots below cards"
+    },
+    "custom_orbit": {
+      "modal_title": "Custom Orbit Builder",
+      "desc": "Drag or click to define which items will appear in each position of the orbital system around your avatar.",
+      "select_zone": "Select for the chosen zone:",
+      "embed_tech": "Embed Technologies in Profile",
+      "embed_tech_desc": "If active, and if there are technologies in the orbit, the standalone technologies section will disappear from the menu to avoid duplication.",
+      "items": {
+        "description": "Bio / Description",
+        "social_links": "Social Links",
+        "tech_stack": "Technologies"
+      },
+      "empty": "Empty"
+    },
+    "export": {
+      "modal_title": "Ready to export",
+      "desc": "Choose how you want to download your portfolio. All formats include minified production-ready files.",
+      "html_title": "HTML",
+      "html_desc": "Download a single index.html file. Ideal for simple hosting anywhere.",
+      "html_btn": "Download HTML",
+      "project_title": "Project",
+      "project_desc": "Download the source files (HTML, CSS, and JS) separately.",
+      "project_btn": "Download ZIP",
+      "github_title": "GitHub Pages",
+      "github_desc": "Prepares the files with correct paths and instructions for free hosting on GitHub Pages.",
+      "github_btn": "Prepare for GitHub Pages",
+      "session_title": "Session",
+      "session_desc": "Download the current editor state (JSON) to restore later.",
+      "session_btn": "Download session.json"
     }
   }
 }

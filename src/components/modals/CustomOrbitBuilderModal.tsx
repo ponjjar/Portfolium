@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
@@ -29,8 +31,8 @@ const AVAILABLE_COMPONENTS = [
   { id: 'name', label: 'Nome', icon: <User size={14} color="var(--text)" /> },
   { id: 'headline', label: 'Headline', icon: <Briefcase size={14} color="var(--text)" /> },
   { id: 'links', label: 'Links Principais', icon: <LinkIcon size={14} color="var(--text)" /> },
-  { id: 'description', label: 'Bio / Descrição', icon: <FileText size={14} color="var(--text)" /> },
-  { id: 'technologies', label: 'Tecnologias', icon: <Code size={14} color="var(--text)" /> },
+  { id: 'description', label: t('custom_orbit.items.description'), icon: <FileText size={14} color="var(--text)" /> },
+  { id: 'technologies', label: t('custom_orbit.items.tech_stack'), icon: <Code size={14} color="var(--text)" /> },
   { id: 'otherLinks', label: 'Outros Links', icon: <LinkIcon size={14} color="var(--text)" /> },
 ];
 
@@ -74,6 +76,7 @@ const ZoneBox = ({
 };
 
 export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnologies, onUpdateZones, onUpdateEmbedsTech }: CustomOrbitBuilderModalProps) {
+  const { t } = useTranslation();
   const [activeZone, setActiveZone] = React.useState<keyof OrbitZones | null>(null);
 
   const handleZoneSelect = (zoneKey: keyof OrbitZones) => {
@@ -92,11 +95,11 @@ export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnol
     <Modal
       visible={visible}
       onClose={() => { setActiveZone(null); onClose(); }}
-      title="Custom Orbit Builder"
+      title={t("custom_orbit.modal_title")}
       size="md"
       footer={
         <Button variant="default" className="w-full" onPress={() => { setActiveZone(null); onClose(); }}>
-          <Text className="text-primary-foreground font-bold">Concluir</Text>
+          <Text className="text-primary-foreground font-bold">{t("common.done")}</Text>
         </Button>
       }
     >
@@ -125,7 +128,7 @@ export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnol
 
         {activeZone && (
           <View className="bg-surface rounded-xl border border-primary p-4 mb-6">
-            <Text className="text-primary font-bold text-sm mb-3 uppercase">Selecione para a zona escolhida:</Text>
+            <Text className="text-primary font-bold text-sm mb-3 uppercase">{t("custom_orbit.select_zone")}</Text>
             <View className="flex-row flex-wrap gap-2">
               {AVAILABLE_COMPONENTS.map(comp => (
                 <TouchableOpacity 
@@ -147,8 +150,8 @@ export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnol
             onPress={() => onUpdateEmbedsTech(!embedsTechnologies)}
           >
             <View className="flex-1 mr-4">
-              <Text className="text-text font-bold text-sm mb-1">Incorporar Tecnologias no Perfil</Text>
-              <Text className="text-text-secondary text-xs">Se ativo, e se houver tecnologias na órbita, a seção autônoma de tecnologias sumirá do menu para não haver duplicação.</Text>
+              <Text className="text-text font-bold text-sm mb-1">{t("custom_orbit.embed_tech")}</Text>
+              <Text className="text-text-secondary text-xs">{t("custom_orbit.embed_tech_desc")}</Text>
             </View>
             <View className={`w-10 h-6 rounded-full p-1 justify-center ${embedsTechnologies ? 'bg-primary' : 'bg-input-background border border-border'}`}>
               <View className={`w-4 h-4 rounded-full bg-white shadow-sm ${embedsTechnologies ? 'ml-auto' : ''}`} />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { User, Briefcase, Code, ArrowUp, ArrowDown, Edit2 } from 'lucide-react-native';
 import { PortfolioSection } from '@/domain/portfolio/types';
@@ -10,15 +11,16 @@ interface SortableSectionListProps {
 }
 
 const SECTION_META: Record<string, { label: string; icon: any }> = {
-  hero: { label: 'Perfil', icon: User },
-  projects: { label: 'Projetos', icon: Briefcase },
-  skills: { label: 'Tecnologias', icon: Code },
-  experience: { label: 'Experiência', icon: Briefcase },
-  education: { label: 'Educação', icon: Briefcase },
-  contact: { label: 'Contato', icon: User },
+  hero: { label: 'hero', icon: User },
+  projects: { label: 'projects', icon: Briefcase },
+  skills: { label: 'skills', icon: Code },
+  experience: { label: 'experience', icon: Briefcase },
+  education: { label: 'education', icon: Briefcase },
+  contact: { label: 'contact', icon: User },
 };
 
 export function SortableSectionList({ sections, onReorder, onEdit }: SortableSectionListProps) {
+  const { t } = useTranslation();
   const items = [...sections].sort((a, b) => a.order - b.order);
 
   const moveItem = (index: number, direction: 'up' | 'down') => {
@@ -70,7 +72,7 @@ export function SortableSectionList({ sections, onReorder, onEdit }: SortableSec
               </TouchableOpacity>
             </View>
             <Icon color="var(--text)" size={16} className="mr-3" />
-            <Text className="text-text flex-1">{meta.label}</Text>
+            <Text className="text-text flex-1">{t(`sections.${meta.label}`)}</Text>
             <TouchableOpacity onPress={() => onEdit(section.id)} className="p-2 bg-input-background hover:bg-surface-elevated rounded">
               <Edit2 color="var(--text-secondary)" size={14} />
             </TouchableOpacity>

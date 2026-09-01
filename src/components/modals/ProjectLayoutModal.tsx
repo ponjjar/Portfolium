@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
@@ -22,22 +24,23 @@ interface ProjectLayoutModalProps {
 }
 
 export function ProjectLayoutModal({ visible, onClose, config, onUpdate }: ProjectLayoutModalProps) {
+  const { t } = useTranslation();
   return (
     <Modal variant="popover"
       visible={visible}
       onClose={onClose}
-      title="Layout dos Projetos"
+      title={t("project_layout.modal_title")}
       size="md"
       footer={
         <Button variant="default" className="w-full" onPress={onClose}>
-          <Text className="text-primary-foreground font-bold">Concluir</Text>
+          <Text className="text-primary-foreground font-bold">{t("common.done")}</Text>
         </Button>
       }
     >
       <ScrollView className="py-2">
         
         {/* DISPLAY STYLE */}
-        <Text className="text-text font-bold text-sm mb-3">Estilo de Exibição (Card)</Text>
+        <Text className="text-text font-bold text-sm mb-3">{t("project_layout.display_style")}</Text>
         <View className="gap-3 mb-6">
           <TouchableOpacity 
             onPress={() => onUpdate({ ...config, cardStyle: 'banner-card' })}
@@ -51,8 +54,8 @@ export function ProjectLayoutModal({ visible, onClose, config, onUpdate }: Proje
               </View>
             </View>
             <View>
-              <Text className={`font-bold ${config.cardStyle === 'banner-card' ? 'text-primary' : 'text-text'}`}>Banner (Padrão)</Text>
-              <Text className="text-text-secondary text-xs">A imagem no topo do card, clássico.</Text>
+              <Text className={`font-bold ${config.cardStyle === 'banner-card' ? 'text-primary' : 'text-text'}`}>{t("project_layout.style_banner")}</Text>
+              <Text className="text-text-secondary text-xs">{t("project_layout.style_banner_desc")}</Text>
             </View>
           </TouchableOpacity>
 
@@ -68,8 +71,8 @@ export function ProjectLayoutModal({ visible, onClose, config, onUpdate }: Proje
               </View>
             </View>
             <View>
-              <Text className={`font-bold ${config.cardStyle === 'logo-side-card' ? 'text-primary' : 'text-text'}`}>Logo Lateral</Text>
-              <Text className="text-text-secondary text-xs">Imagem quadrada focada à esquerda.</Text>
+              <Text className={`font-bold ${config.cardStyle === 'logo-side-card' ? 'text-primary' : 'text-text'}`}>{t("project_layout.style_logo")}</Text>
+              <Text className="text-text-secondary text-xs">{t("project_layout.style_logo_desc")}</Text>
             </View>
           </TouchableOpacity>
 
@@ -83,26 +86,26 @@ export function ProjectLayoutModal({ visible, onClose, config, onUpdate }: Proje
               <View className="w-1/2 h-1 bg-border rounded" />
             </View>
             <View>
-              <Text className={`font-bold ${config.cardStyle === 'text-card' ? 'text-primary' : 'text-text'}`}>Apenas Texto</Text>
-              <Text className="text-text-secondary text-xs">Foco na descrição e código (sem imagens).</Text>
+              <Text className={`font-bold ${config.cardStyle === 'text-card' ? 'text-primary' : 'text-text'}`}>{t("project_layout.style_text")}</Text>
+              <Text className="text-text-secondary text-xs">{t("project_layout.style_text_desc")}</Text>
             </View>
           </TouchableOpacity>
         </View>
 
         {/* STRUCTURE */}
-        <Text className="text-text font-bold text-sm mb-3">Estrutura</Text>
+        <Text className="text-text font-bold text-sm mb-3">{t("project_layout.structure")}</Text>
         <View className="flex-row gap-2 mb-4">
           <TouchableOpacity 
             onPress={() => onUpdate({ ...config, carousel: { ...config.carousel, enabled: false } })}
             className={`flex-1 py-3 rounded items-center border ${!config.carousel.enabled ? 'border-primary bg-primary/20' : 'border-border bg-input-background'}`}
           >
-            <Text className={!config.carousel.enabled ? 'text-primary font-bold' : 'text-text'}>Grade Fixa</Text>
+            <Text className={!config.carousel.enabled ? 'text-primary font-bold' : 'text-text'}>{t("project_layout.grid")}</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => onUpdate({ ...config, carousel: { ...config.carousel, enabled: true } })}
             className={`flex-1 py-3 rounded items-center border ${config.carousel.enabled ? 'border-primary bg-primary/20' : 'border-border bg-input-background'}`}
           >
-            <Text className={config.carousel.enabled ? 'text-primary font-bold' : 'text-text'}>Carrossel</Text>
+            <Text className={config.carousel.enabled ? 'text-primary font-bold' : 'text-text'}>{t("project_layout.carousel")}</Text>
           </TouchableOpacity>
         </View>
 
@@ -110,7 +113,7 @@ export function ProjectLayoutModal({ visible, onClose, config, onUpdate }: Proje
         <View className="p-4 bg-surface rounded-xl border border-border">
           {!config.carousel.enabled ? (
             <>
-              <Text className="text-text-secondary text-xs mb-2">Número de Colunas</Text>
+              <Text className="text-text-secondary text-xs mb-2">{t("project_layout.columns")}</Text>
               <View className="flex-row gap-2">
                 {[1, 2, 3].map(cols => (
                   <TouchableOpacity
@@ -127,8 +130,8 @@ export function ProjectLayoutModal({ visible, onClose, config, onUpdate }: Proje
             <>
               <View className="flex-row items-center justify-between mb-4">
                 <View>
-                  <Text className="text-text font-bold">Auto-rolagem</Text>
-                  <Text className="text-text-secondary text-xs">Avança os projetos a cada 3s</Text>
+                  <Text className="text-text font-bold">{t("project_layout.autoplay")}</Text>
+                  <Text className="text-text-secondary text-xs">{t("project_layout.autoplay_desc")}</Text>
                 </View>
                 <TouchableOpacity 
                   onPress={() => onUpdate({ 
@@ -143,8 +146,8 @@ export function ProjectLayoutModal({ visible, onClose, config, onUpdate }: Proje
 
               <View className="flex-row items-center justify-between">
                 <View>
-                  <Text className="text-text font-bold">Mostrar paginação (pontos)</Text>
-                  <Text className="text-text-secondary text-xs">Pontos de navegação abaixo dos cards</Text>
+                  <Text className="text-text font-bold">{t("project_layout.pagination")}</Text>
+                  <Text className="text-text-secondary text-xs">{t("project_layout.pagination_desc")}</Text>
                 </View>
                 <TouchableOpacity 
                   onPress={() => onUpdate({ 
