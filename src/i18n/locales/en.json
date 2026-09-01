@@ -85,14 +85,23 @@
     },
     "portfolio": {
       "sections": {
-        "projects": "Selected projects",
-        "skills": "Skills & technologies",
+        "projects": "Projects",
+        "skills": "Skills",
         "about": "About",
         "experience": "Experience",
         "contact": "Contact"
       },
       "previous_project": "Previous project",
-      "next_project": "Next project"
+      "next_project": "Next project",
+      "nav": {
+        "hero": "Hero",
+        "projects": "Projects",
+        "skills": "Skills"
+      },
+      "footer": {
+        "rights": "All rights reserved.",
+        "builtWith": "Built with"
+      }
     },
     "skills": {
       "title": "Review your technologies",

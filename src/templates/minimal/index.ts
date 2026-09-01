@@ -30,6 +30,22 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
     }
     return val as string;
   };
+
+  const renderI18n = (keyPath: string) => {
+    if (languageSettings.supportedLanguages.length <= 1) {
+      return escapeHtml(t(keyPath));
+    }
+    return languageSettings.supportedLanguages.map(lang => {
+      const keys = keyPath.split('.');
+      let val = translations[lang] || translations['en'];
+      for (const k of keys) {
+        if (val && typeof val === 'object') val = val[k];
+        else { val = keyPath; break; }
+      }
+      return `<span class="i18n-lang" data-lang="${lang}">${escapeHtml(val as string)}</span>`;
+    }).join('');
+  };
+
   
   // Theme Presets Base Colors
   let bgColor = isDark ? '#0a0a0a' : '#ffffff';
@@ -357,7 +373,7 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
 
     const navHtml = hLayout.showNavigation ? `
       <nav>
-        ${navSections.map(s => `<a href="#${s.id}">${s.id}</a>`).join('')}
+        ${navSections.map(s => `<a href="#${s.id}">${renderI18n('portfolio.nav.' + s.id)}</a>`).join('')}
         ${languageSettings.supportedLanguages.length > 1 ? `
           <select id="lang-selector" style="background:transparent; color:inherit; border:1px solid var(--border); border-radius:4px; padding:2px; font-size:0.8rem; margin-left:1rem;">
             ${languageSettings.supportedLanguages.map(l => `<option value="${l}">${l.toUpperCase()}</option>`).join('')}
@@ -469,11 +485,11 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
           <div class="project-links">
             ${p.links?.demo ? `<a href="${escapeHtml(p.links.demo)}" target="_blank" rel="noopener noreferrer" class="project-link">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-              ${escapeHtml(t('projects.view_project'))}
+              ${renderI18n('projects.view_project')}
             </a>` : ''}
             ${settings.showGitHubLinks && p.links?.repository ? `<a href="${escapeHtml(p.links.repository)}" target="_blank" rel="noopener noreferrer" class="project-link">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-              ${escapeHtml(t('projects.source_code'))}
+              ${renderI18n('projects.source_code')}
             </a>` : ''}
           </div>
         </div>
@@ -488,7 +504,7 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
 
       return `
         <section id="projects">
-          <h2>${escapeHtml(t('portfolio.sections.projects'))}</h2>
+          <h2>${renderI18n('portfolio.sections.projects')}</h2>
           <div class="carousel-wrapper">
             <button class="carousel-arrow carousel-arrow-prev" aria-label="${escapeHtml(t('portfolio.previous_project'))}">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
@@ -507,7 +523,7 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
 
     return `
       <section id="projects">
-        <h2>${escapeHtml(t('portfolio.sections.projects'))}</h2>
+        <h2>${renderI18n('portfolio.sections.projects')}</h2>
         <div class="projects-grid">
           ${cardsHtml}
         </div>
@@ -548,7 +564,7 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
 
     return `
       <section id="skills" class="skills-section">
-        <h2>${escapeHtml(t('portfolio.sections.skills'))}</h2>
+        <h2>${renderI18n('portfolio.sections.skills')}</h2>
         <div class="skills-wrapper">
           ${contentHtml}
         </div>
@@ -744,8 +760,8 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
   </main>
   <footer>
     <div class="container">
-      &copy; ${new Date().getFullYear()} ${escapeHtml(profile.name)}. All rights reserved.
-      <br><span style="opacity: 0.5; font-size: 0.75rem;">Built with Portfolio Builder</span>
+      &copy; ${new Date().getFullYear()} ${escapeHtml(profile.name)}. ${renderI18n('portfolio.footer.rights')}
+      <br><span style="opacity: 0.5; font-size: 0.75rem;">${renderI18n('portfolio.footer.builtWith')} Portfolio Builder</span>
     </div>
   </footer>
   ${scriptsHtml}

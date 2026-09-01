@@ -85,14 +85,23 @@
     },
     "portfolio": {
       "sections": {
-        "projects": "Projetos selecionados",
-        "skills": "Habilidades e tecnologias",
+        "projects": "Projetos",
+        "skills": "Habilidades",
         "about": "Sobre",
         "experience": "Experiência",
         "contact": "Contato"
       },
       "previous_project": "Projeto anterior",
-      "next_project": "Próximo projeto"
+      "next_project": "Próximo projeto",
+      "nav": {
+        "hero": "Início",
+        "projects": "Projetos",
+        "skills": "Habilidades"
+      },
+      "footer": {
+        "rights": "Todos os direitos reservados.",
+        "builtWith": "Criado com"
+      }
     },
     "skills": {
       "title": "Revise suas tecnologias",
