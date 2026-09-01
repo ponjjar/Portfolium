@@ -26,7 +26,7 @@ interface CustomOrbitBuilderModalProps {
   onUpdateEmbedsTech: (embeds: boolean) => void;
 }
 
-const AVAILABLE_COMPONENTS = [
+const getAvailableComponents = (t: any) => [
   { id: '', label: 'Vazio', icon: null },
   { id: 'name', label: 'Nome', icon: <User size={14} color="var(--text)" /> },
   { id: 'headline', label: 'Headline', icon: <Briefcase size={14} color="var(--text)" /> },
@@ -38,7 +38,7 @@ const AVAILABLE_COMPONENTS = [
 
 
 
-const getCompLabel = (id: string) => AVAILABLE_COMPONENTS.find(c => c.id === id)?.label || 'Vazio';
+const getCompLabel = (id: string, t: any) => getAvailableComponents(t).find(c => c.id === id)?.label || t('custom_orbit.empty');
 
 const ZoneBox = ({ 
   zoneKey, 
@@ -53,9 +53,11 @@ const ZoneBox = ({
   activeZone: keyof OrbitZones | null; 
   onSelect: (k: keyof OrbitZones) => void 
 }) => {
+  const { t } = useTranslation();
   const isCenter = zoneKey === 'center';
   const compId = zones[zoneKey];
-  const compLabel = isCenter ? 'Avatar (Fixo)' : getCompLabel(compId);
+
+  const compLabel = isCenter ? 'Avatar (Fixo)' : getCompLabel(compId, t);
   
   return (
     <TouchableOpacity 
@@ -77,6 +79,7 @@ const ZoneBox = ({
 
 export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnologies, onUpdateZones, onUpdateEmbedsTech }: CustomOrbitBuilderModalProps) {
   const { t } = useTranslation();
+
   const [activeZone, setActiveZone] = React.useState<keyof OrbitZones | null>(null);
 
   const handleZoneSelect = (zoneKey: keyof OrbitZones) => {
@@ -130,7 +133,7 @@ export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnol
           <View className="bg-surface rounded-xl border border-primary p-4 mb-6">
             <Text className="text-primary font-bold text-sm mb-3 uppercase">{t("custom_orbit.select_zone")}</Text>
             <View className="flex-row flex-wrap gap-2">
-              {AVAILABLE_COMPONENTS.map(comp => (
+              {getAvailableComponents(t).map(comp => (
                 <TouchableOpacity 
                   key={comp.id}
                   onPress={() => handleComponentAssign(comp.id)}

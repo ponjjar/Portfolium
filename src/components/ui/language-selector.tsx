@@ -2,16 +2,18 @@ import React from 'react';
 import { Text, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Globe } from 'lucide-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function LanguageSelector() {
   const { i18n } = useTranslation();
 
   const toggleLanguage = () => {
-    const nextLang = i18n.language.startsWith('en') ? 'pt-BR' : 'en';
+    const nextLang = i18n.language.startsWith('pt') ? 'en' : 'pt-BR';
     i18n.changeLanguage(nextLang);
+    AsyncStorage.setItem('app_language', nextLang);
   };
 
-  const label = i18n.language.startsWith('en') ? 'EN-US' : 'PT-BR';
+  const label = i18n.language.startsWith('pt') ? 'PT-BR' : 'EN-US';
 
   return (
     <Pressable 

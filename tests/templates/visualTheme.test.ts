@@ -4,7 +4,7 @@ import { PortfolioViewModel } from '@/templates/viewModel';
 describe('Visual Theme Presets & Effects (Issue #34)', () => {
   const createBaseViewModel = (overrides: Partial<PortfolioViewModel> = {}): PortfolioViewModel => ({
     meta: {
-      title: 'Portfolio Test',
+      visible: true, title: 'Portfolio Test',
       description: 'Testing visual theme',
       generatedAt: '2026-08-31T00:00:00.000Z',
       version: '1.0.0',
@@ -28,7 +28,7 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
       showSkillCategories: true,
     },
     sections: [
-      { id: 'hero', title: 'Home', visible: true, order: 0 },
+      { id: 'hero', visible: true, title: 'Home', visible: true, order: 0 },
     ],
     socialLinks: [],
     layout: {
@@ -48,7 +48,7 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
           bottomRight: 'technologies',
         },
       },
-      skills: { variant: "simple", badges: false }, projects: {
+      skills: { variant: "simple", badges: false }, projects: { variant: "stacked-center",
         columns: 2,
         cardStyle: 'banner-card',
         carousel: {
