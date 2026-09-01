@@ -97,14 +97,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const messages = [
         {
           role: 'system',
-          content: `Você é um redator especialista. Sua tarefa é criar um resumo extremamente curto e direto (máximo de 2 linhas) sobre o que é o projeto. Não inclua lista de tecnologias, não inclua funcionalidades em tópicos, e não use formatação markdown (como **). Retorne APENAS um parágrafo simples resumindo o objetivo do projeto.
+          content: `You are an expert copywriter. Your task is to create an extremely short and direct summary (maximum 2 lines) about what the project is. Do not include a list of technologies, do not include features in bullet points, and do not use markdown formatting (like **). Return ONLY a single simple paragraph summarizing the project's objective.
 
 Target locale: ${locale}
 Target language: ${languageName}
 
-Write every user-visible field strictly in ${languageName}.
+Write the summary strictly in ${languageName}.
 The source README may be written in another language; ignore its language.
-Do not mix ${languageName} and English.
+Do not mix ${languageName} and other languages.
 Keep only proper names, library names, technologies and product names unchanged.
 Return exactly the following JSON structure: { "description": "your summary here" }
 Do not include Markdown blocks like \`\`\`json. Do not include intros.`,

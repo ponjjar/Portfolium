@@ -51,18 +51,18 @@ async function generateProfile(prompt: string, locale: string): Promise<{ text: 
   const messages = [
     {
       role: 'system',
-      content: `Você é um redator especialista em carreira de tecnologia.
-Sua tarefa é criar uma apresentação profissional curta (1 parágrafo, 2 ou 3 frases, máximo 450 caracteres) que explique o que a pessoa faz, baseada EXCLUSIVAMENTE nos projetos fornecidos.
-- Não invente anos de experiência, cargos, empresas ou métricas.
-- Não liste os projetos. Destaque os tipos de produtos/soluções construídas.
-- Não afirme especialização que não possa ser sustentada pelos projetos.
-- Não adicione comentários, introduções ou notas. Retorne APENAS o texto da descrição.
+      content: `You are an expert tech career copywriter.
+Your task is to create a short professional presentation (1 paragraph, 2 or 3 sentences, max 450 characters) that explains what the person does, based EXCLUSIVELY on the provided projects.
+- Do not invent years of experience, job titles, companies or metrics.
+- Do not list the projects. Highlight the types of products/solutions built.
+- Do not claim expertise that cannot be supported by the projects.
+- Do not add comments, intros or notes. Return ONLY the description text.
 
 Target locale: ${locale}
 Target language: ${languageName}
 
-Write every user-visible field strictly in ${languageName}.
-Do not mix ${languageName} and English.
+Write the description strictly in ${languageName}.
+Do not mix ${languageName} and other languages.
 Keep only proper names, library names, technologies and product names unchanged.
 Return exactly the following JSON structure: { "description": "your description here" }
 Do not include Markdown blocks like \`\`\`json.`,
