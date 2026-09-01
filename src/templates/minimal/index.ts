@@ -287,7 +287,7 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
     .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); cursor: pointer; transition: background 0.2s; }
     .carousel-dot.active { background: var(--accent); }
 
-    .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
+    .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
     .project-card.logo-side-card { flex-direction: row; align-items: stretch; }
     @media (max-width: 600px) { .project-card.logo-side-card { flex-direction: column; } }
     .project-image { width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid var(--border); }
@@ -677,37 +677,31 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
         carousel.addEventListener('touchstart', () => isHovered = true);
         carousel.addEventListener('touchend', () => { setTimeout(() => isHovered = false, 1000); });
 
-        const getItemWidth = () => {
-          if (!carousel.children[0]) return 300;
-          return carousel.children[0].offsetWidth + 24; // 24px is roughly 1.5rem gap
-        };
-        
-        const scrollByItem = (dir) => {
-          const itemsPerPage = Math.floor(carousel.clientWidth / getItemWidth()) || 1;
-          carousel.scrollLeft += dir * (getItemWidth() * itemsPerPage);
-        };
+                const checkArrowsAndDots = () => {
+          const canScroll = carousel.scrollWidth > carousel.clientWidth + 10;
+          if (prevBtn) prevBtn.style.display = canScroll ? '' : 'none';
+          if (nextBtn) nextBtn.style.display = canScroll ? '' : 'none';
 
-        const renderDots = () => {
           if (!dotsContainer) return;
-          const itemsPerPage = Math.floor(carousel.clientWidth / getItemWidth()) || 1;
-          const totalPages = Math.ceil(carousel.children.length / itemsPerPage);
           
-          if (totalPages <= 1) {
+          if (!canScroll) {
             dotsContainer.innerHTML = '';
             dots = [];
             return;
           }
+
+          const totalPages = Math.ceil(carousel.scrollWidth / carousel.clientWidth);
           
           if (dots.length !== totalPages) {
             dotsContainer.innerHTML = Array.from({length: totalPages}).map((_, i) => 
-              \`<div class="carousel-dot" data-index="\${i}"></div>\`
+              `<div class="carousel-dot" data-index="${i}"></div>`
             ).join('');
             
             dots = document.querySelectorAll('.carousel-dot');
             dots.forEach(dot => {
               dot.addEventListener('click', (e) => {
                 const pageIndex = parseInt(dot.getAttribute('data-index') || '0', 10);
-                carousel.scrollLeft = pageIndex * itemsPerPage * getItemWidth();
+                carousel.scrollLeft = pageIndex * carousel.clientWidth;
               });
             });
           }
@@ -715,12 +709,9 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
 
         const updateDots = () => {
           if (!dots.length) return;
-          const itemsPerPage = Math.floor(carousel.clientWidth / getItemWidth()) || 1;
-          // Current page is calculated by the scroll position relative to total width
-          let pageIndex = Math.round(carousel.scrollLeft / (getItemWidth() * itemsPerPage));
+          let pageIndex = Math.round(carousel.scrollLeft / carousel.clientWidth);
           const maxPage = dots.length - 1;
           
-          // If scrolled to the very end, highlight the last dot
           if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 10) {
             pageIndex = maxPage;
           }
@@ -732,10 +723,17 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
           });
         };
 
-        window.addEventListener('resize', () => { renderDots(); updateDots(); });
-        // Initial render
-        renderDots();
-        updateDots();
+        const scrollByItem = (dir) => {
+          carousel.scrollLeft += dir * carousel.clientWidth;
+        };
+
+        window.addEventListener('resize', () => { checkArrowsAndDots(); updateDots(); });
+        
+        if (window.ResizeObserver) {
+          new ResizeObserver(() => { checkArrowsAndDots(); updateDots(); }).observe(carousel);
+        } else {
+          setTimeout(() => { checkArrowsAndDots(); updateDots(); }, 100);
+        }
         
         carousel.addEventListener('scroll', () => {
           window.requestAnimationFrame(updateDots);
