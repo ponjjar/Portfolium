@@ -1,11 +1,20 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-function cleanAiOutput(text: string): string {
-  // Try to parse as JSON first in case it replied with JSON despite instructions
+function cleanAiOutput(text: any): string {
+  if (!text) return '';
+  
+  if (typeof text === 'object') {
+    if (text.text) return String(text.text);
+    if (text.translation) return String(text.translation);
+    text = JSON.stringify(text);
+  } else if (typeof text !== 'string') {
+    text = String(text);
+  }
+
   try {
     const parsed = JSON.parse(text);
-    if (parsed.text) return parsed.text;
-    if (parsed.translation) return parsed.translation;
+    if (parsed.text) return String(parsed.text);
+    if (parsed.translation) return String(parsed.translation);
   } catch (e) {
     // Not JSON
   }
