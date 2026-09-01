@@ -79,7 +79,20 @@
       "import_github": "Import from GitHub",
       "add_project": "Add project",
       "your_projects": "Your projects",
-      "empty_state": "No projects added yet. Add one manually or import your GitHub repositories."
+      "empty_state": "No projects added yet. Add one manually or import your GitHub repositories.",
+      "view_project": "View project",
+      "source_code": "Source code"
+    },
+    "portfolio": {
+      "sections": {
+        "projects": "Selected projects",
+        "skills": "Skills & technologies",
+        "about": "About",
+        "experience": "Experience",
+        "contact": "Contact"
+      },
+      "previous_project": "Previous project",
+      "next_project": "Next project"
     },
     "skills": {
       "title": "Review your technologies",
@@ -91,7 +104,7 @@
       "add_technology": "Add technology"
     },
     "ai": {
-      "title": "Want to review texts with AI?",
+      "title": "AI suggestions",
       "subtitle": "This step is optional.",
       "recommended": "Recommended",
       "use_my_ai": "Use external AI",
@@ -105,7 +118,49 @@
       "no_ai": "Continue without AI",
       "no_ai_desc": "Your data is ready. You can generate your portfolio without using artificial intelligence.",
       "no_ai_btn": "CONTINUE WITHOUT AI",
-      "finish": "Finish"
+      "finish": "Finish",
+      "limit_title": "Limit of 10 projects",
+      "limit_desc": "Free AI can summarize up to 10 projects at a time. Choose which projects you want to process.",
+      "selected_count": "{{count}} of 10 projects selected",
+      "limit_reached_title": "Limit reached",
+      "limit_reached_desc": "You can select up to 10 projects using Free AI. Deselect a project to choose another.",
+      "no_description": "No original description",
+      "generating_profile_title": "Creating profile suggestion",
+      "generating_profile_desc": "Analyzing approved projects and skills...",
+      "error_profile_title": "Generation error",
+      "error_profile_desc": "Could not generate the suggestion. Original description will be kept.",
+      "generating_projects_title": "Summarizing {{current}} of {{total}} projects",
+      "generating_projects_desc": "We are analyzing your projects. This may take a moment.",
+      "total_failure_title": "Could not generate summaries",
+      "total_failure_desc": "No descriptions were changed. Try again later or use your personal AI.",
+      "partial_failure_title": "Some summaries were not generated",
+      "partial_failure_desc": "Projects with errors will keep their original descriptions.",
+      "success_generated_title": "Summaries generated",
+      "success_generated_desc": "Review the texts and indicate which ones are useful before continuing.",
+      "fallback_alert": "The main service is temporarily unavailable. We will continue using the fallback service.",
+      "generation_error": "Generation failed",
+      "discarded_title": "Summary discarded",
+      "discarded_msg": "This summary will not be used. The original project description will be kept.",
+      "error_kept_original": "The original project description will be kept.",
+      "hide_original": "Hide original description",
+      "show_original": "Show original description",
+      "profile_approved_title": "Description approved",
+      "profile_approved_msg": "The new professional description will be used in your portfolio.",
+      "profile_rejected_title": "Keep original description",
+      "profile_rejected_msg": "The AI suggestion will not be used. Your original professional description will be kept in the portfolio.",
+      "keep_original": "Keep original",
+      "final_description_title": "New description to be used:",
+      "no_original_profile": "You don't have an original professional description. Go back to the profile step to add one.",
+      "new_suggestion_title": "New professional description suggestion:",
+      "approve_suggestion": "Approve suggestion",
+      "original_description_label": "Current Description:",
+      "cancel_flow_title": "Cancel generation",
+      "cancel_flow_desc": "Original descriptions will be kept. Are you sure?",
+      "review_projects_title": "Project summaries",
+      "generate_profile_btn": "Continue to profile",
+      "success_title": "All done!",
+      "success_desc": "Useful summaries and professional description (if approved) were successfully applied to your portfolio.",
+      "go_to_next_step": "Go to next step"
     },
     "github": {
       "modal_title": "Import GitHub Projects",
@@ -137,6 +192,10 @@
       "amoled": "AMOLED",
       "change_theme": "Change theme",
       "hold_to_select": "Hold to select other themes"
+    },
+    "languages": {
+      "pt-BR": "Portuguese",
+      "en": "English"
     },
     "header_config": {
       "modal_title": "Header Configuration",

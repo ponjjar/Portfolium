@@ -79,7 +79,20 @@
       "import_github": "Importar do GitHub",
       "add_project": "Adicionar projeto",
       "your_projects": "Seus projetos",
-      "empty_state": "Nenhum projeto adicionado ainda. Adicione um projeto ou importe seus repositórios do GitHub."
+      "empty_state": "Nenhum projeto adicionado ainda. Adicione um projeto ou importe seus repositórios do GitHub.",
+      "view_project": "Ver projeto",
+      "source_code": "Código-fonte"
+    },
+    "portfolio": {
+      "sections": {
+        "projects": "Projetos selecionados",
+        "skills": "Habilidades e tecnologias",
+        "about": "Sobre",
+        "experience": "Experiência",
+        "contact": "Contato"
+      },
+      "previous_project": "Projeto anterior",
+      "next_project": "Próximo projeto"
     },
     "skills": {
       "title": "Revise suas tecnologias",
@@ -91,7 +104,7 @@
       "add_technology": "Adicionar tecnologia"
     },
     "ai": {
-      "title": "Deseja revisar os textos com IA?",
+      "title": "Sugestões da IA",
       "subtitle": "Esta etapa é opcional.",
       "recommended": "Recomendado",
       "use_my_ai": "Usar uma IA externa",
@@ -105,7 +118,49 @@
       "no_ai": "Continuar sem IA",
       "no_ai_desc": "Seus dados já estão prontos. Você pode gerar seu portfólio sem utilizar inteligência artificial.",
       "no_ai_btn": "CONTINUAR SEM IA",
-      "finish": "Finalizar"
+      "finish": "Finalizar",
+      "limit_title": "Limite de 10 projetos",
+      "limit_desc": "A IA gratuita pode resumir até 10 projetos por vez. Escolha quais projetos deseja processar.",
+      "selected_count": "{{count}} de 10 projetos selecionados",
+      "limit_reached_title": "Limite atingido",
+      "limit_reached_desc": "Você pode selecionar no máximo 10 projetos usando a IA gratuita. Desmarque um projeto para escolher outro.",
+      "no_description": "Sem descrição original",
+      "generating_profile_title": "Criando sugestão de perfil",
+      "generating_profile_desc": "Analisando os projetos aprovados e suas habilidades...",
+      "error_profile_title": "Erro na geração",
+      "error_profile_desc": "Não foi possível gerar a sugestão. A descrição original será mantida.",
+      "generating_projects_title": "Resumindo {{current}} de {{total}} projetos",
+      "generating_projects_desc": "Estamos analisando seus projetos. Isso pode levar alguns instantes.",
+      "total_failure_title": "Não foi possível gerar os resumos",
+      "total_failure_desc": "Nenhuma descrição foi alterada. Tente novamente mais tarde ou utilize sua IA pessoal.",
+      "partial_failure_title": "Alguns resumos não foram gerados",
+      "partial_failure_desc": "Os projetos com falha manterão suas descrições originais.",
+      "success_generated_title": "Resumos gerados",
+      "success_generated_desc": "Revise os textos e indique quais são úteis antes de continuar.",
+      "fallback_alert": "O serviço principal está temporariamente indisponível. Continuaremos usando o serviço de contingência.",
+      "generation_error": "Falha na geração",
+      "discarded_title": "Resumo descartado",
+      "discarded_msg": "Este resumo não será utilizado. A descrição original do projeto será mantida.",
+      "error_kept_original": "A descrição original do projeto será mantida.",
+      "hide_original": "Esconder descrição original",
+      "show_original": "Ver descrição original",
+      "profile_approved_title": "Descrição aprovada",
+      "profile_approved_msg": "A nova descrição profissional será utilizada no seu portfólio.",
+      "profile_rejected_title": "Manter descrição original",
+      "profile_rejected_msg": "A sugestão da IA não será utilizada. Sua descrição profissional original será mantida no portfólio.",
+      "keep_original": "Manter original",
+      "final_description_title": "Nova descrição que será utilizada:",
+      "no_original_profile": "Você não possui uma descrição profissional original. Volte à etapa de perfil para adicionar uma.",
+      "new_suggestion_title": "Nova sugestão de descrição profissional:",
+      "approve_suggestion": "Aprovar sugestão",
+      "original_description_label": "Descrição Atual:",
+      "cancel_flow_title": "Cancelar geração",
+      "cancel_flow_desc": "As descrições originais serão mantidas. Você tem certeza?",
+      "review_projects_title": "Resumos dos projetos",
+      "generate_profile_btn": "Continuar para o perfil",
+      "success_title": "Tudo pronto!",
+      "success_desc": "Os resumos úteis e a descrição profissional (se aprovada) foram aplicados com sucesso ao seu portfólio.",
+      "go_to_next_step": "Ir para a próxima etapa"
     },
     "github": {
       "modal_title": "Importar projetos do GitHub",
@@ -137,6 +192,10 @@
       "amoled": "AMOLED",
       "change_theme": "Alterar tema",
       "hold_to_select": "Segure para selecionar outros temas"
+    },
+    "languages": {
+      "pt-BR": "Português",
+      "en": "Inglês"
     },
     "header_config": {
       "modal_title": "Configuração do Cabeçalho",
