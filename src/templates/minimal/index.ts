@@ -581,12 +581,14 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
   });
 
   const scriptsHtml = `
-    <script>
+        <script>
       // Language Switcher Logic
       const defaultLang = "${languageSettings.defaultLanguage}";
+      const supportedLangs = ${JSON.stringify(languageSettings.supportedLanguages)};
       const langSelector = document.getElementById("lang-selector");
       
       function setLanguage(lang) {
+        if (!supportedLangs.includes(lang)) lang = defaultLang;
         document.querySelectorAll('.i18n-lang').forEach(el => {
           if (el.getAttribute('data-lang') === lang) {
             el.style.display = '';
@@ -594,13 +596,31 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
             el.style.display = 'none';
           }
         });
+        localStorage.setItem('portfolio_lang', lang);
+        if (langSelector) langSelector.value = lang;
       }
+
+      function getInitialLang() {
+        const saved = localStorage.getItem('portfolio_lang');
+        if (saved && supportedLangs.includes(saved)) return saved;
+        
+        const browserLang = navigator.language;
+        // try exact match (pt-BR)
+        if (supportedLangs.includes(browserLang)) return browserLang;
+        // try 2-letter prefix match (pt)
+        const prefix = browserLang.split('-')[0];
+        const partialMatch = supportedLangs.find(l => l.startsWith(prefix));
+        if (partialMatch) return partialMatch;
+        
+        return defaultLang;
+      }
+
+      const initialLang = getInitialLang();
 
       if (langSelector) {
         langSelector.addEventListener('change', (e) => setLanguage(e.target.value));
-        langSelector.value = defaultLang;
       }
-      setLanguage(defaultLang);
+      setLanguage(initialLang);
 
       // Scroll state preservation
       document.addEventListener("DOMContentLoaded", () => {
