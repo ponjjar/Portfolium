@@ -694,7 +694,7 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
           
           if (dots.length !== totalPages) {
             dotsContainer.innerHTML = Array.from({length: totalPages}).map((_, i) => 
-              `<div class="carousel-dot" data-index="${i}"></div>`
+              \`<div class="carousel-dot" data-index="\${i}"></div>\`
             ).join('');
             
             dots = document.querySelectorAll('.carousel-dot');
