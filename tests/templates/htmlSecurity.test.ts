@@ -29,12 +29,6 @@ describe('HTML Escaping & Security in Template (Issue #29)', () => {
 
   describe('Template injection prevention on renderMinimalTemplate', () => {
     const createBaseViewModel = (overrides: Partial<PortfolioViewModel> = {}): PortfolioViewModel => ({
-      meta: {
-        title: 'Portfolio Test',
-        description: 'Testing security',
-        generatedAt: '2026-08-31T00:00:00.000Z',
-        version: '1.0.0'
-      },
       profile: {
         name: 'John Doe',
         headline: 'Software Engineer',
@@ -43,9 +37,18 @@ describe('HTML Escaping & Security in Template (Issue #29)', () => {
       },
       projects: [],
       skills: [],
+      skillGroups: [],
       theme: {
         mode: 'dark',
         accent: '#3b82f6'
+      },
+      visualTheme: {
+        preset: 'dark',
+        accent: '#3b82f6',
+        backgroundEffects: {
+          glows: { enabled: false, intensity: 'medium', color: '#3b82f6', count: 2 },
+          microStars: { enabled: false, density: 'low', opacity: 0.3 }
+        }
       },
       settings: {
         showAvatar: true,
@@ -54,9 +57,9 @@ describe('HTML Escaping & Security in Template (Issue #29)', () => {
         showSkillCategories: true
       },
       sections: [
-        { id: 'hero', title: 'Home', visible: true, order: 0 },
-        { id: 'projects', title: 'Projects', visible: true, order: 1 },
-        { id: 'skills', title: 'Skills', visible: true, order: 2 }
+        { id: 'hero', visible: true, order: 0 },
+        { id: 'projects', visible: true, order: 1 },
+        { id: 'skills', visible: true, order: 2 }
       ],
       socialLinks: [],
       layout: {
@@ -98,8 +101,7 @@ describe('HTML Escaping & Security in Template (Issue #29)', () => {
         revealOnScroll: false
       },
       navigation: {
-        enabled: false,
-        items: []
+        enabled: false
       },
       ...overrides
     });
@@ -149,7 +151,10 @@ describe('HTML Escaping & Security in Template (Issue #29)', () => {
               demo: 'https://example.com/?q="><script>alert(1)</script>',
               repository: 'https://github.com/test"><script>alert(2)</script>'
             },
-            featured: true
+            featured: true,
+            source: { type: 'manual' },
+            selected: true,
+            order: 0,
           }
         ]
       });
@@ -169,6 +174,7 @@ describe('HTML Escaping & Security in Template (Issue #29)', () => {
       const vm = createBaseViewModel({
         socialLinks: [
           {
+            type: 'other',
             label: '<span onclick="evil()">Twitter</span>',
             url: 'https://twitter.com/test" onfocus="evil()'
           }
@@ -184,7 +190,7 @@ describe('HTML Escaping & Security in Template (Issue #29)', () => {
     it('should escape skills and category names', () => {
       const vm = createBaseViewModel({
         skills: [
-          { name: '<img src=x onerror=alert(1)>', category: '<script>alert("cat")</script>' }
+          { id: 's1', name: '<img src=x onerror=alert(1)>', category: '<script>alert("cat")</script>', selected: true, sources: [] }
         ]
       });
       const html = renderMinimalTemplate(vm);

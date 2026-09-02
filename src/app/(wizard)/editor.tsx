@@ -271,7 +271,7 @@ export default function EditorScreen() {
           className="bg-background border border-border shadow-lg transition-all duration-300 ease-in-out"
           style={{ 
             width: viewport === 'desktop' && isMobile ? 1440 : (viewport === 'mobile' ? 375 : '100%'), 
-            height: viewport === 'desktop' && isMobile ? (1440 / width) * 100 + '%' : '100%',
+            height: viewport === 'desktop' && isMobile ? (((1440 / width) * 100) + '%') as any : '100%',
             maxWidth: viewport === 'desktop' && !isMobile ? 1200 : undefined,
             transform: viewport === 'desktop' && isMobile ? [{ scale: width / 1440 }] : [],
             transformOrigin: 'top left',
@@ -339,7 +339,7 @@ export default function EditorScreen() {
         onClose={() => setProjectLayoutModalVisible(false)}
         config={session.portfolio.layout.projects as any}
         onUpdate={(config) => {
-          updateConfig({ layout: { ...session.portfolio.layout, projects: config } });
+          updateConfig({ layout: { ...session.portfolio.layout, projects: config as any } });
         }}
       />
 

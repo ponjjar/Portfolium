@@ -100,13 +100,16 @@ export const VisualThemeSchema = z.object({
       intensity: z.enum(['low', 'medium', 'high']).default('medium'),
       color: z.string().default('#3b82f6'),
       count: z.number().default(2),
-    }).default({}),
+    }).default({ enabled: false, intensity: 'medium', color: '#3b82f6', count: 2 }),
     microStars: z.object({
       enabled: z.boolean().default(false),
       density: z.enum(['low', 'medium', 'high']).default('low'),
       opacity: z.number().default(0.3),
-    }).default({}),
-  }).default({}),
+    }).default({ enabled: false, density: 'low', opacity: 0.3 }),
+  }).default({
+    glows: { enabled: false, intensity: 'medium', color: '#3b82f6', count: 2 },
+    microStars: { enabled: false, density: 'low', opacity: 0.3 }
+  }),
 });
 
 export const PortfolioSectionSchema = z.object({
@@ -126,13 +129,13 @@ export const AvatarStyleSchema = z.object({
   shape: z.enum(['circle', 'square', 'rounded-square']).default('circle'),
   border: z.enum(['none', 'subtle', 'strong']).default('subtle'),
   effect: z.enum(['none', 'fade-in', 'soft-shadow', 'glow']).default('none'),
-});
+}).default({ shape: 'circle', border: 'subtle', effect: 'none' });
 
 export const ProfileLayoutSchema = z.object({
   variant: z.enum(['stacked-center', 'avatar-side', 'center-orbit', 'custom-orbit-builder']).default('stacked-center'),
   cornerItemsOrder: z.array(z.enum(['name', 'links', 'headline'])).default(['name', 'links', 'headline']),
   embedsTechnologies: z.boolean().default(false),
-  avatarStyle: AvatarStyleSchema.default({}),
+  avatarStyle: AvatarStyleSchema,
   zones: z.object({
     topLeft: z.string().default(''),
     topCenter: z.string().default(''),
@@ -143,13 +146,30 @@ export const ProfileLayoutSchema = z.object({
     bottomLeft: z.string().default(''),
     bottomRight: z.string().default(''),
   }).default({
-    center: 'avatar',
     topLeft: 'name',
+    topCenter: '',
     topRight: 'headline',
     left: 'links',
+    center: 'avatar',
+    right: '',
     bottomLeft: 'description',
     bottomRight: 'technologies'
   }),
+}).default({
+  variant: 'stacked-center',
+  cornerItemsOrder: ['name', 'links', 'headline'],
+  embedsTechnologies: false,
+  avatarStyle: { shape: 'circle', border: 'subtle', effect: 'none' },
+  zones: {
+    topLeft: 'name',
+    topCenter: '',
+    topRight: 'headline',
+    left: 'links',
+    center: 'avatar',
+    right: '',
+    bottomLeft: 'description',
+    bottomRight: 'technologies'
+  }
 });
 
 export const ProjectsLayoutSchema = z.object({
@@ -161,6 +181,10 @@ export const ProjectsLayoutSchema = z.object({
     intervalMs: z.number().default(3000),
     paginationDots: z.boolean().default(true),
   }).default({ enabled: false, autoplay: true, intervalMs: 3000, paginationDots: true }),
+}).default({
+  columns: 2,
+  cardStyle: 'banner-card',
+  carousel: { enabled: false, autoplay: true, intervalMs: 3000, paginationDots: true }
 });
 
 export const HeaderLayoutSchema = z.object({
@@ -169,6 +193,12 @@ export const HeaderLayoutSchema = z.object({
   showName: z.boolean().default(true),
   showAvatar: z.boolean().default(true),
   namePosition: z.enum(['left', 'right']).default('left'),
+}).default({
+  enabled: false,
+  showNavigation: true,
+  showName: true,
+  showAvatar: true,
+  namePosition: 'left'
 });
 
 export const PortfolioConfigSchema = z.object({
@@ -183,16 +213,45 @@ export const PortfolioConfigSchema = z.object({
     backgroundEffects: { glows: { enabled: false, intensity: 'medium', color: '#3b82f6', count: 2 }, microStars: { enabled: false, density: 'low', opacity: 0.3 } }
   }),
   layout: z.object({
-    profile: ProfileLayoutSchema.default({}),
-    projects: ProjectsLayoutSchema.default({}),
-    header: HeaderLayoutSchema.default({}),
-  }).default({}),
+    profile: ProfileLayoutSchema,
+    projects: ProjectsLayoutSchema,
+    header: HeaderLayoutSchema,
+  }).default({
+    profile: {
+      variant: 'stacked-center',
+      cornerItemsOrder: ['name', 'links', 'headline'],
+      embedsTechnologies: false,
+      avatarStyle: { shape: 'circle', border: 'subtle', effect: 'none' },
+      zones: {
+        topLeft: 'name',
+        topCenter: '',
+        topRight: 'headline',
+        left: 'links',
+        center: 'avatar',
+        right: '',
+        bottomLeft: 'description',
+        bottomRight: 'technologies'
+      }
+    },
+    projects: {
+      columns: 2,
+      cardStyle: 'banner-card',
+      carousel: { enabled: false, autoplay: true, intervalMs: 3000, paginationDots: true }
+    },
+    header: {
+      enabled: false,
+      showNavigation: true,
+      showName: true,
+      showAvatar: true,
+      namePosition: 'left'
+    }
+  }),
   animations: z.object({
     revealOnScroll: z.boolean().default(false),
-  }).default({}),
+  }).default({ revealOnScroll: false }),
   navigation: z.object({
     enabled: z.boolean().default(false),
-  }).default({}),
+  }).default({ enabled: false }),
   sections: z.array(PortfolioSectionSchema).default([
     { id: 'hero', visible: true, order: 0 },
     { id: 'projects', visible: true, order: 1 },

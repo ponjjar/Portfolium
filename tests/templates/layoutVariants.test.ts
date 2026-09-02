@@ -3,12 +3,6 @@ import { PortfolioViewModel } from '@/templates/viewModel';
 
 describe('Layout Variants HTML Generation (Issue #35)', () => {
   const createBaseViewModel = (overrides: Partial<PortfolioViewModel> = {}): PortfolioViewModel => ({
-    meta: {
-      title: 'Portfolio Test',
-      description: 'Testing layout variants',
-      generatedAt: '2026-08-31T00:00:00.000Z',
-      version: '1.0.0',
-    },
     profile: {
       name: 'John Developer',
       headline: 'Software Architect',
@@ -17,12 +11,21 @@ describe('Layout Variants HTML Generation (Issue #35)', () => {
     },
     projects: [],
     skills: [
-      { name: 'TypeScript', category: 'Frontend' },
-      { name: 'Node.js', category: 'Backend' },
+      { id: 's1', name: 'TypeScript', category: 'Frontend', selected: true, sources: [] },
+      { id: 's2', name: 'Node.js', category: 'Backend', selected: true, sources: [] },
     ],
+    skillGroups: [],
     theme: {
       mode: 'dark',
       accent: '#3b82f6',
+    },
+    visualTheme: {
+      preset: 'dark',
+      accent: '#3b82f6',
+      backgroundEffects: {
+        glows: { enabled: false, intensity: 'medium', color: '#3b82f6', count: 2 },
+        microStars: { enabled: false, density: 'low', opacity: 0.3 }
+      }
     },
     settings: {
       showAvatar: true,
@@ -31,11 +34,11 @@ describe('Layout Variants HTML Generation (Issue #35)', () => {
       showSkillCategories: true,
     },
     sections: [
-      { id: 'hero', title: 'Home', visible: true, order: 0 },
+      { id: 'hero', visible: true, order: 0 },
     ],
     socialLinks: [
-      { label: 'GitHub', url: 'https://github.com/john' },
-      { label: 'LinkedIn', url: 'https://linkedin.com/in/john' },
+      { type: 'github', label: 'GitHub', url: 'https://github.com/john' },
+      { type: 'linkedin', label: 'LinkedIn', url: 'https://linkedin.com/in/john' },
     ],
     layout: {
       profile: {
@@ -77,7 +80,6 @@ describe('Layout Variants HTML Generation (Issue #35)', () => {
     },
     navigation: {
       enabled: false,
-      items: [],
     },
     ...overrides,
   });

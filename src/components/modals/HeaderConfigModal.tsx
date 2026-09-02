@@ -19,10 +19,8 @@ interface HeaderConfigModalProps {
   onUpdate: (config: HeaderConfig) => void;
 }
 
-export function HeaderConfigModal({ visible, onClose, config, onUpdate }: HeaderConfigModalProps) {
-  const { t } = useTranslation();
-
-  const ToggleRow = ({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) => (
+function ToggleRow({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
+  return (
     <TouchableOpacity 
       className="flex-row items-center justify-between py-3 border-b border-border"
       onPress={() => onChange(!value)}
@@ -33,6 +31,10 @@ export function HeaderConfigModal({ visible, onClose, config, onUpdate }: Header
       </View>
     </TouchableOpacity>
   );
+}
+
+export function HeaderConfigModal({ visible, onClose, config, onUpdate }: HeaderConfigModalProps) {
+  const { t } = useTranslation();
 
   return (
     <Modal

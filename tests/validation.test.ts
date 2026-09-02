@@ -5,6 +5,7 @@ import {
   getFirstIncompleteStep 
 } from '../src/domain/portfolio/validation';
 import { PortfolioSession } from '../src/domain/portfolio/types';
+import { PortfolioConfigSchema } from '../src/domain/portfolio/schema';
 
 describe('Validation', () => {
   let session: PortfolioSession;
@@ -39,7 +40,7 @@ describe('Validation', () => {
         { id: 's1', name: 'Skill 1', category: 'Other', selected: true, sources: [] }
       ],
       skillGroups: [],
-      portfolio: {
+      portfolio: PortfolioConfigSchema.parse({
         template: 'minimal',
         theme: { mode: 'dark', accent: '#fff' },
         sections: [],
@@ -49,7 +50,7 @@ describe('Validation', () => {
           showGitHubLinks: true,
           showSkillCategories: true,
         }
-      },
+      }),
       ai: { used: false, provider: null, mode: null, changes: { profileBio: false, projectDescriptions: [] } },
       metadata: { createdAt: '', updatedAt: '', language: 'en', generator: '' }
     };
