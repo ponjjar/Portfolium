@@ -38,6 +38,10 @@ export default function RootLayout() {
       }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="(wizard)" />
+        <Stack.Screen name="terms" />
+        <Stack.Screen name="privacy" />
+        <Stack.Screen name="about" />
+        <Stack.Screen name="cookies" />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
