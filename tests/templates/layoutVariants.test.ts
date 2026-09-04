@@ -4,7 +4,7 @@ import { PortfolioViewModel } from '@/templates/viewModel';
 describe('Layout Variants HTML Generation (Issue #35)', () => {
   const createBaseViewModel = (overrides: Partial<PortfolioViewModel> = {}): PortfolioViewModel => ({
     meta: {
-      title: 'Portfolio Test',
+      visible: true, title: 'Portfolio Test',
       description: 'Testing layout variants',
       generatedAt: '2026-08-31T00:00:00.000Z',
       version: '1.0.0',
@@ -31,7 +31,7 @@ describe('Layout Variants HTML Generation (Issue #35)', () => {
       showSkillCategories: true,
     },
     sections: [
-      { id: 'hero', title: 'Home', visible: true, order: 0 },
+      { id: 'hero', visible: true, title: 'Home', visible: true, order: 0 },
     ],
     socialLinks: [
       { label: 'GitHub', url: 'https://github.com/john' },
@@ -54,7 +54,7 @@ describe('Layout Variants HTML Generation (Issue #35)', () => {
           bottomRight: 'technologies',
         },
       },
-      projects: {
+      skills: { variant: "simple", badges: false }, projects: { variant: "stacked-center",
         columns: 2,
         cardStyle: 'banner-card',
         carousel: {

@@ -79,19 +79,41 @@
       "import_github": "Import from GitHub",
       "add_project": "Add project",
       "your_projects": "Your projects",
-      "empty_state": "No projects added yet. Add one manually or import your GitHub repositories."
+      "empty_state": "No projects added yet. Add one manually or import your GitHub repositories.",
+      "view_project": "View project",
+      "source_code": "Source code"
+    },
+    "portfolio": {
+      "sections": {
+        "projects": "Projects",
+        "skills": "Skills",
+        "about": "About",
+        "experience": "Experience",
+        "contact": "Contact"
+      },
+      "previous_project": "Previous project",
+      "next_project": "Next project",
+      "nav": {
+        "hero": "Hero",
+        "projects": "Projects",
+        "skills": "Skills"
+      },
+      "footer": {
+        "rights": "All rights reserved.",
+        "builtWith": "Built with"
+      }
     },
     "skills": {
       "title": "Review your technologies",
       "subtitle": "Select the technologies you want to highlight.",
-      "found_message": "✨ {{count}} technologies found in {{projects}} projects",
+      "found_message": "\u2728 {{count}} technologies found in {{projects}} projects",
       "info_message": "You can add, remove, or reorganize any technology.",
       "frontend": "FRONTEND",
       "backend": "BACKEND",
       "add_technology": "Add technology"
     },
     "ai": {
-      "title": "Want to review texts with AI?",
+      "title": "AI suggestions",
       "subtitle": "This step is optional.",
       "recommended": "Recommended",
       "use_my_ai": "Use external AI",
@@ -100,12 +122,54 @@
       "start_btn": "START",
       "free_ai": "Free AI",
       "free_ai_desc": "Use the model provided by Portfolio Builder.",
-      "free_ai_info": "⏱ There may be usage limits or a queue.",
+      "free_ai_info": "\u23f1 There may be usage limits or a queue.",
       "generate_ai_btn": "GENERATE WITH AI",
       "no_ai": "Continue without AI",
       "no_ai_desc": "Your data is ready. You can generate your portfolio without using artificial intelligence.",
       "no_ai_btn": "CONTINUE WITHOUT AI",
-      "finish": "Finish"
+      "finish": "Finish",
+      "limit_title": "Limit of 10 projects",
+      "limit_desc": "Free AI can summarize up to 10 projects at a time. Choose which projects you want to process.",
+      "selected_count": "{{count}} of 10 projects selected",
+      "limit_reached_title": "Limit reached",
+      "limit_reached_desc": "You can select up to 10 projects using Free AI. Deselect a project to choose another.",
+      "no_description": "No original description",
+      "generating_profile_title": "Creating profile suggestion",
+      "generating_profile_desc": "Analyzing approved projects and skills...",
+      "error_profile_title": "Generation error",
+      "error_profile_desc": "Could not generate the suggestion. Original description will be kept.",
+      "generating_projects_title": "Summarizing {{current}} of {{total}} projects",
+      "generating_projects_desc": "We are analyzing your projects. This may take a moment.",
+      "total_failure_title": "Could not generate summaries",
+      "total_failure_desc": "No descriptions were changed. Try again later or use your personal AI.",
+      "partial_failure_title": "Some summaries were not generated",
+      "partial_failure_desc": "Projects with errors will keep their original descriptions.",
+      "success_generated_title": "Summaries generated",
+      "success_generated_desc": "Review the texts and indicate which ones are useful before continuing.",
+      "fallback_alert": "The main service is temporarily unavailable. We will continue using the fallback service.",
+      "generation_error": "Generation failed",
+      "discarded_title": "Summary discarded",
+      "discarded_msg": "This summary will not be used. The original project description will be kept.",
+      "error_kept_original": "The original project description will be kept.",
+      "hide_original": "Hide original description",
+      "show_original": "Show original description",
+      "profile_approved_title": "Description approved",
+      "profile_approved_msg": "The new professional description will be used in your portfolio.",
+      "profile_rejected_title": "Keep original description",
+      "profile_rejected_msg": "The AI suggestion will not be used. Your original professional description will be kept in the portfolio.",
+      "keep_original": "Keep original",
+      "final_description_title": "New description to be used:",
+      "no_original_profile": "You don't have an original professional description. Go back to the profile step to add one.",
+      "new_suggestion_title": "New professional description suggestion:",
+      "approve_suggestion": "Approve suggestion",
+      "original_description_label": "Current Description:",
+      "cancel_flow_title": "Cancel generation",
+      "cancel_flow_desc": "Original descriptions will be kept. Are you sure?",
+      "review_projects_title": "Project summaries",
+      "generate_profile_btn": "Continue to profile",
+      "success_title": "All done!",
+      "success_desc": "Useful summaries and professional description (if approved) were successfully applied to your portfolio.",
+      "go_to_next_step": "Go to next step"
     },
     "github": {
       "modal_title": "Import GitHub Projects",
@@ -137,6 +201,10 @@
       "amoled": "AMOLED",
       "change_theme": "Change theme",
       "hold_to_select": "Hold to select other themes"
+    },
+    "languages": {
+      "pt-BR": "Portuguese",
+      "en": "English"
     },
     "header_config": {
       "modal_title": "Header Configuration",
@@ -208,6 +276,84 @@
         "lava": "Lava",
         "grid_stars": "Grid + Stars"
       }
+    },
+    "editor": {
+      "title": "Final Editor",
+      "subtitle": "Review and customize your portfolio.",
+      "customize": "Customize",
+      "visualTheme": "Visual Theme & Effects",
+      "profileLayout": "Profile Layout",
+      "projectsLayout": "Projects Layout",
+      "header": "Header",
+      "options": "Options",
+      "scrollAnimations": "Scroll Animations",
+      "sections": "Sections",
+      "exportPortfolio": "Export Portfolio",
+      "layouts": {
+        "stacked": "Stacked",
+        "side": "Side",
+        "orbital": "Orbital",
+        "carousel": "Carousel",
+        "grid": "Grid",
+        "active": "Active",
+        "hidden": "Hidden"
+      }
+    },
+    "sections": {
+      "hero": "Profile",
+      "projects": "Projects",
+      "skills": "Technologies",
+      "experience": "Experience",
+      "education": "Education",
+      "contact": "Contact",
+      "about": "About me"
+    },
+    "project_layout": {
+      "modal_title": "Projects Layout",
+      "display_style": "Display Style (Card)",
+      "style_banner": "Banner (Default)",
+      "style_banner_desc": "Image at the top of the card, classic.",
+      "style_logo": "Side Logo",
+      "style_logo_desc": "Square image focused on the left.",
+      "style_text": "Text Only",
+      "style_text_desc": "Focus on description and code (no images).",
+      "structure": "Structure",
+      "grid": "Fixed Grid",
+      "carousel": "Carousel",
+      "columns": "Number of Columns",
+      "autoplay": "Autoplay",
+      "autoplay_desc": "Advances projects every 3s",
+      "pagination": "Show pagination (dots)",
+      "pagination_desc": "Navigation dots below cards"
+    },
+    "custom_orbit": {
+      "modal_title": "Custom Orbit Builder",
+      "desc": "Drag or click to define which items will appear in each position of the orbital system around your avatar.",
+      "select_zone": "Select for the chosen zone:",
+      "embed_tech": "Embed Technologies in Profile",
+      "embed_tech_desc": "If active, and if there are technologies in the orbit, the standalone technologies section will disappear from the menu to avoid duplication.",
+      "items": {
+        "description": "Bio / Description",
+        "social_links": "Social Links",
+        "tech_stack": "Technologies"
+      },
+      "empty": "Empty"
+    },
+    "export": {
+      "modal_title": "Ready to export",
+      "desc": "Choose how you want to download your portfolio. All formats include minified production-ready files.",
+      "html_title": "HTML",
+      "html_desc": "Download a single index.html file. Ideal for simple hosting anywhere.",
+      "html_btn": "Download HTML",
+      "project_title": "Project",
+      "project_desc": "Download the source files (HTML, CSS, and JS) separately.",
+      "project_btn": "Download ZIP",
+      "github_title": "GitHub Pages",
+      "github_desc": "Prepares the files with correct paths and instructions for free hosting on GitHub Pages.",
+      "github_btn": "Prepare for GitHub Pages",
+      "session_title": "Session",
+      "session_desc": "Download the current editor state (JSON) to restore later.",
+      "session_btn": "Download session.json"
     }
   }
 }

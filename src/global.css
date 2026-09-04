@@ -168,3 +168,63 @@
 
   --placeholder: rgba(245, 245, 245, 0.50);
 }
+:root {
+  --ai-glimmer-soft: rgba(150, 150, 150, 0.05);
+  --ai-glimmer-strong: rgba(150, 150, 150, 0.2);
+}
+
+.theme-light {
+  --ai-glimmer-soft: rgba(0, 0, 0, 0.03);
+  --ai-glimmer-strong: rgba(0, 0, 0, 0.1);
+}
+
+.ai-choice {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.ai-choice[data-selected='true']::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 15%,
+    var(--ai-glimmer-soft) 38%,
+    var(--ai-glimmer-strong) 50%,
+    var(--ai-glimmer-soft) 62%,
+    transparent 85%
+  );
+  transform: translateX(-120%);
+  animation: ai-glimmer 2.8s ease-in-out infinite;
+}
+
+@keyframes ai-glimmer {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.65;
+  }
+
+  55% {
+    opacity: 0.35;
+  }
+
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-choice[data-selected='true']::before {
+    animation: none;
+    opacity: 0.25;
+    transform: none;
+  }
+}

@@ -1,4 +1,4 @@
-import pt from '../src/i18n/locales/pt.json';
+import pt from '../src/i18n/locales/pt-BR.json';
 import en from '../src/i18n/locales/en.json';
 
 function getNestedKeys(obj: Record<string, any>, prefix = ''): string[] {

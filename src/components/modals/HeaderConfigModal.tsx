@@ -35,7 +35,7 @@ export function HeaderConfigModal({ visible, onClose, config, onUpdate }: Header
   );
 
   return (
-    <Modal
+    <Modal variant="popover"
       visible={visible}
       onClose={onClose}
       title={t('header_config.modal_title')}

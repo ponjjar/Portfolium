@@ -57,7 +57,7 @@ export function ProfileLayoutModal({
   };
 
   return (
-    <Modal
+    <Modal variant="popover"
       visible={visible}
       onClose={onClose}
       title={t('profile_layout.modal_title')}

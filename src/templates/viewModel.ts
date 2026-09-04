@@ -15,6 +15,7 @@ export interface PortfolioViewModel {
   layout: PortfolioSession['portfolio']['layout'];
   animations: PortfolioSession['portfolio']['animations'];
   navigation: PortfolioSession['portfolio']['navigation'];
+  languageSettings: PortfolioSession['languageSettings'];
 }
 
 export function buildPortfolioViewModel(session: PortfolioSession): PortfolioViewModel {
@@ -44,5 +45,6 @@ export function buildPortfolioViewModel(session: PortfolioSession): PortfolioVie
     layout: session.portfolio.layout,
     animations: session.portfolio.animations,
     navigation: session.portfolio.navigation,
+    languageSettings: session.languageSettings,
   };
 }

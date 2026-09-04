@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
@@ -24,17 +26,60 @@ interface CustomOrbitBuilderModalProps {
   onUpdateEmbedsTech: (embeds: boolean) => void;
 }
 
-const AVAILABLE_COMPONENTS = [
+const getAvailableComponents = (t: any) => [
   { id: '', label: 'Vazio', icon: null },
   { id: 'name', label: 'Nome', icon: <User size={14} color="var(--text)" /> },
   { id: 'headline', label: 'Headline', icon: <Briefcase size={14} color="var(--text)" /> },
   { id: 'links', label: 'Links Principais', icon: <LinkIcon size={14} color="var(--text)" /> },
-  { id: 'description', label: 'Bio / Descrição', icon: <FileText size={14} color="var(--text)" /> },
-  { id: 'technologies', label: 'Tecnologias', icon: <Code size={14} color="var(--text)" /> },
+  { id: 'description', label: t('custom_orbit.items.description'), icon: <FileText size={14} color="var(--text)" /> },
+  { id: 'technologies', label: t('custom_orbit.items.tech_stack'), icon: <Code size={14} color="var(--text)" /> },
   { id: 'otherLinks', label: 'Outros Links', icon: <LinkIcon size={14} color="var(--text)" /> },
 ];
 
+
+
+const getCompLabel = (id: string, t: any) => getAvailableComponents(t).find(c => c.id === id)?.label || t('custom_orbit.empty');
+
+const ZoneBox = ({ 
+  zoneKey, 
+  label, 
+  zones, 
+  activeZone, 
+  onSelect 
+}: { 
+  zoneKey: keyof OrbitZones; 
+  label: string; 
+  zones: OrbitZones; 
+  activeZone: keyof OrbitZones | null; 
+  onSelect: (k: keyof OrbitZones) => void 
+}) => {
+  const { t } = useTranslation();
+  const isCenter = zoneKey === 'center';
+  const compId = zones[zoneKey];
+
+  const compLabel = isCenter ? 'Avatar (Fixo)' : getCompLabel(compId, t);
+  
+  return (
+    <TouchableOpacity 
+      className={`flex-1 m-1 border-2 rounded-xl justify-center items-center p-2 h-20 ${activeZone === zoneKey ? 'border-primary bg-primary/20' : isCenter ? 'border-primary/50 bg-primary/10' : compId ? 'border-border bg-surface-elevated' : 'border-dashed border-border bg-transparent'}`}
+      onPress={() => onSelect(zoneKey)}
+      activeOpacity={isCenter ? 1 : 0.7}
+    >
+      {isCenter ? (
+        <View className="w-10 h-10 rounded-full bg-primary/30 items-center justify-center mb-1">
+          <User size={16} color="var(--primary)" />
+        </View>
+      ) : null}
+      <Text className={`text-xs text-center ${compId || isCenter ? 'font-bold text-text' : 'text-text-muted'}`}>
+        {compLabel}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
 export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnologies, onUpdateZones, onUpdateEmbedsTech }: CustomOrbitBuilderModalProps) {
+  const { t } = useTranslation();
+
   const [activeZone, setActiveZone] = React.useState<keyof OrbitZones | null>(null);
 
   const handleZoneSelect = (zoneKey: keyof OrbitZones) => {
@@ -49,40 +94,15 @@ export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnol
     }
   };
 
-  const getCompLabel = (id: string) => AVAILABLE_COMPONENTS.find(c => c.id === id)?.label || 'Vazio';
-
-  const ZoneBox = ({ zoneKey, label }: { zoneKey: keyof OrbitZones, label: string }) => {
-    const isCenter = zoneKey === 'center';
-    const compId = zones[zoneKey];
-    const compLabel = isCenter ? 'Avatar (Fixo)' : getCompLabel(compId);
-    
-    return (
-      <TouchableOpacity 
-        className={`flex-1 m-1 border-2 rounded-xl justify-center items-center p-2 h-20 ${activeZone === zoneKey ? 'border-primary bg-primary/20' : isCenter ? 'border-primary/50 bg-primary/10' : compId ? 'border-border bg-surface-elevated' : 'border-dashed border-border bg-transparent'}`}
-        onPress={() => handleZoneSelect(zoneKey)}
-        activeOpacity={isCenter ? 1 : 0.7}
-      >
-        {isCenter ? (
-          <View className="w-10 h-10 rounded-full bg-primary/30 items-center justify-center mb-1">
-            <User size={16} color="var(--primary)" />
-          </View>
-        ) : null}
-        <Text className={`text-xs text-center ${compId || isCenter ? 'font-bold text-text' : 'text-text-muted'}`}>
-          {compLabel}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <Modal
       visible={visible}
       onClose={() => { setActiveZone(null); onClose(); }}
-      title="Custom Orbit Builder"
+      title={t("custom_orbit.modal_title")}
       size="md"
       footer={
         <Button variant="default" className="w-full" onPress={() => { setActiveZone(null); onClose(); }}>
-          <Text className="text-primary-foreground font-bold">Concluir</Text>
+          <Text className="text-primary-foreground font-bold">{t("common.done")}</Text>
         </Button>
       }
     >
@@ -93,27 +113,27 @@ export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnol
 
         <View className="bg-input-background p-4 rounded-xl border border-border mb-6">
           <View className="flex-row">
-            <ZoneBox zoneKey="topLeft" label="Top Left" />
-            <ZoneBox zoneKey="topCenter" label="Top Center" />
-            <ZoneBox zoneKey="topRight" label="Top Right" />
+            <ZoneBox zoneKey="topLeft" label="Top Left" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
+            <ZoneBox zoneKey="topCenter" label="Top Center" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
+            <ZoneBox zoneKey="topRight" label="Top Right" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
           </View>
           <View className="flex-row">
-            <ZoneBox zoneKey="left" label="Left" />
-            <ZoneBox zoneKey="center" label="Center" />
-            <ZoneBox zoneKey="right" label="Right" />
+            <ZoneBox zoneKey="left" label="Left" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
+            <ZoneBox zoneKey="center" label="Center" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
+            <ZoneBox zoneKey="right" label="Right" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
           </View>
           <View className="flex-row">
-            <ZoneBox zoneKey="bottomLeft" label="Bottom Left" />
+            <ZoneBox zoneKey="bottomLeft" label="Bottom Left" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
             <View className="flex-1 m-1" />
-            <ZoneBox zoneKey="bottomRight" label="Bottom Right" />
+            <ZoneBox zoneKey="bottomRight" label="Bottom Right" zones={zones} activeZone={activeZone} onSelect={handleZoneSelect} />
           </View>
         </View>
 
         {activeZone && (
           <View className="bg-surface rounded-xl border border-primary p-4 mb-6">
-            <Text className="text-primary font-bold text-sm mb-3 uppercase">Selecione para a zona escolhida:</Text>
+            <Text className="text-primary font-bold text-sm mb-3 uppercase">{t("custom_orbit.select_zone")}</Text>
             <View className="flex-row flex-wrap gap-2">
-              {AVAILABLE_COMPONENTS.map(comp => (
+              {getAvailableComponents(t).map(comp => (
                 <TouchableOpacity 
                   key={comp.id}
                   onPress={() => handleComponentAssign(comp.id)}
@@ -133,8 +153,8 @@ export function CustomOrbitBuilderModal({ visible, onClose, zones, embedsTechnol
             onPress={() => onUpdateEmbedsTech(!embedsTechnologies)}
           >
             <View className="flex-1 mr-4">
-              <Text className="text-text font-bold text-sm mb-1">Incorporar Tecnologias no Perfil</Text>
-              <Text className="text-text-secondary text-xs">Se ativo, e se houver tecnologias na órbita, a seção autônoma de tecnologias sumirá do menu para não haver duplicação.</Text>
+              <Text className="text-text font-bold text-sm mb-1">{t("custom_orbit.embed_tech")}</Text>
+              <Text className="text-text-secondary text-xs">{t("custom_orbit.embed_tech_desc")}</Text>
             </View>
             <View className={`w-10 h-6 rounded-full p-1 justify-center ${embedsTechnologies ? 'bg-primary' : 'bg-input-background border border-border'}`}>
               <View className={`w-4 h-4 rounded-full bg-white shadow-sm ${embedsTechnologies ? 'ml-auto' : ''}`} />

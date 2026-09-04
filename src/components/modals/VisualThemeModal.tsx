@@ -89,7 +89,7 @@ export function VisualThemeModal({ visible, onClose, config, onUpdate }: VisualT
   );
 
   return (
-    <Modal
+    <Modal variant="popover"
       visible={visible}
       onClose={onClose}
       title={t('visual_theme.modal_title')}

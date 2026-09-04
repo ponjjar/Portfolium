@@ -35,7 +35,7 @@ export function ProfileCenterOrbitModal({ visible, onClose, order, onUpdateOrder
     newOrder[index] = newOrder[targetIndex];
     newOrder[targetIndex] = temp;
     
-    onUpdateOrder(newOrder);
+    onUpdateOrder(newOrder as OrbitItem[]);
   };
 
   return (
@@ -60,7 +60,7 @@ export function ProfileCenterOrbitModal({ visible, onClose, order, onUpdateOrder
             <View 
               key={item}
               className={`flex-row items-center p-3 bg-surface ${
-                index < currentOrder.length - 1 ? 'border-b border-border' : ''
+                index < (currentOrder as OrbitItem[]).length - 1 ? 'border-b border-border' : ''
               }`}
             >
               <View className="flex-col mr-3">

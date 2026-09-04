@@ -52,7 +52,7 @@ export default function SkillsScreen() {
     }
   };
 
-  const handleAddSkill = (name: string, category: string) => {
+  const handleAddSkill = (name: string, category: any) => {
     const newSkill = {
       id: `skill_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
       name,
