@@ -13,6 +13,8 @@ import {
   ProjectAiReviewSchema,
   ProfileAiDescriptionSchema,
   PortfolioLanguageSettingsSchema,
+  ExperienceSchema,
+  EducationSchema,
 } from './schema';
 
 export type Profile = z.infer<typeof ProfileSchema>;
@@ -29,3 +31,5 @@ export type ProjectAiReview = z.infer<typeof ProjectAiReviewSchema>;
 export type ProfileAiDescription = z.infer<typeof ProfileAiDescriptionSchema>;
 export type PortfolioLanguageSettings = z.infer<typeof PortfolioLanguageSettingsSchema>;
 export type AiReviewStatus = ProjectAiReview['status'];
+export type Experience = z.infer<typeof ExperienceSchema>;
+export type Education = z.infer<typeof EducationSchema>;

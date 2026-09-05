@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DEFAULT_SECTIONS } from './registry';
 
 export const PortfolioLanguageSettingsSchema = z.object({
   supportedLanguages: z.array(z.string()).default(['pt-BR', 'en']),
@@ -99,6 +100,32 @@ export const ProjectSchema = z.object({
   aiReviewsByLocale: z.record(z.string(), ProjectAiReviewSchema).optional(),
 });
 
+export const ExperienceSchema = z.object({
+  id: z.string(),
+  company: z.string().min(1).max(100),
+  title: z.string().min(1).max(120),
+  employmentType: z.string().max(60).optional(),
+  location: z.string().max(100).optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().nullable().optional(),
+  current: z.boolean().default(false),
+  description: z.string().max(1000).optional(),
+  url: z.string().max(300).optional(),
+});
+
+export const EducationSchema = z.object({
+  id: z.string(),
+  institution: z.string().min(1).max(120),
+  course: z.string().min(1).max(120),
+  degree: z.string().max(80).optional(),
+  fieldOfStudy: z.string().max(120).optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().nullable().optional(),
+  current: z.boolean().default(false),
+  description: z.string().max(800).optional(),
+  url: z.string().max(300).optional(),
+});
+
 export const SkillCategorySchema = z.enum([
   'frontend',
   'backend',
@@ -115,6 +142,7 @@ export const SkillCategorySchema = z.enum([
 export const SkillSchema = z.object({
   id: z.string(),
   name: z.string(),
+  icon: z.string().optional(),
   category: SkillCategorySchema.default('other'),
   selected: z.boolean().default(true),
   sources: z.array(z.string()).default([]), // Project IDs
@@ -153,7 +181,7 @@ export const VisualThemeSchema = z.object({
 });
 
 export const PortfolioSectionSchema = z.object({
-  id: z.enum(['hero', 'projects', 'skills', 'experience', 'education', 'contact']),
+  id: z.enum(['hero', 'projects', 'skills', 'career', 'contact']),
   visible: z.boolean().default(true),
   order: z.number().default(0),
 });
@@ -215,9 +243,21 @@ export const HeaderLayoutSchema = z.object({
 });
 
 export const SkillsLayoutSchema = z.object({
-  placement: z.enum(['separate-section', 'beside-profile']).default('separate-section'),
-  grouping: z.enum(['none', 'category']).default('none'),
-  collapsedRows: z.number().default(5),
+  displayStyle: z.enum(['chips', 'icons', 'icon-grid', 'grouped']).default('chips'),
+  placement: z.enum(['section', 'profile-description-side']).default('section'),
+  showCategoryTitles: z.boolean().default(true),
+  showNames: z.boolean().default(true),
+  showIcons: z.boolean().default(false),
+  compact: z.boolean().default(false),
+});
+
+export const CareerLayoutSchema = z.object({
+  layout: z.enum(['stacked', 'side-by-side', 'tabs']).default('stacked'),
+  sharedEntryStyle: z.boolean().default(true),
+  entryStyle: z.enum(['timeline', 'cards', 'stepper', 'list']).default('timeline'),
+  experienceStyle: z.enum(['timeline', 'cards', 'stepper', 'list']).default('timeline'),
+  educationStyle: z.enum(['timeline', 'cards', 'stepper', 'list']).default('timeline'),
+  defaultTab: z.enum(['experience', 'education']).default('experience'),
 });
 
 export const PortfolioMotionSchema = z.object({
@@ -245,16 +285,13 @@ export const PortfolioConfigSchema = z.object({
     projects: ProjectsLayoutSchema.default({} as any),
     header: HeaderLayoutSchema.default({} as any),
     skills: SkillsLayoutSchema.default({} as any),
+    career: CareerLayoutSchema.default({} as any),
   }).default({} as any),
   animations: PortfolioMotionSchema.default({} as any),
   navigation: z.object({
     enabled: z.boolean().default(false),
   }).default({} as any),
-  sections: z.array(PortfolioSectionSchema).default([
-    { id: 'hero', visible: true, order: 0 },
-    { id: 'projects', visible: true, order: 1 },
-    { id: 'skills', visible: true, order: 2 },
-  ]),
+  sections: z.array(PortfolioSectionSchema).default(DEFAULT_SECTIONS as any),
   settings: PortfolioSettingsSchema.default({
     showAvatar: true,
     showProjectImages: true,
@@ -309,6 +346,8 @@ export const PortfolioSessionSchema = z.object({
   projects: z.array(ProjectSchema).default([]),
   skills: z.array(SkillSchema).default([]),
   skillGroups: z.array(SkillGroupSchema).default([]),
+  experiences: z.array(ExperienceSchema).default([]),
+  education: z.array(EducationSchema).default([]),
   portfolio: PortfolioConfigSchema.default({
     template: 'minimal',
     theme: { mode: 'dark', accent: '#FFFFFF' },
@@ -327,7 +366,8 @@ export const PortfolioSessionSchema = z.object({
       },
       projects: { columns: 2, cardStyle: 'banner-card', carousel: { enabled: false, autoplay: true, intervalMs: 3000, paginationDots: true } },
       header: { enabled: true, showNavigation: true, showName: true, showAvatar: true, namePosition: 'left' },
-      skills: { placement: 'separate-section', grouping: 'none', collapsedRows: 5 }
+      skills: { displayStyle: 'chips', placement: 'section', showCategoryTitles: true, showNames: true, showIcons: true, compact: false },
+      career: { layout: 'stacked', defaultTab: 'experience', sharedEntryStyle: true, entryStyle: 'timeline', experienceStyle: 'timeline', educationStyle: 'timeline' }
     },
     animations: { enabled: true, intensity: 'subtle', sectionReveal: true, cardHover: true, chipStagger: true, backgroundParallax: false },
     navigation: { enabled: false },
@@ -335,6 +375,7 @@ export const PortfolioSessionSchema = z.object({
       { id: 'hero', visible: true, order: 0 },
       { id: 'projects', visible: true, order: 1 },
       { id: 'skills', visible: true, order: 2 },
+      { id: 'career', visible: true, order: 3 },
     ],
     settings: {
       showAvatar: true,

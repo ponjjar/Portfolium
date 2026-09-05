@@ -10,7 +10,9 @@
       "add": "Add",
       "cancel": "Cancel",
       "confirm": "Confirm",
-      "done": "Done"
+      "done": "Done",
+      "delete": "Delete",
+      "delete_confirm": "Are you sure you want to delete this item?"
     },
     "welcome": {
       "title": "Portfolium",
@@ -101,6 +103,49 @@
       "footer": {
         "rights": "All rights reserved.",
         "builtWith": "Built with"
+      }
+    },
+    "experience": {
+      "title": "Experience and Education",
+      "subtitle": "Add your professional journey.",
+      "tabs": {
+        "experience": "Experience",
+        "education": "Education"
+      },
+      "import_data": "Import professional data",
+      "add_experience": "Add experience",
+      "add_education": "Add education",
+      "empty_experience": "No experience added yet.",
+      "empty_education": "No education added yet.",
+      "fields": {
+        "company": "Company",
+        "job_title": "Job title",
+        "employment_type": "Employment type",
+        "location": "Location",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "currently_working": "Currently working here",
+        "description": "Description",
+        "url": "URL",
+        "institution": "Institution",
+        "course": "Course",
+        "degree": "Degree",
+        "field_of_study": "Field of study",
+        "currently_studying": "Currently studying"
+      },
+      "import": {
+        "title": "Import Data",
+        "resume": "Import Resume / CV",
+        "linkedin": "Import LinkedIn data export",
+        "review_title": "Review Imported Data",
+        "duplicate_warning": "Potential duplicate detected",
+        "select_all": "Select All",
+        "apply": "Apply to Portfolio"
+      },
+      "validation": {
+        "date_invalid": "End date cannot be before start date.",
+        "max_chars": "Maximum characters exceeded.",
+        "required": "This field is required."
       }
     },
     "skills": {
@@ -289,20 +334,63 @@
       "scrollAnimations": "Scroll Animations",
       "sections": "Sections",
       "exportPortfolio": "Export Portfolio",
+      "tabs": {
+        "content": "Content",
+        "structure": "Structure"
+      },
+      "settings": "Settings",
       "layouts": {
         "stacked": "Stacked",
+        "side_by_side": "Side by side",
+        "tabs": "Tabs",
         "side": "Side",
         "orbital": "Orbital",
         "carousel": "Carousel",
         "grid": "Grid",
         "active": "Active",
         "hidden": "Hidden"
+      },
+      "entryStyles": {
+        "timeline": "Timeline",
+        "cards": "Cards",
+        "stepper": "Stepper",
+        "list": "List"
+      },
+      "careerLayout": {
+        "title": "Experience & Education",
+        "enabled": "Enable Section",
+        "overallLayout": "Overall Layout",
+        "defaultTab": "Default Tab",
+        "sharedEntryStyle": "Use different styles",
+        "entryStyle": "Entry style",
+        "experienceStyle": "Experience style",
+        "educationStyle": "Education style"
+      },
+      "skillsLayout": {
+        "title": "Technologies Layout",
+        "displayStyle": "Display Style",
+        "style_chips": "Chips",
+        "style_chips_desc": "Wrapping responsive chips",
+        "style_icons": "Icons + Labels",
+        "style_icons_desc": "List with technology icons",
+        "style_grid": "Icon Grid",
+        "style_grid_desc": "Centered icons in a responsive grid",
+        "style_grouped": "Grouped",
+        "style_grouped_desc": "Organized by categories",
+        "placement": "Placement",
+        "placement_section": "Standalone Section",
+        "placement_beside": "Beside Profile Description",
+        "opt_showCategoryTitles": "Show Categories",
+        "opt_showNames": "Show Names",
+        "opt_showIcons": "Show Icons",
+        "opt_compact": "Compact Spacing"
       }
     },
     "sections": {
       "hero": "Profile",
       "projects": "Projects",
       "skills": "Technologies",
+      "career": "Experience & Education",
       "experience": "Experience",
       "education": "Education",
       "contact": "Contact",

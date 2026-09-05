@@ -85,3 +85,17 @@ export interface TranslateResponse {
     error?: string;
   }[];
 }
+
+export interface ParseResumeRequest {
+  text: string;
+  language: string;
+}
+
+export interface ParseResumeResponse {
+  result: {
+    experiences: any[];
+    education: any[];
+  };
+  provider?: AiProvider;
+  error?: string;
+}

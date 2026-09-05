@@ -6,8 +6,11 @@ import { OrbitItem, ProfileCenterOrbitModal } from '@/components/modals/ProfileC
 import { ProfileLayoutModal } from '@/components/modals/ProfileLayoutModal';
 import { ProjectLayoutModal } from '@/components/modals/ProjectLayoutModal';
 import { VisualThemeModal } from '@/components/modals/VisualThemeModal';
+import { CareerLayoutModal } from '@/components/modals/CareerLayoutModal';
+import { SkillsLayoutModal } from '@/components/modals/SkillsLayoutModal';
 import { Button } from '@/components/ui/button';
 import { SortableSectionList } from '@/components/ui/SortableSectionList';
+import { SECTION_REGISTRY } from '@/domain/portfolio/registry';
 import { getFirstIncompleteStep } from '@/domain/portfolio/validation';
 import { usePortfolioStore } from '@/store';
 import { renderMinimalTemplate } from '@/templates/minimal';
@@ -33,6 +36,7 @@ export default function EditorScreen() {
   const [viewport, setViewport] = useState<'desktop' | 'mobile'>('desktop');
   const [isExportVisible, setIsExportVisible] = useState(false);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
+  const [activeTab, setActiveTab] = useState<'content' | 'structure' | 'settings'>('content');
 
   // Modals
   const [orbitModalVisible, setOrbitModalVisible] = useState(false);
@@ -41,6 +45,8 @@ export default function EditorScreen() {
   const [projectLayoutModalVisible, setProjectLayoutModalVisible] = useState(false);
   const [headerModalVisible, setHeaderModalVisible] = useState(false);
   const [visualThemeModalVisible, setVisualThemeModalVisible] = useState(false);
+  const [careerLayoutModalVisible, setCareerLayoutModalVisible] = useState(false);
+  const [skillsLayoutModalVisible, setSkillsLayoutModalVisible] = useState(false);
 
   // Validation Check on Mount
   useEffect(() => {
@@ -54,7 +60,9 @@ export default function EditorScreen() {
   const htmlContent = renderMinimalTemplate(viewModel);
 
   const handleEditSection = (step: string) => {
-    router.push({ pathname: `/(wizard)/${step}` as any, params: { returnTo: 'editor' } });
+    const registryEntry = SECTION_REGISTRY[step as keyof typeof SECTION_REGISTRY];
+    const route = registryEntry ? registryEntry.wizardRoute.replace('/(wizard)/', '') : step;
+    router.push({ pathname: `/(wizard)/${route}` as any, params: { returnTo: 'editor' } });
   };
 
   const handleExportHtml = async () => {
@@ -99,116 +107,145 @@ export default function EditorScreen() {
   // ----------------------------------------------------
   const renderSidebar = () => (
     <View className={`bg-input-background border-r border-border flex-col ${isMobile ? 'flex-1' : 'w-80'}`}>
-      <View className="p-6 border-b border-border">
+      <View className="p-6 pb-4 border-b border-border">
         <Text className="text-text font-bold text-xl mb-1">{t('editor.title')}</Text>
         <Text className="text-text-secondary text-xs">{t('editor.subtitle')}</Text>
       </View>
 
+      <View className="flex-row border-b border-border">
+        <TouchableOpacity
+          onPress={() => setActiveTab('content')}
+          className={`flex-1 p-4 items-center border-b-2 ${activeTab === 'content' ? 'border-primary' : 'border-transparent'}`}
+        >
+          <Text className={`font-bold ${activeTab === 'content' ? 'text-primary' : 'text-text-secondary'}`}>{t('editor.tabs.content', 'Conteúdo')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setActiveTab('structure')}
+          className={`flex-1 p-4 items-center border-b-2 ${activeTab === 'structure' ? 'border-primary' : 'border-transparent'}`}
+        >
+          <Text className={`font-bold ${activeTab === 'structure' ? 'text-primary' : 'text-text-secondary'}`}>{t('editor.tabs.structure', 'Estrutura')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setActiveTab('settings')}
+          className={`p-4 items-center border-b-2 ${activeTab === 'settings' ? 'border-primary' : 'border-transparent'}`}
+        >
+          <Settings color={activeTab === 'settings' ? 'var(--primary)' : 'var(--text-secondary)'} size={18} />
+        </TouchableOpacity>
+      </View>
+
       <ScrollView className="flex-1">
-        {/* Customization */}
-        <View className="p-6 border-b border-border">
-          <View className="flex-row items-center mb-4">
-            <Palette color="var(--text-secondary)" size={16} className="mr-2" />
-            <Text className="text-text-secondary text-xs font-bold uppercase tracking-widest">
-              {t('editor.customize')}
+        {activeTab === 'content' && (
+          <View className="p-6 gap-3 pb-20">
+            <Text className="text-text-secondary text-xs font-bold uppercase tracking-widest mb-2">
+              {t('editor.tabs.content', 'Conteúdo')}
             </Text>
+            {session.portfolio.sections
+              .filter(s => s.visible)
+              .filter(s => !(s.id === 'skills' && session.portfolio.layout.profile.embedsTechnologies))
+              .map((section) => {
+                const reg = SECTION_REGISTRY[section.id as keyof typeof SECTION_REGISTRY];
+                if (!reg) return null;
+                return (
+                  <View
+                    key={section.id}
+                    className="flex-row items-center justify-between bg-surface p-3 rounded border border-border"
+                  >
+                    <View className="flex-row items-center">
+                      <Text className="text-text font-bold">
+                        {t(reg.labelKey)}
+                      </Text>
+                    </View>
+                    <View className="flex-row items-center gap-2">
+                      {reg.hasLayoutModal && (
+                        <TouchableOpacity onPress={() => {
+                          if (section.id === 'hero') setProfileLayoutModalVisible(true);
+                          if (section.id === 'projects') setProjectLayoutModalVisible(true);
+                          if (section.id === 'career') setCareerLayoutModalVisible(true);
+                          if (section.id === 'skills') setSkillsLayoutModalVisible(true);
+                        }} className="p-2 bg-input-background rounded hover:bg-surface-elevated">
+                          <Settings color="var(--text-secondary)" size={14} />
+                        </TouchableOpacity>
+                      )}
+                      <TouchableOpacity onPress={() => handleEditSection(section.id)} className="p-2">
+                        <Text className="text-primary text-xs font-bold uppercase">Editar &gt;</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              })}
           </View>
+        )}
 
-          <View className="gap-2 mb-6">
-            <TouchableOpacity
-              onPress={() => setVisualThemeModalVisible(true)}
-              className="flex-row items-center justify-between bg-surface p-3 rounded border border-border"
-            >
-              <View className="flex-row items-center">
-                <Palette color="var(--text)" size={16} className="mr-3" />
-                <Text className="text-text font-bold text-sm">{t('editor.visualTheme')}</Text>
-              </View>
-              <Text className="text-text-secondary text-xs">{session.portfolio.visualTheme?.preset || 'dark'} &gt;</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Layout Pickers */}
-          <View className="gap-2">
-            <TouchableOpacity
-              onPress={() => setProfileLayoutModalVisible(true)}
-              className="flex-row items-center justify-between bg-surface p-3 rounded border border-border"
-            >
-              <View className="flex-row items-center">
-                <User color="var(--text)" size={16} className="mr-3" />
-                <Text className="text-text font-bold text-sm">{t('editor.profileLayout')}</Text>
-              </View>
-              <Text className="text-text-secondary text-xs">{
-                session.portfolio.layout.profile.variant === 'stacked-center' ? t('editor.layouts.stacked') :
-                  session.portfolio.layout.profile.variant === 'avatar-side' ? t('editor.layouts.side') : t('editor.layouts.orbital')
-              } &gt;</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => setProjectLayoutModalVisible(true)}
-              className="flex-row items-center justify-between bg-surface p-3 rounded border border-border"
-            >
-              <View className="flex-row items-center">
-                <Briefcase color="var(--text)" size={16} className="mr-3" />
-                <Text className="text-text font-bold text-sm">{t('editor.projectsLayout')}</Text>
-              </View>
-              <Text className="text-text-secondary text-xs">{session.portfolio.layout.projects.carousel?.enabled ? t('editor.layouts.carousel') : t('editor.layouts.grid')} &gt;</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => setHeaderModalVisible(true)}
-              className="flex-row items-center justify-between bg-surface p-3 rounded border border-border"
-            >
-              <View className="flex-row items-center">
-                <MonitorSmartphone color="var(--text)" size={16} className="mr-3" />
-                <Text className="text-text font-bold text-sm">{t('editor.header')}</Text>
-              </View>
-              <Text className="text-text-secondary text-xs">{session.portfolio.layout.header?.enabled ? t('editor.layouts.active') : t('editor.layouts.hidden')} &gt;</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Options */}
-        <View className="p-6 border-b border-border">
-          <View className="flex-row items-center mb-4">
-            <Settings color="var(--text-secondary)" size={16} className="mr-2" />
-            <Text className="text-text-secondary text-xs font-bold uppercase tracking-widest">
-              Opções
+        {activeTab === 'structure' && (
+          <View className="p-6 pb-20">
+            <Text className="text-text-secondary text-xs font-bold uppercase tracking-widest mb-4">
+              {t('editor.tabs.structure', 'Estrutura')}
             </Text>
+            <SortableSectionList
+              sections={session.portfolio.sections.filter(s =>
+                !(s.id === 'skills' && session.portfolio.layout.profile.embedsTechnologies)
+              )}
+              onReorder={(sections) => {
+                const hiddenSections = session.portfolio.sections.filter(s =>
+                  (s.id === 'skills' && session.portfolio.layout.profile.embedsTechnologies)
+                );
+                updateConfig({ sections: [...sections, ...hiddenSections] });
+              }}
+              onToggleVisibility={(sectionId) => {
+                const updatedSections = session.portfolio.sections.map(s => 
+                  s.id === sectionId ? { ...s, visible: !s.visible } : s
+                );
+                updateConfig({ sections: updatedSections });
+              }}
+            />
           </View>
-          <TouchableOpacity
-            className="flex-row items-center mb-2"
-            onPress={() => updateConfig({ animations: { ...session.portfolio.animations, sectionReveal: !session.portfolio.animations.sectionReveal } as any })}
-          >
-            <View className={`w-4 h-4 rounded border mr-2 items-center justify-center ${session.portfolio.animations.sectionReveal ? 'bg-primary border-primary' : 'border-border bg-input-background'}`}>
-              {session.portfolio.animations.sectionReveal && <View className="w-2 h-2 bg-primary-foreground rounded-sm" />}
+        )}
+
+        {activeTab === 'settings' && (
+          <View className="p-6 gap-6 pb-20">
+            <View>
+              <Text className="text-text-secondary text-xs font-bold uppercase tracking-widest mb-4">
+                {t('editor.settings', 'Configurações')}
+              </Text>
+              <View className="gap-2">
+                <TouchableOpacity
+                  onPress={() => setVisualThemeModalVisible(true)}
+                  className="flex-row items-center justify-between bg-surface p-3 rounded border border-border"
+                >
+                  <View className="flex-row items-center">
+                    <Palette color="var(--text)" size={16} className="mr-3" />
+                    <Text className="text-text font-bold text-sm">{t('editor.visualTheme')}</Text>
+                  </View>
+                  <Text className="text-text-secondary text-xs">{session.portfolio.visualTheme?.preset || 'dark'} &gt;</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setHeaderModalVisible(true)}
+                  className="flex-row items-center justify-between bg-surface p-3 rounded border border-border"
+                >
+                  <View className="flex-row items-center">
+                    <MonitorSmartphone color="var(--text)" size={16} className="mr-3" />
+                    <Text className="text-text font-bold text-sm">{t('editor.header')}</Text>
+                  </View>
+                  <Text className="text-text-secondary text-xs">{session.portfolio.layout.header?.enabled ? t('editor.layouts.active') : t('editor.layouts.hidden')} &gt;</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <Text className="text-text text-sm">{t('editor.scrollAnimations')}</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Content Editing (Sortable) */}
-        <View className="p-6 pb-20">
-          <View className="flex-row items-center mb-4">
-            <LayoutTemplate color="var(--text-secondary)" size={16} className="mr-2" />
-            <Text className="text-text-secondary text-xs font-bold uppercase tracking-widest">
-              Seções
-            </Text>
+            <View className="border-t border-border pt-6">
+              <Text className="text-text-secondary text-xs font-bold uppercase tracking-widest mb-4">
+                {t('editor.options', 'Opções')}
+              </Text>
+              <TouchableOpacity
+                className="flex-row items-center mb-2"
+                onPress={() => updateConfig({ animations: { ...session.portfolio.animations, sectionReveal: !session.portfolio.animations.sectionReveal } as any })}
+              >
+                <View className={`w-4 h-4 rounded border mr-2 items-center justify-center ${session.portfolio.animations.sectionReveal ? 'bg-primary border-primary' : 'border-border bg-input-background'}`}>
+                  {session.portfolio.animations.sectionReveal && <View className="w-2 h-2 bg-primary-foreground rounded-sm" />}
+                </View>
+                <Text className="text-text text-sm">{t('editor.scrollAnimations')}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-          <SortableSectionList
-            sections={session.portfolio.sections.filter(s =>
-              !(s.id === 'skills' && session.portfolio.layout.profile.embedsTechnologies)
-            )}
-            onReorder={(sections) => {
-              // Maintain any hidden sections in their existing order relative to the updated ones
-              const hiddenSections = session.portfolio.sections.filter(s =>
-                s.id === 'skills' && session.portfolio.layout.profile.embedsTechnologies
-              );
-              updateConfig({ sections: [...sections, ...hiddenSections] });
-            }}
-            onEdit={handleEditSection}
-          />
-        </View>
+        )}
       </ScrollView>
 
       {/* Export / Actions Footer */}
@@ -375,6 +412,13 @@ export default function EditorScreen() {
         }}
       />
 
+      <CareerLayoutModal
+        visible={careerLayoutModalVisible}
+        onClose={() => setCareerLayoutModalVisible(false)}
+        config={session.portfolio.layout.career || {} as any}
+        onUpdate={(career) => updateConfig({ layout: { ...session.portfolio.layout, career } })}
+      />
+
       <VisualThemeModal
         visible={visualThemeModalVisible}
         onClose={() => setVisualThemeModalVisible(false)}
@@ -383,6 +427,13 @@ export default function EditorScreen() {
           updateTheme({ mode: config.preset.includes('light') ? 'light' : 'dark', accent: config.accent });
           updateConfig({ visualTheme: config as any });
         }}
+      />
+
+      <SkillsLayoutModal
+        visible={skillsLayoutModalVisible}
+        onClose={() => setSkillsLayoutModalVisible(false)}
+        config={session.portfolio.layout.skills}
+        onUpdate={(conf) => updateConfig({ layout: { ...session.portfolio.layout, skills: conf } })}
       />
 
       <CustomOrbitBuilderModal

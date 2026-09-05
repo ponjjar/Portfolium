@@ -8,6 +8,7 @@ export default function WizardLayout() {
       <GlobalHeader />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: 'transparent' } }}>
         <Stack.Screen name="profile" />
+        <Stack.Screen name="experience" />
         <Stack.Screen name="projects" />
         <Stack.Screen name="skills" />
         <Stack.Screen name="ai" />

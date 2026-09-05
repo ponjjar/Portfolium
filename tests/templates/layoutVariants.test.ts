@@ -33,9 +33,9 @@ describe('Layout Variants HTML Generation (Issue #35)', () => {
     sections: [
       { id: 'hero', visible: true, title: 'Home', visible: true, order: 0 },
     ],
-    socialLinks: [
-      { label: 'GitHub', url: 'https://github.com/john' },
-      { label: 'LinkedIn', url: 'https://linkedin.com/in/john' },
+    socialLinks: [ { type: "github", label: "GitHub", url: "https://github.com" },
+      
+      
     ],
     layout: {
       profile: {
@@ -54,7 +54,8 @@ describe('Layout Variants HTML Generation (Issue #35)', () => {
           bottomRight: 'technologies',
         },
       },
-      skills: { variant: "simple", badges: false }, projects: { variant: "stacked-center",
+      skills: { placement: 'separate-section', grouping: 'none', collapsedRows: 5 },
+      projects: {
         columns: 2,
         cardStyle: 'banner-card',
         carousel: {
@@ -64,7 +65,7 @@ describe('Layout Variants HTML Generation (Issue #35)', () => {
           paginationDots: true,
         },
       },
-      header: {
+      career: { layout: "stacked", sharedEntryStyle: true, entryStyle: "timeline", experienceStyle: "timeline", educationStyle: "timeline", defaultTab: "experience" }, header: {
         enabled: false,
         showNavigation: true,
         showName: true,
@@ -73,13 +74,19 @@ describe('Layout Variants HTML Generation (Issue #35)', () => {
       },
     },
     animations: {
-      revealOnScroll: false,
+      enabled: false,
+      intensity: 'subtle',
+      sectionReveal: false,
+      cardHover: true,
+      chipStagger: true,
+      backgroundParallax: false,
     },
     navigation: {
       enabled: false,
-      items: [],
     },
-    ...overrides,
+    sections: [
+      { id: 'hero', visible: true, order: 0 } as any,
+    ],
   });
 
   it('renders stacked-center layout correctly with hero-stacked-center class', () => {

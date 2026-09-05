@@ -10,7 +10,9 @@
       "add": "Adicionar",
       "cancel": "Cancelar",
       "confirm": "Confirmar",
-      "done": "Concluir"
+      "done": "Concluir",
+      "delete": "Excluir",
+      "delete_confirm": "Tem certeza que deseja excluir este item?"
     },
     "welcome": {
       "title": "Portfolium",
@@ -101,6 +103,49 @@
       "footer": {
         "rights": "Todos os direitos reservados.",
         "builtWith": "Criado com"
+      }
+    },
+    "experience": {
+      "title": "Experiência e Educação",
+      "subtitle": "Adicione sua jornada profissional.",
+      "tabs": {
+        "experience": "Experiência",
+        "education": "Educação"
+      },
+      "import_data": "Importar dados profissionais",
+      "add_experience": "Adicionar experiência",
+      "add_education": "Adicionar educação",
+      "empty_experience": "Nenhuma experiência adicionada.",
+      "empty_education": "Nenhuma educação adicionada.",
+      "fields": {
+        "company": "Empresa",
+        "job_title": "Cargo",
+        "employment_type": "Tipo de emprego",
+        "location": "Localidade",
+        "start_date": "Data de início",
+        "end_date": "Data de término",
+        "currently_working": "Trabalho atualmente neste cargo",
+        "description": "Descrição",
+        "url": "URL",
+        "institution": "Instituição",
+        "course": "Curso",
+        "degree": "Grau",
+        "field_of_study": "Área de estudo",
+        "currently_studying": "Estudo atualmente aqui"
+      },
+      "import": {
+        "title": "Importar Dados",
+        "resume": "Importar Currículo / CV",
+        "linkedin": "Importar arquivo do LinkedIn",
+        "review_title": "Revisar Dados Importados",
+        "duplicate_warning": "Possível duplicata detectada",
+        "select_all": "Selecionar Todos",
+        "apply": "Aplicar ao Portfólio"
+      },
+      "validation": {
+        "date_invalid": "A data de término não pode ser anterior à data de início.",
+        "max_chars": "Límite de caracteres excedido.",
+        "required": "Este campo é obrigatório."
       }
     },
     "skills": {
@@ -288,21 +333,64 @@
       "options": "Op\u00e7\u00f5es",
       "scrollAnimations": "Anima\u00e7\u00f5es de rolagem",
       "sections": "Se\u00e7\u00f5es",
-      "exportPortfolio": "Exportar Portf\u00f3lio",
+      "exportPortfolio": "Exportar Portfólio",
+      "tabs": {
+        "content": "Conteúdo",
+        "structure": "Estrutura"
+      },
+      "settings": "Configurações",
       "layouts": {
         "stacked": "Empilhado",
+        "side_by_side": "Lado a lado",
+        "tabs": "Abas",
         "side": "Lateral",
         "orbital": "Orbital",
         "carousel": "Carrossel",
         "grid": "Grade",
         "active": "Ativo",
         "hidden": "Oculto"
+      },
+      "entryStyles": {
+        "timeline": "Linha do Tempo",
+        "cards": "Cards",
+        "stepper": "Passos",
+        "list": "Lista"
+      },
+      "careerLayout": {
+        "title": "Experiência e Formação",
+        "enabled": "Habilitar Seção",
+        "overallLayout": "Layout Geral",
+        "defaultTab": "Aba Padrão",
+        "sharedEntryStyle": "Usar o mesmo estilo",
+        "entryStyle": "Estilo dos itens",
+        "experienceStyle": "Estilo de Experiência",
+        "educationStyle": "Estilo de Formação"
+      },
+      "skillsLayout": {
+        "title": "Layout de Tecnologias",
+        "displayStyle": "Estilo de Exibição",
+        "style_chips": "Chips",
+        "style_chips_desc": "Chips responsivos lado a lado",
+        "style_icons": "Ícones + Nomes",
+        "style_icons_desc": "Lista com ícones das tecnologias",
+        "style_grid": "Grid de Ícones",
+        "style_grid_desc": "Ícones centralizados num grid responsivo",
+        "style_grouped": "Agrupado",
+        "style_grouped_desc": "Organizado por categorias",
+        "placement": "Posicionamento",
+        "placement_section": "Seção Independente",
+        "placement_beside": "Ao lado da Descrição do Perfil",
+        "opt_showCategoryTitles": "Mostrar Títulos das Categorias",
+        "opt_showNames": "Mostrar Nomes",
+        "opt_showIcons": "Mostrar Ícones",
+        "opt_compact": "Espaçamento Compacto"
       }
     },
     "sections": {
       "hero": "Perfil",
       "projects": "Projetos",
       "skills": "Tecnologias",
+      "career": "Experiência & Formação",
       "experience": "Experi\u00eancia",
       "education": "Educa\u00e7\u00e3o",
       "contact": "Contato",

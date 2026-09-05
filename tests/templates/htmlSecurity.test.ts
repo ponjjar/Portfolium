@@ -150,7 +150,7 @@ describe('HTML Escaping & Security in Template (Issue #29)', () => {
               repository: 'https://github.com/test"><script>alert(2)</script>'
             },
             featured: true
-          }
+          } as any
         ]
       });
       const html = renderMinimalTemplate(vm);
@@ -171,7 +171,7 @@ describe('HTML Escaping & Security in Template (Issue #29)', () => {
           {
             label: '<span onclick="evil()">Twitter</span>',
             url: 'https://twitter.com/test" onfocus="evil()'
-          }
+          } as any
         ]
       });
       const html = renderMinimalTemplate(vm);
@@ -184,7 +184,7 @@ describe('HTML Escaping & Security in Template (Issue #29)', () => {
     it('should escape skills and category names', () => {
       const vm = createBaseViewModel({
         skills: [
-          { name: '<img src=x onerror=alert(1)>', category: '<script>alert("cat")</script>' }
+          { name: '<img src=x onerror=alert(1)>', category: '<script>alert("cat")</script>' as any }
         ]
       });
       const html = renderMinimalTemplate(vm);
