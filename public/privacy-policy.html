@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidade | Portfolium</title>
+    <meta name="description" content="Saiba como o Portfolium trata informações, arquivos importados, integrações e dados armazenados pelo aplicativo.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#111111" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#202124" media="(prefers-color-scheme: dark)">
+    <link rel="canonical" href="https://folium-builder.vercel.app/privacy-policy">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <style>
+        :root {
+            --bg-color: #F7F7F5;
+            --text-color: #111111;
+            --text-muted: #686868;
+            --border-color: #E2E2DF;
+            --link-color: #111111;
+            --accent-bg: #FFFFFF;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #202124;
+                --text-color: #F1F3F4;
+                --text-muted: #BDC1C6;
+                --border-color: #3C4043;
+                --link-color: #F1F3F4;
+                --accent-bg: #292A2D;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem 1.5rem;
+            box-sizing: border-box;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0 0 0.5rem 0;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        p, li {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        .meta-info {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            padding-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <img src="/favicon.png" alt="Portfolium Logo" class="logo">
+        <h1>Política de Privacidade — Portfolium</h1>
+        <div class="meta-info">Última atualização: 5 de setembro de 2026</div>
+        <a href="/" class="back-link">← Voltar para o início</a>
+    </header>
+
+    <main>
+        <section>
+            <p>O Portfolium adota uma abordagem prioritariamente local (<em>local-first</em>). Isso significa que grande parte das informações inseridas por você para a criação do seu portfólio são armazenadas localmente no seu próprio dispositivo ou navegador, e não em nossos servidores.</p>
+        </section>
+
+        <section>
+            <h2>Informações fornecidas pelo usuário</h2>
+            <p>O Portfolium pode processar informações inseridas voluntariamente por você, incluindo:</p>
+            <ul>
+                <li>Nome e cargo profissional</li>
+                <li>Imagem de perfil</li>
+                <li>Descrição profissional e resumo</li>
+                <li>Links e perfis de redes sociais</li>
+                <li>Experiência profissional e histórico acadêmico (educação)</li>
+                <li>Projetos e competências/tecnologias</li>
+                <li>Arquivos de currículo</li>
+                <li>Arquivos exportados de serviços de terceiros</li>
+                <li>Preferências de portfólio e configurações visuais</li>
+            </ul>
+            <p>Essas informações são utilizadas estritamente para fornecer a funcionalidade central do aplicativo: gerar o seu portfólio.</p>
+        </section>
+
+        <section>
+            <h2>Armazenamento local (Local Storage)</h2>
+            <p>As informações do seu perfil, projetos, experiências, educação, tecnologias, temas escolhidos, configurações do portfólio e dados da sua sessão podem ser armazenados localmente no seu dispositivo ou navegador de internet.</p>
+            <p>Você possui controle total sobre esses dados e pode exportar os dados da sua sessão a qualquer momento através da interface do aplicativo.</p>
+        </section>
+
+        <section>
+            <h2>Integração com o GitHub</h2>
+            <p>O Portfolium pode utilizar a API oficial do GitHub para buscar informações de repositórios públicos, visando facilitar a importação dos seus projetos. As informações consultadas incluem:</p>
+            <ul>
+                <li>Nome do repositório e descrição</li>
+                <li>Linguagens utilizadas</li>
+                <li>Arquivos README e imagens vinculadas</li>
+                <li>Arquivos do repositório usados para identificar tecnologias (ex: package.json)</li>
+                <li>Outros metadados públicos do repositório</li>
+            </ul>
+            <p><strong>Atenção:</strong> O aplicativo não requer e não solicita acesso de escrita (write access) aos seus repositórios para o funcionamento deste recurso.</p>
+        </section>
+
+        <section>
+            <h2>Importação de currículo e exportação do LinkedIn</h2>
+            <p>Opcionalmente, você pode importar dados para o aplicativo através de:</p>
+            <ul>
+                <li>Arquivos de currículo em PDF</li>
+                <li>Arquivos CSV</li>
+                <li>Arquivos ZIP contendo dados exportados diretamente por você</li>
+            </ul>
+            <p>Esses arquivos podem ser processados para extrair e identificar suas experiências profissionais e acadêmicas. O processamento desses arquivos ocorre preferencialmente de forma local.</p>
+            <p>Declaramos explicitamente que <strong>o Portfolium não realiza qualquer tipo de raspagem automatizada (scraping) no site ou serviços do LinkedIn</strong>.</p>
+        </section>
+
+        <section>
+            <h2>Inteligência Artificial</h2>
+            <p>Funcionalidades opcionais do Portfolium podem utilizar serviços de Inteligência Artificial para resumir, organizar, traduzir ou interpretar as informações fornecidas por você.</p>
+            <p>Nesses casos, apenas as informações estritamente necessárias para realizar a operação solicitada serão enviadas de forma temporária ao provedor de IA selecionado. O uso dessas funcionalidades é totalmente opcional e pode estar sujeito aos termos e políticas de privacidade dos próprios provedores do serviço.</p>
+        </section>
+
+        <section>
+            <h2>Serviços Externos</h2>
+            <p>Algumas funcionalidades do aplicativo podem depender de serviços de terceiros, como:</p>
+            <ul>
+                <li>GitHub (para importação de projetos)</li>
+                <li>Provedores de hospedagem e infraestrutura (para manter o aplicativo online)</li>
+                <li>Provedores de Inteligência Artificial opcionais</li>
+            </ul>
+            <p>Cada um desses provedores possui suas próprias políticas de privacidade aplicáveis.</p>
+        </section>
+
+        <section>
+            <h2>Logs técnicos e de servidor</h2>
+            <p>Provedores de infraestrutura e hospedagem podem processar automaticamente informações técnicas e de conexão, tais como:</p>
+            <ul>
+                <li>Endereço IP</li>
+                <li>Data e hora das requisições</li>
+                <li>Rotas ou páginas solicitadas</li>
+                <li>Informações técnicas do dispositivo e do navegador</li>
+                <li>Logs operacionais e de segurança</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Publicidade e venda de dados</h2>
+            <p>Declaramos explicitamente que:</p>
+            <ul>
+                <li><strong>O Portfolium não vende as informações pessoais dos usuários.</strong></li>
+                <li><strong>O Portfolium não utiliza as informações fornecidas por você para criar ou veicular publicidade direcionada.</strong></li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Compartilhamento</h2>
+            <p>Suas informações são compartilhadas apenas quando estritamente necessário para:</p>
+            <ul>
+                <li>Executar funcionalidades solicitadas por você (ex: resumo via IA)</li>
+                <li>Utilizar integrações externas (ex: consultas ao GitHub)</li>
+                <li>Cumprir obrigações legais</li>
+                <li>Proteger a segurança e integridade do aplicativo e dos usuários</li>
+            </ul>
+            <p>Você pode, por conta própria e voluntariamente, exportar, compartilhar e publicar o portfólio gerado ou arquivos extraídos da aplicação.</p>
+        </section>
+
+        <section>
+            <h2>Controle do Usuário</h2>
+            <p>Você tem o controle para editar, atualizar ou remover as informações inseridas e armazenadas na aplicação, podendo também excluir completamente os dados da sessão local pelo seu navegador. Arquivos exportados permanecem inteiramente sob o seu controle e gestão.</p>
+        </section>
+
+        <section>
+            <h2>Segurança</h2>
+            <p>Utilizamos medidas de segurança razoáveis do ponto de vista tecnológico e de engenharia para proteger o aplicativo. Segredos de servidor e chaves de API restritas não são armazenados na aplicação cliente distribuída (frontend). No entanto, ressaltamos que nenhum sistema conectado à internet possui segurança absoluta e inviolável.</p>
+        </section>
+
+        <section>
+            <h2>Links Externos</h2>
+            <p>Os portfólios gerados por este aplicativo podem conter links apontando para sites externos (como redes sociais ou sites de projetos). O Portfolium não possui responsabilidade pelas práticas de privacidade ou conteúdo desses serviços de terceiros.</p>
+        </section>
+
+        <section>
+            <h2>Alterações nesta política</h2>
+            <p>Esta política de privacidade poderá ser atualizada periodicamente para refletir mudanças em nossas funcionalidades, integrações ou exigências legais. A data da revisão mais recente permanecerá sempre visível no topo desta página.</p>
+        </section>
+
+        <section>
+            <h2>Contato</h2>
+            <p>Se você tiver dúvidas, sugestões ou solicitações relativas à sua privacidade, por favor, entre em contato através do nosso canal de suporte público:</p>
+            <p><a href="https://github.com/ponjjar/portfolio-builder/issues" target="_blank" rel="noopener noreferrer">Acessar canal de suporte no GitHub</a></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Portfolium. Todos os direitos reservados.</p>
+    </footer>
+</div>
+
+</body>
+</html>

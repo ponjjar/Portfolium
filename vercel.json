@@ -9,6 +9,14 @@
             "destination": "/api/:match*"
         },
         {
+            "source": "/privacy-policy",
+            "destination": "/privacy-policy.html"
+        },
+        {
+            "source": "/politica-de-privacidade",
+            "destination": "/privacy-policy.html"
+        },
+        {
             "source": "/:path*",
             "destination": "/"
         }
