@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { usePortfolioStore, getManagedAiUsage } from '@/store';
 import { AiClient } from '../ai-client';
 import { AiMode, AiGenerationStatus, ProjectAiDraft, ProfileAiDraft } from '../types';
+import { useTurnstile } from '@/components/ui/TurnstileProvider';
 import { ExternalAiConfig } from '@/components/ai/AiExternalConfigModal';
 import { ProjectAiReview, ProfileAiDescription } from '@/domain/portfolio/types';
 
@@ -21,6 +22,7 @@ export interface ProjectLocalePair {
 
 export function useAiGeneration() {
   const { session, updateAiConfig, updateProfile, saveProjectAiReview, saveProfileAiDescription } = usePortfolioStore();
+  const { getToken } = useTurnstile();
   
   const [step, setStep] = useState<AiWizardStep>('idle');
   const [selectedPairs, setSelectedPairs] = useState<ProjectLocalePair[]>([]);
@@ -127,9 +129,11 @@ export function useAiGeneration() {
           }
         } else {
           const projectsForRequest = basePairs.map(pair => session.projects.find(p => p.id === pair.projectId)!);
+          const turnstileToken = await getToken();
           const response = await AiClient.summarizeProjects({
             language: defaultLang, // mapped to target locale internally if needed
             locale: defaultLang,
+            turnstileToken,
             projects: projectsForRequest.map(p => ({
               id: p.id,
               title: p.title,
@@ -203,9 +207,11 @@ export function useAiGeneration() {
         if (textsToTranslate.length === 0) continue;
 
         try {
+          const turnstileToken = await getToken();
           const response = await AiClient.translate({
             sourceLocale: defaultLang,
             targetLocale: locale,
+            turnstileToken,
             texts: textsToTranslate
           });
 
@@ -280,9 +286,11 @@ export function useAiGeneration() {
     });
 
     try {
+      const turnstileToken = await getToken();
       const response = await AiClient.suggestProfile({
         sourceLocale: defaultLang,
         targetLocales: selectedLocales as Array<'pt-BR' | 'en'>,
+        turnstileToken,
         projects: projectsToSend,
         currentProfile: {
           descriptions: {

@@ -21,6 +21,7 @@ export class GitHubApiError extends Error {
 
 interface FetchOptions extends RequestInit {
   timeoutMs?: number;
+  turnstileToken?: string;
 }
 
 export async function fetchFromGitHub<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
@@ -50,6 +51,10 @@ export async function fetchFromGitHub<T>(endpoint: string, options: FetchOptions
   const authToken = process.env.GITHUB_TOKEN || process.env.EXPO_PUBLIC_GITHUB_TOKEN || process.env.readRepoGHKey;
   if (authToken && !headers.has('Authorization')) {
     headers.set('Authorization', `Bearer ${authToken}`);
+  }
+  
+  if (options.turnstileToken) {
+    headers.set('x-turnstile-token', options.turnstileToken);
   }
   
   // Explicitly adding User-Agent as it's required by GitHub API, though browsers might override it

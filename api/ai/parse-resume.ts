@@ -1,4 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import { verifyTurnstileToken } from '../utils/turnstile';
 
 function filterResumeText(text: string): string {
   const keywords = [
@@ -71,6 +72,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const token = req.headers['x-turnstile-token'] as string | undefined;
+  const isHuman = await verifyTurnstileToken(token);
+  if (!isHuman) {
+    return res.status(403).json({ error: 'Invalid or missing Turnstile token' });
   }
 
   try {

@@ -8,6 +8,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { parseLinkedInExport } from '@/features/import/linkedin-parser';
 import { AiClient } from '@/features/ai/ai-client';
 import { usePortfolioStore } from '@/store';
+import { useTurnstile } from '@/components/ui/TurnstileProvider';
 import * as FileSystem from 'expo-file-system/legacy';
 
 interface ImportDataModalProps {
@@ -21,6 +22,7 @@ export function ImportDataModal({ visible, onClose, onSuccess }: ImportDataModal
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { session } = usePortfolioStore();
+  const { getToken } = useTurnstile();
 
   const handleImportResume = async () => {
     try {
@@ -59,10 +61,14 @@ export function ImportDataModal({ visible, onClose, onSuccess }: ImportDataModal
       }
 
       // Extract text
+      const turnstileToken = await getToken();
       const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || '';
       const response = await fetch(`${API_BASE_URL}/api/extract-pdf-text`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(turnstileToken ? { 'x-turnstile-token': turnstileToken } : {})
+        },
         body: JSON.stringify({ base64Pdf }),
       });
 
@@ -83,7 +89,8 @@ export function ImportDataModal({ visible, onClose, onSuccess }: ImportDataModal
       if (session.ai?.provider && session.ai.provider !== 'free' && (session as any).aiConfig) {
         parsedData = await AiClient.fetchExternalResumeParse((session as any).aiConfig, text, lang);
       } else {
-        const res = await AiClient.parseResume({ text, language: lang });
+        const turnstileToken2 = await getToken();
+        const res = await AiClient.parseResume({ text, language: lang, turnstileToken: turnstileToken2 });
         parsedData = res.result;
       }
 

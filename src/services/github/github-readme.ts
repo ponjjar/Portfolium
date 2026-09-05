@@ -224,9 +224,10 @@ export function extractCleanSummaryFromReadme(rawReadme: string, maxChars = 300)
 /**
  * Fetches the README HTML, parses image tags, resolves them, and filters them by size.
  */
-export async function extractReadmeImages(repo: GitHubRepositorySummary): Promise<ImageCandidate[]> {
+export async function extractReadmeImages(repo: GitHubRepositorySummary, getToken?: () => Promise<string | undefined>): Promise<ImageCandidate[]> {
   try {
     const endpoint = `/repos/${repo.ownerLogin}/${repo.name}/readme`;
+    const turnstileToken = getToken ? await getToken() : undefined;
     
     // We expect HTML+JSON
     let html = '';
@@ -235,6 +236,7 @@ export async function extractReadmeImages(repo: GitHubRepositorySummary): Promis
         headers: {
           'Accept': 'application/vnd.github.html+json',
         },
+        turnstileToken,
         timeoutMs: 5000,
       });
     } catch (error) {
@@ -285,15 +287,18 @@ export async function extractReadmeImages(repo: GitHubRepositorySummary): Promis
  */
 export async function fetchRepositoryReadme(
   repo: GitHubRepositorySummary,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  getToken?: () => Promise<string | undefined>
 ): Promise<string | null> {
   try {
     const endpoint = `/repos/${repo.ownerLogin}/${repo.name}/readme`;
+    const turnstileToken = getToken ? await getToken() : undefined;
     
     const rawResponse = await fetchFromGitHub<any>(endpoint, {
       headers: {
         'Accept': 'application/vnd.github.raw+json',
       },
+      turnstileToken,
       signal,
       timeoutMs: 10000,
     });

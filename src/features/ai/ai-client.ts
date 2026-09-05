@@ -9,6 +9,7 @@ export class AiClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...(request.turnstileToken ? { 'x-turnstile-token': request.turnstileToken } : {})
       },
       body: JSON.stringify(request),
     });
@@ -26,6 +27,7 @@ export class AiClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...(request.turnstileToken ? { 'x-turnstile-token': request.turnstileToken } : {})
       },
       body: JSON.stringify(request),
     });
@@ -43,6 +45,7 @@ export class AiClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...(request.turnstileToken ? { 'x-turnstile-token': request.turnstileToken } : {})
       },
       body: JSON.stringify(request),
     });
@@ -102,6 +105,7 @@ export class AiClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...(request.turnstileToken ? { 'x-turnstile-token': request.turnstileToken } : {})
       },
       body: JSON.stringify(request),
     });

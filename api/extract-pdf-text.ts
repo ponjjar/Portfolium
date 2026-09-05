@@ -1,5 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-const { PDFParse } = require('pdf-parse');
+import { verifyTurnstileToken } from './utils/turnstile';
+const pdf = require('pdf-parse');
 
 // Increase payload size limit if Next.js/Vercel allows it this way
 export const config = {
@@ -28,6 +29,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const token = req.headers['x-turnstile-token'] as string | undefined;
+  const isHuman = await verifyTurnstileToken(token);
+  if (!isHuman) {
+    return res.status(403).json({ error: 'Invalid or missing Turnstile token' });
+  }
+
   try {
     const { base64Pdf } = req.body;
 
@@ -43,8 +50,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Parse PDF (max 3 pages limit applied)
-    const parser = new PDFParse({ data: buffer });
-    const data = await parser.getText({ first: 3 });
+    const data = await pdf(buffer, { max: 3 });
 
     return res.status(200).json({ text: data.text });
   } catch (error: any) {
