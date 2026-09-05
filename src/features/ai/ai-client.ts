@@ -1,4 +1,4 @@
-import { SummarizeProjectsRequest, SummarizeProjectsResponse, SuggestProfileRequest, SuggestProfileResponse, TranslateRequest, TranslateResponse } from './types';
+import { SummarizeProjectsRequest, SummarizeProjectsResponse, SuggestProfileRequest, SuggestProfileResponse, TranslateRequest, TranslateResponse, ParseResumeRequest, ParseResumeResponse } from './types';
 import { ExternalAiConfig } from '@/components/ai/AiExternalConfigModal';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || '';
@@ -93,6 +93,82 @@ export class AiClient {
       if (!res.ok) throw new Error(`Gemini API Error: ${res.statusText}`);
       const data = await res.json();
       return data.candidates[0].content.parts[0].text;
+    }
+    throw new Error('Unsupported provider');
+  }
+
+  static async parseResume(request: ParseResumeRequest): Promise<ParseResumeResponse> {
+    const response = await fetch(`${API_BASE_URL}/api/ai/parse-resume`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to parse resume: ${response.status} ${errorText}`);
+    }
+
+    return response.json();
+  }
+
+  static async fetchExternalResumeParse(
+    config: ExternalAiConfig, 
+    text: string, 
+    languageName: string
+  ): Promise<any> {
+    const systemPrompt = `You are an expert ATS (Applicant Tracking System) parser.
+Your job is to read the unstructured text of a CV/resume and extract it into a structured JSON format.
+Extract the professional Experience and Education. Do not invent information. If a field is unknown, leave it empty.
+Current interface language: ${languageName}.
+Return the result strictly as a JSON object with this shape:
+{
+  "experiences": [
+    { "id": "exp_1", "company": "...", "title": "...", "startDate": "YYYY-MM", "endDate": "YYYY-MM or null", "current": boolean, "location": "...", "employmentType": "...", "description": "..." }
+  ],
+  "education": [
+    { "id": "edu_1", "institution": "...", "course": "...", "degree": "...", "fieldOfStudy": "...", "startDate": "YYYY-MM", "endDate": "YYYY-MM or null", "current": boolean, "description": "..." }
+  ]
+}
+No markdown wrappers, only pure JSON string.`;
+
+    if (config.provider === 'openai' || config.provider === 'ollama' || config.provider === 'custom') {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (config.apiKey) headers['Authorization'] = `Bearer ${config.apiKey}`;
+      
+      const res = await fetch(config.endpoint, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          model: config.model,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: text }
+          ],
+          response_format: { type: "json_object" },
+          temperature: 0.1,
+        })
+      });
+      if (!res.ok) throw new Error(`API Error: ${res.statusText}`);
+      const data = await res.json();
+      return JSON.parse(data.choices[0].message.content);
+    } else if (config.provider === 'gemini') {
+      const res = await fetch(`${config.endpoint}/models/${config.model}:generateContent?key=${config.apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: { text: systemPrompt } },
+          contents: [{ parts: [{ text }] }]
+        })
+      });
+      if (!res.ok) throw new Error(`Gemini API Error: ${res.statusText}`);
+      const data = await res.json();
+      let content = data.candidates[0].content.parts[0].text;
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      if (jsonMatch) content = jsonMatch[0];
+      return JSON.parse(content);
     }
     throw new Error('Unsupported provider');
   }

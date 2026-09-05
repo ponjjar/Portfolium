@@ -1,5 +1,6 @@
 export const WIZARD_STEPS = [
   'profile',
+  'experience',
   'projects',
   'skills',
   'ai',

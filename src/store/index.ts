@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { PortfolioSession, Project, Skill, Profile, Theme, PortfolioConfig, SocialLink } from '../domain/portfolio/types';
+import { PortfolioSession, Project, Skill, Profile, Theme, PortfolioConfig, SocialLink, Experience, Education } from '../domain/portfolio/types';
 import { PortfolioSessionSchema } from '../domain/portfolio/schema';
 import { saveSession } from '../storage';
 
@@ -31,6 +31,15 @@ interface PortfolioState {
   rejectProfileAiDescription: (locale: any) => void;
   finalizeAiChanges: () => void;
   updateLanguageSettings: (settings: any) => void;
+
+  addExperience: (experience: Experience) => void;
+  updateExperience: (id: string, experience: Partial<Experience>) => void;
+  removeExperience: (id: string) => void;
+  reorderExperiences: (experiences: Experience[]) => void;
+  addEducation: (education: Education) => void;
+  updateEducation: (id: string, education: Partial<Education>) => void;
+  removeEducation: (id: string) => void;
+  reorderEducation: (education: Education[]) => void;
 }
 
 export const getInitialSession = (): PortfolioSession => {
@@ -128,6 +137,66 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => {
       }));
     },
 
+    addExperience: (experience) => {
+      updateSession((session) => ({
+        ...session,
+        experiences: [...(session.experiences || []), experience],
+      }));
+    },
+
+    updateExperience: (id, experienceUpdate) => {
+      updateSession((session) => ({
+        ...session,
+        experiences: session.experiences.map((e) =>
+          e.id === id ? { ...e, ...experienceUpdate } : e
+        ),
+      }));
+    },
+
+    removeExperience: (id) => {
+      updateSession((session) => ({
+        ...session,
+        experiences: session.experiences.filter((e) => e.id !== id),
+      }));
+    },
+
+    reorderExperiences: (experiences) => {
+      updateSession((session) => ({
+        ...session,
+        experiences,
+      }));
+    },
+
+    addEducation: (education) => {
+      updateSession((session) => ({
+        ...session,
+        education: [...(session.education || []), education],
+      }));
+    },
+
+    updateEducation: (id, educationUpdate) => {
+      updateSession((session) => ({
+        ...session,
+        education: session.education.map((e) =>
+          e.id === id ? { ...e, ...educationUpdate } : e
+        ),
+      }));
+    },
+
+    removeEducation: (id) => {
+      updateSession((session) => ({
+        ...session,
+        education: session.education.filter((e) => e.id !== id),
+      }));
+    },
+
+    reorderEducation: (education) => {
+      updateSession((session) => ({
+        ...session,
+        education,
+      }));
+    },
+
     setSkills: (skills) => {
       updateSession((session) => ({
         ...session,
@@ -214,11 +283,35 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => {
         }
       }
 
-      const result = PortfolioSessionSchema.safeParse(sessionJson);
+      // Prevent validation failures due to old schema for layout
+      if (asAny?.portfolio?.layout) {
+        if (asAny.portfolio.layout.skills && asAny.portfolio.layout.skills.placement === 'separate-section') {
+          delete asAny.portfolio.layout.skills;
+        }
+      }
+
+      const result = PortfolioSessionSchema.safeParse(asAny);
       if (result.success) {
-        set({ session: result.data });
-        saveSession(result.data); // Immediate save on import
+        // Ensure all required sections exist in the loaded session (for older states)
+        const session = result.data;
+        const requiredSections = [
+          { id: 'hero', visible: true, order: 0 },
+          { id: 'projects', visible: true, order: 1 },
+          { id: 'skills', visible: true, order: 2 },
+          { id: 'career', visible: true, order: 3 }
+        ] as const;
+
+        requiredSections.forEach(reqSection => {
+          if (!session.portfolio.sections.find(s => s.id === reqSection.id)) {
+            session.portfolio.sections.push({ ...reqSection });
+          }
+        });
+
+        set({ session });
+        saveSession(session); // Immediate save on import
         return true;
+      } else {
+        console.error("Failed to parse session:", result.error);
       }
       return false;
     },

@@ -1,25 +1,24 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { User, Briefcase, Code, ArrowUp, ArrowDown, Edit2 } from 'lucide-react-native';
+import { User, Briefcase, Code, ArrowUp, ArrowDown, Eye, EyeOff } from 'lucide-react-native';
 import { PortfolioSection } from '@/domain/portfolio/types';
 
 interface SortableSectionListProps {
   sections: PortfolioSection[];
   onReorder: (sections: PortfolioSection[]) => void;
-  onEdit: (sectionId: string) => void;
+  onToggleVisibility: (sectionId: string) => void;
 }
 
 const SECTION_META: Record<string, { label: string; icon: any }> = {
   hero: { label: 'hero', icon: User },
   projects: { label: 'projects', icon: Briefcase },
   skills: { label: 'skills', icon: Code },
-  experience: { label: 'experience', icon: Briefcase },
-  education: { label: 'education', icon: Briefcase },
+  career: { label: 'career', icon: Briefcase },
   contact: { label: 'contact', icon: User },
 };
 
-export function SortableSectionList({ sections, onReorder, onEdit }: SortableSectionListProps) {
+export function SortableSectionList({ sections, onReorder, onToggleVisibility }: SortableSectionListProps) {
   const { t } = useTranslation();
   const items = [...sections].sort((a, b) => a.order - b.order);
 
@@ -72,9 +71,13 @@ export function SortableSectionList({ sections, onReorder, onEdit }: SortableSec
               </TouchableOpacity>
             </View>
             <Icon color="var(--text)" size={16} className="mr-3" />
-            <Text className="text-text flex-1">{t(`sections.${meta.label}`)}</Text>
-            <TouchableOpacity onPress={() => onEdit(section.id)} className="p-2 bg-input-background hover:bg-surface-elevated rounded">
-              <Edit2 color="var(--text-secondary)" size={14} />
+            <Text className={`text-text flex-1 ${!section.visible ? 'opacity-50' : ''}`}>{t(`sections.${meta.label}`)}</Text>
+            <TouchableOpacity onPress={() => onToggleVisibility(section.id)} className="p-2 bg-input-background hover:bg-surface-elevated rounded">
+              {section.visible ? (
+                <Eye color="var(--text-secondary)" size={14} />
+              ) : (
+                <EyeOff color="var(--text-muted)" size={14} />
+              )}
             </TouchableOpacity>
           </View>
         );

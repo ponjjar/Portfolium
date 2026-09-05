@@ -48,7 +48,8 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
           bottomRight: 'technologies',
         },
       },
-      skills: { variant: "simple", badges: false }, projects: { variant: "stacked-center",
+      skills: { placement: 'separate-section', grouping: 'none', collapsedRows: 5 },
+      projects: {
         columns: 2,
         cardStyle: 'banner-card',
         carousel: {
@@ -58,7 +59,7 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
           paginationDots: true,
         },
       },
-      header: {
+      career: { layout: "stacked", sharedEntryStyle: true, entryStyle: "timeline", experienceStyle: "timeline", educationStyle: "timeline", defaultTab: "experience" }, header: {
         enabled: false,
         showNavigation: true,
         showName: true,
@@ -67,11 +68,15 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
       },
     },
     animations: {
-      revealOnScroll: false,
+      enabled: false,
+      intensity: 'subtle',
+      sectionReveal: false,
+      cardHover: true,
+      chipStagger: true,
+      backgroundParallax: false,
     },
     navigation: {
       enabled: false,
-      items: [],
     },
     ...overrides,
   });
@@ -86,7 +91,7 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
             glows: { enabled: false, intensity: 'medium', color: '#3b82f6', count: 2 },
             microStars: { enabled: false, density: 'medium', opacity: 0.3 },
           },
-        },
+        } as any
       });
       const html = renderMinimalTemplate(vm);
 
@@ -100,10 +105,10 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
           preset: 'amoled',
           accent: '#8b5cf6',
           backgroundEffects: {
-            glows: { enabled: false, intensity: 'medium', color: '#8b5cf6', count: 2 },
+            glows: { enabled: false, intensity: 'medium', color: '#000000', count: 2 },
             microStars: { enabled: false, density: 'medium', opacity: 0.3 },
           },
-        },
+        } as any
       });
       const html = renderMinimalTemplate(vm);
 
@@ -121,7 +126,7 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
             glows: { enabled: false, intensity: 'medium', color: '#ef4444', count: 2 },
             microStars: { enabled: false, density: 'medium', opacity: 0.3 },
           },
-        },
+        } as any
       });
       const html = renderMinimalTemplate(vm);
 
@@ -175,10 +180,10 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
           preset: 'dark',
           accent: '#3b82f6',
           backgroundEffects: {
-            glows: { enabled: true, intensity: 'high', color: '#ff0055', count: 2 },
+            glows: { enabled: true, intensity: 'high', color: '#3b82f6', count: 3 },
             microStars: { enabled: false, density: 'medium', opacity: 0.3 },
           },
-        },
+        } as any
       });
       const html = renderMinimalTemplate(vm);
 
@@ -227,9 +232,9 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
           accent: '#3b82f6',
           backgroundEffects: {
             glows: { enabled: false, intensity: 'medium', color: '#3b82f6', count: 2 },
-            microStars: { enabled: true, density: 'high', opacity: 0.5 },
+            microStars: { enabled: true, density: 'high', opacity: 0.8 },
           },
-        },
+        } as any
       });
       const htmlHigh = renderMinimalTemplate(vmHigh);
       expect(htmlHigh).toContain('background-image: radial-gradient(');
@@ -241,9 +246,9 @@ describe('Visual Theme Presets & Effects (Issue #34)', () => {
           accent: '#3b82f6',
           backgroundEffects: {
             glows: { enabled: false, intensity: 'medium', color: '#3b82f6', count: 2 },
-            microStars: { enabled: true, density: 'low', opacity: 0.5 },
+            microStars: { enabled: true, density: 'low', opacity: 0.1 },
           },
-        },
+        } as any
       });
       const htmlLow = renderMinimalTemplate(vmLow);
       expect(htmlLow).toContain('background-size: 50px 50px;');

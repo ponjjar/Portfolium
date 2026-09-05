@@ -10,7 +10,7 @@ const translations: Record<string, any> = {
 };
 
 export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
-  const { profile, projects, skills, theme, visualTheme, settings, sections, socialLinks, layout, animations, navigation, languageSettings } = viewModel;
+  const { profile, projects, skills, experiences, education, theme, visualTheme, settings, sections, socialLinks, layout, animations, navigation, languageSettings } = viewModel;
 
   const currentVisualTheme = visualTheme || { preset: 'dark', accent: theme.accent || '#3b82f6', backgroundEffects: { glows: { enabled: false, intensity: 'medium', color: '#3b82f6', count: 2 }, microStars: { enabled: false, density: 'low', opacity: 0.3 } } };
   const accentColor = currentVisualTheme.accent;
@@ -75,6 +75,7 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
   const pLayout = layout?.profile || { variant: 'stacked-center', cornerItemsOrder: ['name', 'links', 'headline'], embedsTechnologies: false, avatarStyle: { shape: 'circle', border: 'subtle', effect: 'none' }, zones: { center: 'avatar', topLeft: 'name', topRight: 'headline', left: 'links', right: '', topCenter: '', bottomLeft: 'description', bottomRight: 'technologies' } };
   const prLayout = layout?.projects || { columns: 2, cardStyle: 'banner-card', carousel: { enabled: false, autoplay: true, intervalMs: 3000, paginationDots: true } };
   const hLayout = layout?.header || { enabled: false, showNavigation: true, showName: true, showAvatar: true, namePosition: 'left' };
+  const cLayout = layout?.career || { enabled: true, layout: 'stacked', sharedEntryStyle: true, entryStyle: 'timeline', experienceStyle: 'timeline', educationStyle: 'timeline', defaultTab: 'experience' };
 
   // Micro Stars CSS
   let starsCSS = '';
@@ -283,9 +284,43 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
     .carousel-arrow-next { right: -20px; }
     @media (max-width: 768px) { .carousel-arrow { display: none; } }
 
-    .carousel-pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
-    .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); cursor: pointer; transition: background 0.2s; }
+    .carousel-pagination { display: flex; justify-content: center; gap: 8px; margin-top: 1rem; }
+    .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); cursor: pointer; border: none; padding: 0; }
     .carousel-dot.active { background: var(--accent); }
+
+    /* Career Section */
+    .career-grid { display: grid; gap: 2rem; }
+    .career-side-by-side { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 768px) { .career-side-by-side { grid-template-columns: 1fr; } }
+    .career-tabs-header { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); }
+    .career-tab-btn { background: none; border: none; color: var(--muted); padding: 0.5rem 1rem; cursor: pointer; font-weight: 600; border-bottom: 2px solid transparent; transition: all 0.3s ease; }
+    .career-tab-btn.active { color: var(--text); border-bottom-color: var(--accent); }
+    .career-tab-content { display: none; opacity: 0; transition: opacity 0.3s ease; }
+    .career-tab-content.active { display: block; opacity: 1; }
+
+    /* Entry Styles */
+    .entry-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    
+    .style-timeline { border-left: 2px solid var(--border); padding-left: 1.5rem; position: relative; margin-left: 0.5rem; }
+    .style-timeline .entry-item { position: relative; margin-bottom: 2rem; }
+    .style-timeline .entry-item:last-child { margin-bottom: 0; }
+    .style-timeline .entry-item::before { content: ''; position: absolute; left: -1.85rem; top: 0.25rem; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); }
+    
+    .style-cards .entry-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: transform 0.3s, border-color 0.3s; }
+    ${(animations as any)?.cardHover ? '.style-cards .entry-item:hover { transform: translateY(-4px); border-color: var(--accent); }' : ''}
+    
+    .style-stepper { display: flex; flex-direction: column; gap: 2rem; }
+    .style-stepper .entry-item { display: flex; gap: 1rem; }
+    .style-stepper .step-number { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--surface); border: 1px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; }
+    .style-stepper .step-content { flex: 1; padding-top: 0.25rem; }
+    
+    .style-list .entry-item { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; }
+    .style-list .entry-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .entry-date { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.25rem; display: block; font-weight: 500; }
+    .entry-title { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
+    .entry-subtitle { font-size: 0.95rem; color: var(--muted); margin-bottom: 0.75rem; font-weight: 500; }
+    .entry-desc { font-size: 0.95rem; color: var(--text); line-height: 1.6; white-space: pre-line; }
 
     .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
     .project-card.logo-side-card { flex-direction: row; align-items: stretch; }
@@ -368,8 +403,8 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
     
     if (hLayout.namePosition === 'right') { brandHtml = `${avatarImg}${nameText}`; } else { brandHtml = `${nameText}${avatarImg}`; }
 
-    // Filter out skills from navigation if embedded
-    const navSections = visibleSections.filter(s => !(s.id === 'skills' && pLayout.embedsTechnologies));
+    // Filter out skills from navigation if embedded or placed beside profile
+    const navSections = visibleSections.filter(s => !(s.id === 'skills' && (pLayout.embedsTechnologies || layout.skills?.placement === 'profile-description-side')));
 
     const navHtml = hLayout.showNavigation ? `
       <nav>
@@ -534,11 +569,37 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
   // --- Render Skills ---
   const renderSkills = () => {
     if (skills.length === 0 || pLayout.embedsTechnologies) return '';
-    const grouping = layout.skills?.grouping || 'none';
+    const style = layout.skills?.displayStyle || 'chips';
+    const showNames = layout.skills?.showNames ?? true;
+    const showIcons = layout.skills?.showIcons ?? false;
+    const showCats = layout.skills?.showCategoryTitles ?? true;
+    const isCompact = layout.skills?.compact ?? false;
     
     let contentHtml = '';
     
-    if (grouping === 'category') {
+    const renderSkillItem = (s: typeof skills[0]) => {
+      const nameHtml = showNames ? escapeHtml(s.name) : '';
+      const iconHtml = (showIcons && s.icon) ? `<img src="${escapeHtml(s.icon)}" style="width: 16px; height: 16px; object-fit: contain;" alt=""/>` : (showIcons ? `<div style="width: 16px; height: 16px; border-radius: 50%; background: var(--muted);"></div>` : '');
+      const inner = (iconHtml && nameHtml) ? `<span style="display:flex; align-items:center; gap: 0.4rem;">${iconHtml}<span>${nameHtml}</span></span>` : (iconHtml || nameHtml);
+      
+      if (style === 'icons') {
+        return `<div style="display:flex; align-items:center; gap: 0.5rem; color: var(--text); padding: ${isCompact ? '0.25rem' : '0.5rem'} 0;">
+          ${iconHtml || '◉'} ${nameHtml}
+        </div>`;
+      }
+      
+      if (style === 'icon-grid') {
+        return `<div style="display:flex; flex-direction:column; align-items:center; gap: 0.5rem; background: var(--surface); padding: ${isCompact ? '0.75rem' : '1.25rem'}; border-radius: 12px; border: 1px solid var(--border); text-align: center;">
+          ${showIcons ? (s.icon ? `<img src="${escapeHtml(s.icon)}" style="width: 32px; height: 32px; object-fit: contain;" alt=""/>` : `<div style="width: 32px; height: 32px; border-radius: 50%; background: var(--border);"></div>`) : ''}
+          ${showNames ? `<span style="font-size: 0.85rem; font-weight: 500;">${nameHtml}</span>` : ''}
+        </div>`;
+      }
+      
+      // Default: chips / grouped chips
+      return `<span class="tech-badge" style="margin:0; ${isCompact ? 'padding: 0.2rem 0.6rem; font-size: 0.75rem;' : ''}">${inner}</span>`;
+    };
+
+    if (style === 'grouped') {
       const grouped: Record<string, typeof skills> = {};
       skills.forEach(s => {
         const cat = s.category || 'other';
@@ -547,26 +608,128 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
       });
       
       contentHtml = Object.entries(grouped).map(([category, catSkills]) => `
-        <div class="skill-category">
-          <h3 style="font-size: 0.85rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted);">${escapeHtml(category)}</h3>
-          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            ${catSkills.map(s => `<span class="tech-badge" style="margin:0;">${escapeHtml(s.name)}</span>`).join('')}
+        <div class="skill-category" style="margin-bottom: ${isCompact ? '1rem' : '2rem'};">
+          ${showCats ? `<h3 style="font-size: 0.85rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted);">${escapeHtml(category)}</h3>` : ''}
+          <div style="display: flex; flex-wrap: wrap; gap: ${isCompact ? '0.25rem' : '0.5rem'};">
+            ${catSkills.map(renderSkillItem).join('')}
           </div>
         </div>
-      `).join('<div style="height: 1.5rem;"></div>');
+      `).join('');
+    } else if (style === 'icon-grid') {
+      contentHtml = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(${isCompact ? '80px' : '100px'}, 1fr)); gap: ${isCompact ? '0.5rem' : '1rem'};">
+          ${skills.map(renderSkillItem).join('')}
+        </div>
+      `;
+    } else if (style === 'icons') {
+      contentHtml = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: ${isCompact ? '0.5rem' : '1rem'};">
+          ${skills.map(renderSkillItem).join('')}
+        </div>
+      `;
     } else {
       contentHtml = `
-        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-          ${skills.map(s => `<span class="tech-badge" style="margin:0;">${escapeHtml(s.name)}</span>`).join('')}
+        <div style="display: flex; flex-wrap: wrap; gap: ${isCompact ? '0.25rem' : '0.5rem'};">
+          ${skills.map(renderSkillItem).join('')}
         </div>
       `;
     }
 
+    // Handle profile-description-side placement later (it requires changing the layout wrapper)
+    // For now, if placement is beside-profile (or profile-description-side), we just render it. 
+    // The wrapper CSS will put it in the right grid column if it's rendered as a section.
+    
     return `
       <section id="skills" class="skills-section">
         <h2>${renderI18n('portfolio.sections.skills')}</h2>
         <div class="skills-wrapper">
           ${contentHtml}
+        </div>
+      </section>
+    `;
+  };
+
+  // --- Render Career (Experience & Education) ---
+  const renderCareer = () => {
+    if (experiences.length === 0 && education.length === 0) return '';
+    
+    const expStyle = cLayout.sharedEntryStyle ? cLayout.entryStyle : cLayout.experienceStyle;
+    const eduStyle = cLayout.sharedEntryStyle ? cLayout.entryStyle : cLayout.educationStyle;
+
+    const renderEntry = (item: any, style: string, index: number) => {
+      const isEdu = 'institution' in item;
+      const title = isEdu ? item.course : item.position;
+      const subtitle = isEdu ? item.institution : item.company;
+      const date = (item.startDate || '') + ' - ' + (item.current ? t('experience.fields.present') : (item.endDate || ''));
+      
+      const content = `
+        <span class="entry-date">${escapeHtml(date)}</span>
+        <h3 class="entry-title">${escapeHtml(title)}</h3>
+        <div class="entry-subtitle">${escapeHtml(subtitle)}</div>
+        ${item.description ? `<div class="entry-desc">${escapeHtml(item.description)}</div>` : ''}
+      `;
+
+      if (style === 'stepper') {
+        return `
+          <div class="entry-item">
+            <div class="step-number">${index + 1}</div>
+            <div class="step-content">${content}</div>
+          </div>
+        `;
+      }
+
+      return `<div class="entry-item">${content}</div>`;
+    };
+
+    const expHtml = experiences.length > 0 ? `
+      <div class="career-block">
+        <h3 style="margin-bottom: 1.5rem;">${renderI18n('experience.tabs.experience')}</h3>
+        <div class="entry-list style-${expStyle}">
+          ${experiences.map((e, i) => renderEntry(e, expStyle, i)).join('')}
+        </div>
+      </div>
+    ` : '';
+
+    const eduHtml = education.length > 0 ? `
+      <div class="career-block">
+        <h3 style="margin-bottom: 1.5rem;">${renderI18n('experience.tabs.education')}</h3>
+        <div class="entry-list style-${eduStyle}">
+          ${education.map((e, i) => renderEntry(e, eduStyle, i)).join('')}
+        </div>
+      </div>
+    ` : '';
+
+    if (cLayout.layout === 'tabs' && experiences.length > 0 && education.length > 0) {
+      const isExpDefault = cLayout.defaultTab === 'experience';
+      return `
+        <section id="career" class="career-section">
+          <h2>${renderI18n('editor.careerLayout.title')}</h2>
+          <div class="career-tabs-header">
+            <button class="career-tab-btn ${isExpDefault ? 'active' : ''}" data-target="tab-exp">${renderI18n('experience.tabs.experience')}</button>
+            <button class="career-tab-btn ${!isExpDefault ? 'active' : ''}" data-target="tab-edu">${renderI18n('experience.tabs.education')}</button>
+          </div>
+          <div id="tab-exp" class="career-tab-content ${isExpDefault ? 'active' : ''}">
+            <div class="entry-list style-${expStyle}">
+              ${experiences.map((e, i) => renderEntry(e, expStyle, i)).join('')}
+            </div>
+          </div>
+          <div id="tab-edu" class="career-tab-content ${!isExpDefault ? 'active' : ''}">
+            <div class="entry-list style-${eduStyle}">
+              ${education.map((e, i) => renderEntry(e, eduStyle, i)).join('')}
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    const wrapperClass = cLayout.layout === 'side-by-side' ? 'career-grid career-side-by-side' : 'career-grid';
+    
+    return `
+      <section id="career" class="career-section">
+        <h2>${renderI18n('editor.careerLayout.title')}</h2>
+        <div class="${wrapperClass}">
+          ${expHtml}
+          ${eduHtml}
         </div>
       </section>
     `;
@@ -578,6 +741,7 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
     if (section.id === 'hero') bodyContent += renderHero();
     if (section.id === 'projects') bodyContent += renderProjects();
     if (section.id === 'skills') bodyContent += renderSkills();
+    if (section.id === 'career') bodyContent += renderCareer();
   });
 
   const scriptsHtml = `
@@ -629,6 +793,20 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
       });
       window.addEventListener("scroll", () => {
         sessionStorage.setItem("portfolio_preview_scroll", window.scrollY);
+      });
+
+      // Career Tabs Logic
+      document.querySelectorAll('.career-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          if (!targetId) return;
+          
+          document.querySelectorAll('.career-tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          document.querySelectorAll('.career-tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById(targetId).classList.add('active');
+        });
       });
 
       // Parallax Effects
@@ -773,7 +951,7 @@ export function renderMinimalTemplate(viewModel: PortfolioViewModel): string {
 <body>
   ${glowsHTML}
   ${renderHeader()}
-  <main class="container ${layout.skills?.placement === 'beside-profile' ? 'beside-profile-layout' : ''}">
+  <main class="container ${layout.skills?.placement === 'profile-description-side' ? 'beside-profile-layout' : ''}">
     ${bodyContent}
   </main>
   <footer>

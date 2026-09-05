@@ -8,6 +8,8 @@ export interface PortfolioViewModel {
   projects: Project[];
   skills: Skill[];
   skillGroups: SkillGroup[];
+  experiences: PortfolioSession['experiences'];
+  education: PortfolioSession['education'];
   theme: PortfolioSession['portfolio']['theme'];
   visualTheme: PortfolioSession['portfolio']['visualTheme'];
   sections: PortfolioSession['portfolio']['sections'];
@@ -38,6 +40,8 @@ export function buildPortfolioViewModel(session: PortfolioSession): PortfolioVie
     projects: validProjects,
     skills: validSkills,
     skillGroups: session.skillGroups,
+    experiences: session.experiences || [],
+    education: session.education || [],
     theme: session.portfolio.theme,
     visualTheme: session.portfolio.visualTheme,
     sections: validSections,
