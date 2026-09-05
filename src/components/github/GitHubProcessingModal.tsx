@@ -7,6 +7,7 @@ import { fetchRepositoryReadme } from '@/services/github/github-readme';
 import { detectTechnologies } from '@/services/github/github-manifests';
 import { runWithConcurrency } from '@/utils/promise-concurrency';
 import { Modal } from '@/components/ui/modal';
+import { useTurnstile } from '@/components/ui/TurnstileProvider';
 
 interface GitHubProcessingModalProps {
   visible: boolean;
@@ -27,6 +28,7 @@ export function GitHubProcessingModal({ visible, reposToProcess, onComplete, onC
   const abortControllerRef = useRef<AbortController | null>(null);
   const [completedCount, setCompletedCount] = useState(0);
   const [isDone, setIsDone] = useState(false);
+  const { getToken } = useTurnstile();
 
   const startProcessing = React.useCallback(async () => {
     abortControllerRef.current = new AbortController();
@@ -44,8 +46,8 @@ export function GitHubProcessingModal({ visible, reposToProcess, onComplete, onC
 
           try {
             const [readme, manifestsResult] = await Promise.all([
-              fetchRepositoryReadme(repo, signal),
-              detectTechnologies(repo, signal)
+              fetchRepositoryReadme(repo, signal, getToken),
+              detectTechnologies(repo, signal, getToken)
             ]);
 
             // Update status to completed

@@ -1,8 +1,8 @@
 import { fetchFromGitHub } from './github-client';
 import { GitHubUser, GitHubRepoResponse, GitHubRepositorySummary } from './github.schemas';
 
-export async function fetchGitHubUser(username: string, signal?: AbortSignal): Promise<GitHubUser> {
-  return fetchFromGitHub<GitHubUser>(`/users/${username}`, { signal });
+export async function fetchGitHubUser(username: string, signal?: AbortSignal, turnstileToken?: string): Promise<GitHubUser> {
+  return fetchFromGitHub<GitHubUser>(`/users/${username}`, { signal, turnstileToken });
 }
 
 function mapRepoToSummary(repo: GitHubRepoResponse): GitHubRepositorySummary {
@@ -28,7 +28,8 @@ function mapRepoToSummary(repo: GitHubRepoResponse): GitHubRepositorySummary {
 export async function fetchAllPublicRepositories(
   username: string, 
   signal?: AbortSignal,
-  onProgress?: (fetchedCount: number) => void
+  onProgress?: (fetchedCount: number) => void,
+  turnstileToken?: string
 ): Promise<GitHubRepositorySummary[]> {
   const perPage = 100;
   let page = 1;
@@ -41,7 +42,7 @@ export async function fetchAllPublicRepositories(
 
     const repos = await fetchFromGitHub<GitHubRepoResponse[]>(
       `/users/${username}/repos?per_page=${perPage}&page=${page}&sort=updated`,
-      { signal }
+      { signal, turnstileToken }
     );
 
     if (repos.length === 0) {

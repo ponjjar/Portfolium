@@ -9,16 +9,24 @@ const ALLOWED_ENDPOINTS = [
   /^\/repos\/[^/]+\/[^/]+\/contents\/[^]+$/, // e.g. /repos/inovia/portfolio/contents/package.json
 ];
 
+import { verifyTurnstileToken } from './utils/turnstile';
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Only allow GET requests
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Extract the target endpoint
   const endpoint = req.query.endpoint as string;
   if (!endpoint) {
     return res.status(400).json({ error: 'Missing endpoint parameter' });
+  }
+
+  // Turnstile validation is required for ALL endpoints as requested.
+  const turnstileToken = req.headers['x-turnstile-token'] as string | undefined;
+  const isHuman = await verifyTurnstileToken(turnstileToken);
+  if (!isHuman) {
+    return res.status(403).json({ error: 'Invalid or missing Turnstile token' });
   }
 
   // Validate endpoint to prevent arbitrary SSRF

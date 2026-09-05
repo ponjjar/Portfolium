@@ -31,15 +31,19 @@ const JS_DEP_TO_TECH: Record<string, string> = {
   'zod': 'Zod',
 };
 
+type GetTokenFn = () => Promise<string | undefined>;
 
-async function checkFileExists(owner: string, repo: string, path: string, signal?: AbortSignal): Promise<boolean> {
+
+async function checkFileExists(owner: string, repo: string, path: string, signal?: AbortSignal, getToken?: GetTokenFn): Promise<boolean> {
   const endpoint = `/repos/${owner}/${repo}/contents/${path}`;
   try {
+    const turnstileToken = getToken ? await getToken() : undefined;
     // We use a small timeout and fetch metadata
     await fetchFromGitHub(endpoint, {
       method: 'HEAD',
       signal,
       timeoutMs: 10000,
+      turnstileToken,
     });
     return true;
   } catch (error) {
@@ -49,15 +53,17 @@ async function checkFileExists(owner: string, repo: string, path: string, signal
   }
 }
 
-async function fetchPackageJson(owner: string, repo: string, signal?: AbortSignal): Promise<any | null> {
+async function fetchPackageJson(owner: string, repo: string, signal?: AbortSignal, getToken?: GetTokenFn): Promise<any | null> {
   const endpoint = `/repos/${owner}/${repo}/contents/package.json`;
   try {
+    const turnstileToken = getToken ? await getToken() : undefined;
     const pkg = await fetchFromGitHub<any>(endpoint, {
       headers: {
         'Accept': 'application/vnd.github.v3.raw',
       },
       signal,
       timeoutMs: 10000,
+      turnstileToken,
     });
     // fetchFromGitHub returns raw string because of the .raw header
     return typeof pkg === 'string' ? JSON.parse(pkg) : pkg;
@@ -68,7 +74,8 @@ async function fetchPackageJson(owner: string, repo: string, signal?: AbortSigna
 
 export async function detectTechnologies(
   repo: GitHubRepositorySummary,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  getToken?: GetTokenFn
 ): Promise<{ manifests: Record<string, boolean>; detectedTechnologies: string[] }> {
   const manifests: Record<string, boolean> = {};
   const detectedTechnologies = new Set<string>();
@@ -81,7 +88,7 @@ export async function detectTechnologies(
   // Check common manifests
   const manifestChecks = Object.keys(FILE_TO_TECH_MAP).map(async (filename) => {
     if (filename === 'package.json') {
-      const pkg = await fetchPackageJson(repo.ownerLogin, repo.name, signal);
+      const pkg = await fetchPackageJson(repo.ownerLogin, repo.name, signal, getToken);
       if (pkg) {
         manifests['packageJson'] = true;
         detectedTechnologies.add(FILE_TO_TECH_MAP[filename]);
@@ -102,7 +109,7 @@ export async function detectTechnologies(
         manifests['packageJson'] = false;
       }
     } else {
-      const exists = await checkFileExists(repo.ownerLogin, repo.name, filename, signal);
+      const exists = await checkFileExists(repo.ownerLogin, repo.name, filename, signal, getToken);
       if (exists) {
         // Camel case the key e.g. requirements.txt -> requirementsTxt
         const key = filename.replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());

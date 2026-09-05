@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import { ProjectImageSelectionModal } from '../modals/ProjectImageSelectionModal';
+import { useTurnstile } from '@/components/ui/TurnstileProvider';
 
 interface GitHubImportModalProps {
   visible: boolean;
@@ -41,6 +42,8 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
   // Image editing modal state
   const [editingRepoId, setEditingRepoId] = useState<number | null>(null);
 
+  const { getToken } = useTurnstile();
+
   const handleClose = () => {
     setStep('input');
     setRepositories([]);
@@ -57,9 +60,14 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
     try {
       setStep('loading');
       setError(null);
+      
+      const userToken = await getToken();
       const username = normalizeGitHubUsername(usernameInput);
-      const user = await fetchGitHubUser(username);
-      const repos = await fetchAllPublicRepositories(user.login);
+      const user = await fetchGitHubUser(username, undefined, userToken);
+      
+      const reposToken = await getToken();
+      const repos = await fetchAllPublicRepositories(user.login, undefined, undefined, reposToken);
+      
       setRepositories(repos);
       setStep('select');
     } catch (err: any) {
@@ -103,7 +111,7 @@ export function GitHubImportModal({ visible, onClose, onImport }: GitHubImportMo
     
     setRepoImages(prev => ({ ...prev, [repo.id]: { status: 'loading', candidates: [], selectedCandidateIndex: null } }));
     
-    const candidates = await extractReadmeImages(repo);
+    const candidates = await extractReadmeImages(repo, getToken);
     
     setRepoImages(prev => ({
       ...prev,

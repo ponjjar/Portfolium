@@ -33,6 +33,7 @@ export interface SummarizeProjectsRequest {
     topics?: string[];
     rawReadme?: string;
   })[];
+  turnstileToken?: string;
 }
 
 export interface SummarizeProjectsResponse {
@@ -59,6 +60,7 @@ export interface SuggestProfileRequest {
   currentProfile?: {
     descriptions?: Partial<Record<'pt-BR' | 'en', string>>;
   };
+  turnstileToken?: string;
 }
 
 export interface SuggestProfileResponse {
@@ -75,6 +77,7 @@ export interface TranslateRequest {
   sourceLocale: string;
   targetLocale: string;
   texts: { id: string; text: string }[];
+  turnstileToken?: string;
 }
 
 export interface TranslateResponse {
@@ -89,6 +92,7 @@ export interface TranslateResponse {
 export interface ParseResumeRequest {
   text: string;
   language: string;
+  turnstileToken?: string;
 }
 
 export interface ParseResumeResponse {
