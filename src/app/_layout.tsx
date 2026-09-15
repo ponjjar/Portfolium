@@ -6,6 +6,13 @@ import { loadSession } from '../storage';
 import { usePortfolioStore } from '../store';
 import { View, ActivityIndicator } from 'react-native';
 import { ThemeProvider } from '../theme/ThemeContext';
+import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
+
+// Disable Reanimated strict mode to eliminate render-time shared value warnings during theme switches on Web
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
+});
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);

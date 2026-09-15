@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-12T16:31:00Z",
+  "title": "Design System: Portfolio Builder",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "High-Contrast Monolith",
+        "canonical": "#F1F3F4",
+        "tonalRamp": ["#F1F3F4", "#BDC1C6", "#9AA0A6", "#5F6368", "#3C4043", "#303134", "#292A2D", "#202124"]
+      },
+      "neutral-bg": {
+        "role": "neutral",
+        "displayName": "Deep Slate Canvas",
+        "canonical": "#202124",
+        "tonalRamp": ["#303134", "#292A2D", "#202124", "#111111", "#000000"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface Elevation",
+        "canonical": "#292A2D"
+      },
+      "surface-elevated": {
+        "role": "neutral",
+        "displayName": "Elevated Surface",
+        "canonical": "#303134"
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Primary Text",
+        "canonical": "#F1F3F4"
+      },
+      "text-secondary": {
+        "role": "neutral",
+        "displayName": "Secondary Text",
+        "canonical": "#BDC1C6"
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Muted Text",
+        "canonical": "#9AA0A6"
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Structural Border",
+        "canonical": "#3C4043"
+      },
+      "border-strong": {
+        "role": "neutral",
+        "displayName": "Strong Border",
+        "canonical": "#5F6368"
+      },
+      "border-lava": {
+        "role": "neutral",
+        "displayName": "Lava Border",
+        "canonical": "#4A2D12"
+      },
+      "border-terminal": {
+        "role": "neutral",
+        "displayName": "Terminal Border",
+        "canonical": "#285D31"
+      },
+      "border-light": {
+        "role": "neutral",
+        "displayName": "Light Border",
+        "canonical": "#E2E2DF"
+      },
+      "accent-lava": {
+        "role": "accent",
+        "displayName": "Lava Ember",
+        "canonical": "#FFB020"
+      },
+      "accent-terminal": {
+        "role": "accent",
+        "displayName": "Terminal Green",
+        "canonical": "#6CFF75"
+      },
+      "accent-ocean": {
+        "role": "accent",
+        "displayName": "Ocean Blue",
+        "canonical": "#3478D4"
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headlines and landing showcases" },
+      "headline": { "displayName": "Headline", "purpose": "Page titles and primary view headings" },
+      "title": { "displayName": "Title", "purpose": "Section and card headers" },
+      "body": { "displayName": "Body", "purpose": "Standard content and form labels" },
+      "label": { "displayName": "Label", "purpose": "Badges, buttons, chips" },
+      "code": { "displayName": "Code", "purpose": "Technical data, stats, commit snippets" }
+    },
+    "shadows": [
+      { "name": "subtle-ambient", "value": "0 4px 20px rgba(0, 0, 0, 0.25)", "purpose": "Modal dialogs and popover panels" },
+      { "name": "focus-ring", "value": "0 0 0 2px var(--primary)", "purpose": "Accessible focus ring indicator" }
+    ],
+    "motion": [
+      { "name": "ease-out-cubic", "value": "cubic-bezier(0.33, 1, 0.68, 1)", "purpose": "Standard entrance and state transitions" },
+      { "name": "ease-in-out-cubic", "value": "cubic-bezier(0.65, 0, 0.35, 1)", "purpose": "Theme and layout transitions" }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Standard high-contrast primary call-to-action button.",
+      "html": "<button class=\"ds-btn-primary\">CONTINUE</button>",
+      "css": ".ds-btn-primary { background: var(--primary, #F1F3F4); color: var(--primary-foreground, #202124); padding: 10px 20px; font-weight: 500; font-size: 14px; border: none; border-radius: 8px; cursor: pointer; transition: opacity 0.15s ease-out; } .ds-btn-primary:hover { opacity: 0.9; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Bordered secondary action button.",
+      "html": "<button class=\"ds-btn-outline\">EXPORT</button>",
+      "css": ".ds-btn-outline { background: transparent; color: var(--text, #F1F3F4); border: 1px solid var(--border, #3C4043); padding: 10px 20px; font-weight: 500; font-size: 14px; border-radius: 8px; cursor: pointer; transition: background 0.15s ease-out; } .ds-btn-outline:hover { background: var(--surface, #292A2D); }"
+    },
+    {
+      "name": "Card Container",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Tonal elevation surface for displaying projects, repositories, and profile details.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Repository Name</h3><p class=\"ds-card-desc\">Automated portfolio generator for developers.</p></div>",
+      "css": ".ds-card { background: var(--surface, #292A2D); border: 1px solid var(--border, #3C4043); border-radius: 16px; padding: 20px; } .ds-card-title { font-size: 18px; font-weight: 600; color: var(--text, #F1F3F4); margin: 0 0 8px 0; } .ds-card-desc { font-size: 14px; color: var(--text-secondary, #BDC1C6); margin: 0; }"
+    },
+    {
+      "name": "Floating Input Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Input field with animated focus ring and floating label.",
+      "html": "<div class=\"ds-field\"><input class=\"ds-input\" placeholder=\"GitHub Username\" /></div>",
+      "css": ".ds-field { position: relative; width: 100%; } .ds-input { width: 100%; height: 50px; background: var(--input-background, #303134); border: 1px solid var(--border, #3C4043); border-radius: 8px; padding: 0 16px; color: var(--text, #F1F3F4); font-size: 15px; outline: none; transition: border-color 0.15s ease-out; } .ds-input:focus { border-color: var(--primary, #F1F3F4); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Studio Console",
+    "overview": "Portfolio Builder treats the portfolio creation workflow as a high-precision command center for developers. The visual language is dark-first, crisp, and architectural, emphasizing high-density utility, typographic structure, and refined surfaces.",
+    "keyCharacteristics": [
+      "Obsidian & Slate baseline with high-contrast monochrome primary typography.",
+      "Architectural lines and subtle borders (border-border) establishing hierarchy without heavy drop shadows.",
+      "Multi-theme adaptability (dark, light, lava, terminal, ocean, amoled) anchored on semantic CSS variables.",
+      "Fluid responsiveness with universal component parity across Web, iOS, and Android."
+    ],
+    "rules": [
+      {
+        "name": "The Semantic Token Rule",
+        "body": "Direct hex colors, raw RGB values, or literal Tailwind colors (bg-white, text-black, #FFF) are strictly banned in component code. All surfaces, borders, and text must use semantic classes (bg-surface, border-border, text-text, text-text-muted).",
+        "section": "colors"
+      },
+      {
+        "name": "The Typographic Hierarchy Rule",
+        "body": "Headings must use display font tokens with negative letter-spacing for tight architectural rhythm, while body text preserves neutral tracking and comfortable leading.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tonal Layering Rule",
+        "body": "Avoid blurry dark drop-shadows on dark mode interfaces. Depth is communicated through tonal elevation steps (bg-background < bg-surface < bg-surface-elevated) outlined by crisp 1px borders (border-border).",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do consume semantic tokens (bg-background, bg-surface, text-text, border-border) across all UI elements.",
+      "Do provide bilingual i18n keys for every user-visible string in both pt.json and en.json.",
+      "Do maintain 44x44pt minimum touch targets on mobile touch devices.",
+      "Do test every screen against all 4 main themes: Light, Dark, Lava, AMOLED.",
+      "Do isolate platform-specific APIs using .web.tsx and .native.tsx extensions."
+    ],
+    "donts": [
+      "Don't hardcode hex colors, rgb values, or Tailwind literal colors (bg-white, text-black, #000, #FFF).",
+      "Don't insert hardcoded strings or untranslated literals directly into JSX.",
+      "Don't use bouncy or cartoonish easing transitions; use exponential/cubic deceleration (ease-out).",
+      "Don't use empty or placeholder <img> tags without valid fallback sources."
+    ]
+  }
+}

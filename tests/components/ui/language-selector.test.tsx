@@ -7,6 +7,13 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(),
 }));
 
+jest.mock('@/theme/ThemeContext', () => ({
+  useTheme: () => ({ theme: 'dark', setTheme: jest.fn() }),
+  useThemeColors: () => ({
+    textSecondary: '#BDC1C6',
+  }),
+}));
+
 describe('LanguageSelector Component', () => {
   it('renders EN-US correctly', () => {
     (useTranslation as jest.Mock).mockReturnValue({

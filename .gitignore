@@ -48,5 +48,15 @@ example
 CLAUDE.md
 TASKS.md
 PROJECT.md
-DESIGN.md
 .gemini/
+
+# Impeccable (Local & Ephemeral artifacts)
+.impeccable/*.local.*
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/build/
+.impeccable/review/
+.impeccable/live/sessions/
+.impeccable/live/inject-journal.json
+.impeccable/live/roots.json
+

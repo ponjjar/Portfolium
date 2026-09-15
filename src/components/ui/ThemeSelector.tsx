@@ -1,4 +1,4 @@
-import { ThemeId, useTheme } from '@/theme/ThemeContext';
+import { ThemeId, useTheme, useThemeColors } from '@/theme/ThemeContext';
 import { Eclipse, Flame, Moon, Palette, Sun, Terminal, Waves } from 'lucide-react-native';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import { Dimensions, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View 
 
 export function ThemeSelector() {
   const { theme, setTheme } = useTheme();
+  const colors = useThemeColors();
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -72,7 +73,7 @@ export function ThemeSelector() {
         className="w-10 h-10 items-center justify-center rounded-full bg-surface border border-border"
         accessibilityLabel={t('theme.change_theme')}
       >
-        <Palette size={18} color="var(--text)" />
+        <Palette size={18} color={colors.text} />
       </TouchableOpacity>
 
       {/* Tooltip */}

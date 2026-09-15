@@ -12,6 +12,108 @@ import Animated, {
 
 export type ThemeId = 'light' | 'lava' | 'dark' | 'amoled' | 'terminal' | 'ocean';
 
+export interface ThemeColorTokens {
+  background: string;
+  surface: string;
+  surfaceElevated: string;
+  text: string;
+  textSecondary: string;
+  textMuted: string;
+  border: string;
+  borderStrong: string;
+  primary: string;
+  primaryForeground: string;
+  inputBackground: string;
+  overlay: string;
+}
+
+export const THEME_TOKENS: Record<ThemeId, ThemeColorTokens> = {
+  dark: {
+    background: '#202124',
+    surface: '#292A2D',
+    surfaceElevated: '#303134',
+    text: '#F1F3F4',
+    textSecondary: '#BDC1C6',
+    textMuted: '#9AA0A6',
+    border: '#3C4043',
+    borderStrong: '#5F6368',
+    primary: '#F1F3F4',
+    primaryForeground: '#202124',
+    inputBackground: '#303134',
+    overlay: 'rgba(0, 0, 0, 0.60)',
+  },
+  light: {
+    background: '#F7F7F5',
+    surface: '#FFFFFF',
+    surfaceElevated: '#FAFAF8',
+    text: '#111111',
+    textSecondary: '#686868',
+    textMuted: '#8A8A8A',
+    border: '#E2E2DF',
+    borderStrong: '#CBCBC7',
+    primary: '#111111',
+    primaryForeground: '#FFFFFF',
+    inputBackground: '#FFFFFF',
+    overlay: 'rgba(0, 0, 0, 0.40)',
+  },
+  lava: {
+    background: '#160D05',
+    surface: '#211308',
+    surfaceElevated: '#2D1B0B',
+    text: '#FFF7E8',
+    textSecondary: '#E8C99A',
+    textMuted: '#AD8A5F',
+    border: '#4A2D12',
+    borderStrong: '#724719',
+    primary: '#FFB020',
+    primaryForeground: '#1A0D00',
+    inputBackground: '#1D1107',
+    overlay: 'rgba(12, 6, 0, 0.72)',
+  },
+  terminal: {
+    background: '#071009',
+    surface: '#0A170D',
+    surfaceElevated: '#102116',
+    text: '#9CFF9C',
+    textSecondary: '#70CC76',
+    textMuted: '#4D9254',
+    border: '#285D31',
+    borderStrong: '#3D8648',
+    primary: '#6CFF75',
+    primaryForeground: '#061008',
+    inputBackground: '#08130B',
+    overlay: 'rgba(0, 8, 2, 0.78)',
+  },
+  ocean: {
+    background: '#111315',
+    surface: '#181A1D',
+    surfaceElevated: '#202328',
+    text: '#F1F3F5',
+    textSecondary: '#B5BAC1',
+    textMuted: '#7E858E',
+    border: '#2A2E34',
+    borderStrong: '#3B424B',
+    primary: '#3478D4',
+    primaryForeground: '#FFFFFF',
+    inputBackground: '#191C20',
+    overlay: 'rgba(0, 0, 0, 0.68)',
+  },
+  amoled: {
+    background: '#000000',
+    surface: '#0A0A0A',
+    surfaceElevated: '#141414',
+    text: '#F5F5F5',
+    textSecondary: '#B8B8B8',
+    textMuted: '#858585',
+    border: '#242424',
+    borderStrong: '#3A3A3A',
+    primary: '#FFFFFF',
+    primaryForeground: '#000000',
+    inputBackground: '#0A0A0A',
+    overlay: 'rgba(0, 0, 0, 0.80)',
+  },
+};
+
 interface ThemeContextType {
   theme: ThemeId;
   setTheme: (id: ThemeId, x?: number, y?: number) => void;
@@ -25,6 +127,11 @@ const ThemeContext = createContext<ThemeContextType>({
 });
 
 export const useTheme = () => useContext(ThemeContext);
+
+export const useThemeColors = (): ThemeColorTokens => {
+  const { theme } = useTheme();
+  return THEME_TOKENS[theme] || THEME_TOKENS.dark;
+};
 
 const THEME_STORAGE_KEY = 'portfolio-builder:theme:v1';
 
@@ -93,8 +200,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         setIsTransitioning(true);
         const transition = (document as any).startViewTransition(() => {
           // Set background to new theme for the new state
-          document.documentElement.style.backgroundColor = getThemeBackground(theme);
-
+          document.documentElement.style.backgroundColor = getThemeBackground(id);
 
           setThemeState(id);
           AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => { });

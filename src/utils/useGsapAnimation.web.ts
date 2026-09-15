@@ -11,35 +11,45 @@ export function useGsapHero(containerRef: React.RefObject<any>) {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      tl.fromTo(
-        '.gsap-hero-badge',
-        { opacity: 0, y: -16, scale: 0.9 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.6 }
-      )
-      .fromTo(
-        '.gsap-hero-title',
-        { opacity: 0, y: 25 },
-        { opacity: 1, y: 0, duration: 0.8 },
-        '-=0.35'
-      )
-      .fromTo(
-        '.gsap-hero-desc',
-        { opacity: 0, y: 16 },
-        { opacity: 1, y: 0, duration: 0.7 },
-        '-=0.45'
-      )
-      .fromTo(
-        '.gsap-hero-cta',
-        { opacity: 0, y: 14, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, stagger: 0.1, duration: 0.6, ease: 'back.out(1.4)' },
-        '-=0.4'
-      )
-      .fromTo(
-        '.gsap-hero-showcase',
-        { opacity: 0, y: 35 },
-        { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' },
-        '-=0.5'
-      );
+      if (document.querySelector('.gsap-hero-badge')) {
+        tl.fromTo(
+          '.gsap-hero-badge',
+          { opacity: 0, y: -16, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.6 }
+        );
+      }
+      if (document.querySelector('.gsap-hero-title')) {
+        tl.fromTo(
+          '.gsap-hero-title',
+          { opacity: 0, y: 25 },
+          { opacity: 1, y: 0, duration: 0.8 },
+          '-=0.35'
+        );
+      }
+      if (document.querySelector('.gsap-hero-desc')) {
+        tl.fromTo(
+          '.gsap-hero-desc',
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.7 },
+          '-=0.45'
+        );
+      }
+      if (document.querySelector('.gsap-hero-cta')) {
+        tl.fromTo(
+          '.gsap-hero-cta',
+          { opacity: 0, y: 14, scale: 0.95 },
+          { opacity: 1, y: 0, scale: 1, stagger: 0.1, duration: 0.6, ease: 'back.out(1.4)' },
+          '-=0.4'
+        );
+      }
+      if (document.querySelector('.gsap-hero-showcase')) {
+        tl.fromTo(
+          '.gsap-hero-showcase',
+          { opacity: 0, y: 35 },
+          { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' },
+          '-=0.5'
+        );
+      }
     }, containerRef);
 
     return () => ctx.revert();
@@ -103,8 +113,11 @@ export function useGsapFloatingElements(selector: string) {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
+    const elements = document.querySelectorAll(selector);
+    if (!elements || elements.length === 0) return;
+
     const ctx = gsap.context(() => {
-      gsap.to(selector, {
+      gsap.to(elements, {
         y: -6,
         duration: 2.4,
         repeat: -1,

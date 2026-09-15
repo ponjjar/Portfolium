@@ -39,6 +39,20 @@ jest.mock('@/theme/ThemeContext', () => ({
     theme: 'dark',
     setTheme: jest.fn(),
   }),
+  useThemeColors: () => ({
+    background: '#202124',
+    surface: '#292A2D',
+    surfaceElevated: '#303134',
+    text: '#F1F3F4',
+    textSecondary: '#BDC1C6',
+    textMuted: '#9AA0A6',
+    border: '#3C4043',
+    borderStrong: '#5F6368',
+    primary: '#F1F3F4',
+    primaryForeground: '#202124',
+    inputBackground: '#303134',
+    overlay: 'rgba(0, 0, 0, 0.60)',
+  }),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -46,6 +60,9 @@ jest.mock('react-i18next', () => ({
     t: (key: string) => {
       const map: Record<string, string> = {
         'visual_theme.modal_title': 'Tema e Efeitos Visuais',
+        'visual_theme.preview_title': 'Pré-visualização em Tempo Real',
+        'visual_theme.preview_sample_role': 'Engenheiro de Software',
+        'visual_theme.preview_sample_cta': 'Ver Projeto',
         'common.done': 'Concluir',
         'visual_theme.preset_title': 'Predefinição de Tema',
         'visual_theme.accent_color': 'Cor de Destaque',

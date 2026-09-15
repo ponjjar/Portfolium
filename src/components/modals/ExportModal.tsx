@@ -1,15 +1,18 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Modal } from '@/components/ui/modal';
-import { Download, FileJson, FileCode, Globe, FolderArchive } from 'lucide-react-native';
+import { Download, FileJson, FileCode, Globe, FolderArchive, FileText, CheckCircle2 } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface ExportModalProps {
   visible: boolean;
   onClose: () => void;
-  onExportHtml: () => void;
-  onExportJson: () => void;
-  onExportZip: () => void;
-  onExportGitHubPages: () => void;
+  onExportHtml: () => Promise<void> | void;
+  onExportJson: () => Promise<void> | void;
+  onExportZip: () => Promise<void> | void;
+  onExportGitHubPages: () => Promise<void> | void;
+  onExportMarkdown?: () => Promise<void> | void;
 }
 
 export function ExportModal({ 
@@ -18,97 +21,228 @@ export function ExportModal({
   onExportHtml, 
   onExportJson,
   onExportZip,
-  onExportGitHubPages
+  onExportGitHubPages,
+  onExportMarkdown,
 }: ExportModalProps) {
+  const { t } = useTranslation();
+  const colors = useThemeColors();
+  const [activeAction, setActiveAction] = useState<string | null>(null);
+
+  const handleAction = async (key: string, action: () => Promise<void> | void) => {
+    setActiveAction(key);
+    try {
+      await action();
+    } finally {
+      setActiveAction(null);
+    }
+  };
 
   return (
     <Modal
       visible={visible}
       onClose={onClose}
-      title="Pronto para exportar"
-      size="sm"
+      title={t('export_modal.title')}
+      size="md"
     >
-      <View className="py-2">
+      <ScrollView className="py-2 max-h-[75vh]" showsVerticalScrollIndicator={false}>
         <Text className="text-text-secondary text-sm mb-6">
-          Escolha como deseja levar seu portfólio.
+          {t('export_modal.subtitle')}
         </Text>
 
         <View className="gap-4">
           
-          {/* HTML Export */}
-          <View className="border border-border rounded-lg p-4 bg-input-background">
-            <View className="flex-row items-center mb-2">
-              <FileCode color="var(--text)" size={20} className="mr-2" />
-              <Text className="text-text font-bold text-base">HTML</Text>
+          {/* HTML Export Card */}
+          <View className="border border-border rounded-2xl p-5 bg-surface-elevated shadow-sm">
+            <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-row items-center gap-2.5">
+                <View className="w-8 h-8 rounded-xl bg-primary/10 border border-primary/20 items-center justify-center">
+                  <FileCode color={colors.primary} size={18} />
+                </View>
+                <Text className="text-text font-bold text-base tracking-tight">
+                  {t('export_modal.html_title')}
+                </Text>
+              </View>
+              <View className="px-2 py-0.5 rounded-full bg-primary/15 border border-primary/25">
+                <Text className="text-primary font-mono font-bold text-xs uppercase">.html</Text>
+              </View>
             </View>
-            <Text className="text-text-secondary text-xs mb-4">
-              Baixe um único arquivo pronto para abrir ou publicar.
+            <Text className="text-text-secondary text-xs sm:text-sm mb-4 leading-relaxed">
+              {t('export_modal.html_desc')}
             </Text>
             <TouchableOpacity 
-              onPress={onExportHtml}
-              className="bg-primary py-3 rounded items-center flex-row justify-center"
+              onPress={() => handleAction('html', onExportHtml)}
+              disabled={activeAction !== null}
+              className="bg-primary py-3 px-4 rounded-xl items-center flex-row justify-center gap-2 active:opacity-90"
+              accessibilityRole="button"
+              accessibilityLabel={t('export_modal.html_btn')}
             >
-              <Download color="var(--primary-foreground)" size={16} className="mr-2" />
-              <Text className="text-primary-foreground font-bold text-sm">Baixar HTML</Text>
+              {activeAction === 'html' ? (
+                <ActivityIndicator size="small" color={colors.primaryForeground} />
+              ) : (
+                <Download color={colors.primaryForeground} size={16} />
+              )}
+              <Text className="text-primary-foreground font-bold text-sm">
+                {t('export_modal.html_btn')}
+              </Text>
             </TouchableOpacity>
           </View>
 
-          {/* ZIP Export */}
-          <View className="border border-border rounded-lg p-4 bg-input-background">
-            <View className="flex-row items-center mb-2">
-              <FolderArchive color="var(--text)" size={20} className="mr-2" />
-              <Text className="text-text font-bold text-base">Projeto</Text>
+          {/* ZIP Export Card */}
+          <View className="border border-border rounded-2xl p-5 bg-surface-elevated shadow-sm">
+            <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-row items-center gap-2.5">
+                <View className="w-8 h-8 rounded-xl bg-surface border border-border items-center justify-center">
+                  <FolderArchive color={colors.text} size={18} />
+                </View>
+                <Text className="text-text font-bold text-base tracking-tight">
+                  {t('export_modal.zip_title')}
+                </Text>
+              </View>
+              <View className="px-2 py-0.5 rounded-full bg-surface border border-border">
+                <Text className="text-text-muted font-mono font-bold text-xs uppercase">.zip</Text>
+              </View>
             </View>
-            <Text className="text-text-secondary text-xs mb-4">
-              Baixe os arquivos do seu portfólio para continuar desenvolvendo.
+            <Text className="text-text-secondary text-xs sm:text-sm mb-4 leading-relaxed">
+              {t('export_modal.zip_desc')}
             </Text>
             <TouchableOpacity 
-              onPress={onExportZip}
-              className="bg-transparent border border-border py-3 rounded items-center flex-row justify-center"
+              onPress={() => handleAction('zip', onExportZip)}
+              disabled={activeAction !== null}
+              className="bg-surface border border-border py-3 px-4 rounded-xl items-center flex-row justify-center gap-2 active:bg-surface-elevated"
+              accessibilityRole="button"
+              accessibilityLabel={t('export_modal.zip_btn')}
             >
-              <Download color="var(--text)" size={16} className="mr-2" />
-              <Text className="text-text font-bold text-sm">Baixar ZIP</Text>
+              {activeAction === 'zip' ? (
+                <ActivityIndicator size="small" color={colors.text} />
+              ) : (
+                <Download color={colors.text} size={16} />
+              )}
+              <Text className="text-text font-bold text-sm">
+                {t('export_modal.zip_btn')}
+              </Text>
             </TouchableOpacity>
           </View>
 
-          {/* GitHub Pages */}
-          <View className="border border-border rounded-lg p-4 bg-input-background">
-            <View className="flex-row items-center mb-2">
-              <Globe color="var(--text)" size={20} className="mr-2" />
-              <Text className="text-text font-bold text-base">GitHub Pages</Text>
+          {/* Technical Resume Markdown Card */}
+          {onExportMarkdown && (
+            <View className="border border-border rounded-2xl p-5 bg-surface-elevated shadow-sm">
+              <View className="flex-row items-center justify-between mb-2">
+                <View className="flex-row items-center gap-2.5">
+                  <View className="w-8 h-8 rounded-xl bg-surface border border-border items-center justify-center">
+                    <FileText color={colors.text} size={18} />
+                  </View>
+                  <Text className="text-text font-bold text-base tracking-tight">
+                    {t('export_modal.markdown_title')}
+                  </Text>
+                </View>
+                <View className="px-2 py-0.5 rounded-full bg-surface border border-border">
+                  <Text className="text-text-muted font-mono font-bold text-xs uppercase">.md</Text>
+                </View>
+              </View>
+              <Text className="text-text-secondary text-xs sm:text-sm mb-4 leading-relaxed">
+                {t('export_modal.markdown_desc')}
+              </Text>
+              <TouchableOpacity 
+                onPress={() => handleAction('markdown', onExportMarkdown)}
+                disabled={activeAction !== null}
+                className="bg-surface border border-border py-3 px-4 rounded-xl items-center flex-row justify-center gap-2 active:bg-surface-elevated"
+                accessibilityRole="button"
+                accessibilityLabel={t('export_modal.markdown_btn')}
+              >
+                {activeAction === 'markdown' ? (
+                  <ActivityIndicator size="small" color={colors.text} />
+                ) : (
+                  <Download color={colors.text} size={16} />
+                )}
+                <Text className="text-text font-bold text-sm">
+                  {t('export_modal.markdown_btn')}
+                </Text>
+              </TouchableOpacity>
             </View>
-            <Text className="text-text-secondary text-xs mb-4">
-              Prepare seu portfólio para publicar gratuitamente no GitHub Pages.
+          )}
+
+          {/* GitHub Pages Card */}
+          <View className="border border-border rounded-2xl p-5 bg-surface-elevated shadow-sm">
+            <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-row items-center gap-2.5">
+                <View className="w-8 h-8 rounded-xl bg-surface border border-border items-center justify-center">
+                  <Globe color={colors.text} size={18} />
+                </View>
+                <Text className="text-text font-bold text-base tracking-tight">
+                  {t('export_modal.github_title')}
+                </Text>
+              </View>
+              <View className="px-2 py-0.5 rounded-full bg-surface border border-border">
+                <Text className="text-text-muted font-mono font-bold text-xs uppercase">Pages</Text>
+              </View>
+            </View>
+            <Text className="text-text-secondary text-xs sm:text-sm mb-4 leading-relaxed">
+              {t('export_modal.github_desc')}
             </Text>
             <TouchableOpacity 
-              onPress={onExportGitHubPages}
-              className="bg-transparent border border-border py-3 rounded items-center flex-row justify-center"
+              onPress={() => handleAction('github', onExportGitHubPages)}
+              disabled={activeAction !== null}
+              className="bg-surface border border-border py-3 px-4 rounded-xl items-center flex-row justify-center gap-2 active:bg-surface-elevated"
+              accessibilityRole="button"
+              accessibilityLabel={t('export_modal.github_btn')}
             >
-              <Globe color="var(--text)" size={16} className="mr-2" />
-              <Text className="text-text font-bold text-sm">Preparar para GitHub Pages</Text>
+              {activeAction === 'github' ? (
+                <ActivityIndicator size="small" color={colors.text} />
+              ) : (
+                <Globe color={colors.text} size={16} />
+              )}
+              <Text className="text-text font-bold text-sm">
+                {t('export_modal.github_btn')}
+              </Text>
             </TouchableOpacity>
           </View>
 
-          {/* Session JSON */}
-          <View className="border border-border rounded-lg p-4 bg-input-background">
-            <View className="flex-row items-center mb-2">
-              <FileJson color="var(--text)" size={20} className="mr-2" />
-              <Text className="text-text font-bold text-base">Sessão</Text>
+          {/* Session JSON Backup Card */}
+          <View className="border border-border rounded-2xl p-5 bg-surface-elevated shadow-sm">
+            <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-row items-center gap-2.5">
+                <View className="w-8 h-8 rounded-xl bg-surface border border-border items-center justify-center">
+                  <FileJson color={colors.text} size={18} />
+                </View>
+                <Text className="text-text font-bold text-base tracking-tight">
+                  {t('export_modal.json_title')}
+                </Text>
+              </View>
+              <View className="px-2 py-0.5 rounded-full bg-surface border border-border">
+                <Text className="text-text-muted font-mono font-bold text-xs uppercase">.json</Text>
+              </View>
             </View>
-            <Text className="text-text-secondary text-xs mb-4">
-              Salve seus dados para continuar editando depois.
+            <Text className="text-text-secondary text-xs sm:text-sm mb-4 leading-relaxed">
+              {t('export_modal.json_desc')}
             </Text>
             <TouchableOpacity 
-              onPress={onExportJson}
-              className="bg-transparent border border-border py-3 rounded items-center flex-row justify-center"
+              onPress={() => handleAction('json', onExportJson)}
+              disabled={activeAction !== null}
+              className="bg-surface border border-border py-3 px-4 rounded-xl items-center flex-row justify-center gap-2 active:bg-surface-elevated"
+              accessibilityRole="button"
+              accessibilityLabel={t('export_modal.json_btn')}
             >
-              <Download color="var(--text)" size={16} className="mr-2" />
-              <Text className="text-text font-bold text-sm">Baixar session.json</Text>
+              {activeAction === 'json' ? (
+                <ActivityIndicator size="small" color={colors.text} />
+              ) : (
+                <Download color={colors.text} size={16} />
+              )}
+              <Text className="text-text font-bold text-sm">
+                {t('export_modal.json_btn')}
+              </Text>
             </TouchableOpacity>
           </View>
 
         </View>
-      </View>
+
+        {/* Auto-save Assurance Footer Note */}
+        <View className="mt-6 pt-4 border-t border-border flex-row items-center gap-2">
+          <CheckCircle2 size={14} color={colors.primary} />
+          <Text className="text-text-muted text-xs leading-relaxed flex-1">
+            {t('export_modal.auto_saved_note')}
+          </Text>
+        </View>
+      </ScrollView>
     </Modal>
   );
 }

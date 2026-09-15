@@ -5,7 +5,7 @@ import { usePortfolioStore } from '@/store';
 import { getFirstIncompleteStep } from '@/domain/portfolio/validation';
 import { buildPortfolioViewModel } from '@/templates/viewModel';
 import { renderMinimalTemplate } from '@/templates/minimal';
-import { exportHtml, exportSessionJson, exportZip, exportGitHubPagesReady } from '@/utils/export';
+import { exportHtml, exportSessionJson, exportZip, exportGitHubPagesReady, exportMarkdownResume } from '@/utils/export';
 import { Button } from '@/components/ui/button';
 import { ExportModal } from '@/components/modals/ExportModal';
 import { Laptop, Smartphone, Download, Settings, Palette, Eye, ArrowLeft, LayoutTemplate, User, Briefcase, MonitorSmartphone } from 'lucide-react-native';
@@ -89,6 +89,15 @@ export default function EditorScreen() {
       alert('Extraia o conteúdo do ZIP no seu repositório github.io.');
     } catch (e) {
       alert('Erro ao exportar para GitHub Pages');
+    }
+  };
+
+  const handleExportMarkdown = async () => {
+    try {
+      await exportMarkdownResume(session);
+      setIsExportVisible(false);
+    } catch (e) {
+      alert('Erro ao exportar Markdown');
     }
   };
 
@@ -311,6 +320,7 @@ export default function EditorScreen() {
         onExportJson={handleExportJson}
         onExportZip={handleExportZip}
         onExportGitHubPages={handleExportGitHubPages}
+        onExportMarkdown={handleExportMarkdown}
       />
 
       <ProfileLayoutModal
